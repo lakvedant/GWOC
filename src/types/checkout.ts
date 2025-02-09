@@ -24,5 +24,3 @@ export interface CartItem {
     shippingAddress: ShippingAddress
     saveInformation: boolean
   }
-  
-  
