@@ -10,7 +10,7 @@ export default function Page() {
     const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchImages = async () => {
       try {
         const data = await fetch("/api/products", 
         {
@@ -26,7 +26,7 @@ export default function Page() {
       }
     };
 
-    fetchVideos();
+    fetchImages();
   }, []);
   return (
     <>
