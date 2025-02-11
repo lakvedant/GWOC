@@ -129,18 +129,27 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
             </div>
 
             <div className="form-control">
-                <label className="label">Category</label>
-                <input
-                    type="text"
-                    className={`input input-bordered bg-gray-200 ${
-                        errors.category ? "input-error" : ""
-                    }`}
-                    {...register("category", { required: "Category is required" })}
-                />
-                {errors.category && (
-                    <span className="text-error text-sm mt-1">{errors.category.message}</span>
-                )}
-            </div>
+    <label className="label">Category</label>
+    <select
+        className={`select select-bordered bg-gray-200 ${errors.category ? "select-error" : ""}`}
+        {...register("category", { required: "Category is required" })}
+    >
+        <option value="">Select a category</option>
+        <option value="Fudge">Fudge</option>
+        <option value="Chocolate Modak">Chocolate Modak</option>
+        <option value="Truffle Chocolate Balls">Truffle Chocolate Balls</option>
+        <option value="Brownie">Brownie</option>
+        <option value="Muffins">Muffins</option>
+        <option value="Cookies">Cookies</option>
+        <option value="Cakes">Cakes</option>
+        <option value="Ice Cream">Ice Cream</option>
+        <option value="Donuts">Donuts</option>
+        <option value="Swiss Rolls">Swiss Rolls</option>
+    </select>
+    {errors.category && (
+        <span className="text-error text-sm mt-1">{errors.category.message}</span>
+    )}
+</div>
 
             <div className="form-control">
                 <label className="label">Available</label>
