@@ -1,7 +1,5 @@
 import Image from "next/image";
 import type { CartItem } from "@/types/checkout";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
 
 interface CartSummaryProps {
   items: CartItem[];
