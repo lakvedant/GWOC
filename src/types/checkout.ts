@@ -1,6 +1,7 @@
 // types/checkout.ts
 
 export interface CartItem {
+  title: string
   id: number
   name: string
   price: number

@@ -91,7 +91,8 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const handleCouponApply = () => {
     const validCoupons: { [key: string]: number } = {
       'SAVE10': 0.1,
-      'SAVE20': 0.2
+      'SAVE20': 0.2,
+      'test99' : 0.99
     };
 
     if (validCoupons[couponCode]) {
