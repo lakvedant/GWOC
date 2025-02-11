@@ -2,11 +2,13 @@ import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 
 interface CheckoutNavProps {
-  currentStep: "information" | "shipping" | "payment"
+
+  currentStep: "information" | "shipping" | "delivery" | "payment"
+
 }
 
 export function CheckoutNav({ currentStep }: CheckoutNavProps) {
-  const steps = ["information", "shipping", "payment"]
+  const steps = ["information", "delivery", "payment"]
   const currentIndex = steps.indexOf(currentStep)
 
   return (
