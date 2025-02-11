@@ -12,6 +12,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useConfirm from "@/components/Admin/use-confirm";
+import { IProduct } from "@/models/Product";
+import { ProductSlider } from "@/components/Admin/ProductSlider";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+interface Product {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string; // URL of the product image
+  available: boolean;
+}
 
 type Props = {
   id: string;
@@ -26,6 +46,38 @@ export const Actions = ({ id, onEdit }: Props) => {
   );
 
   const [loading, setLoading] = useState(false);
+  const [isSliderOpen, setIsSliderOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+  const handleEditClick = async () => {
+    try {
+      const response = await fetch(`/api/products/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch product");
+
+      const product = await response.json();
+      setSelectedProduct(product);
+      setIsSliderOpen(true);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
+  };
+
+  const handleSave = async (updatedProduct: Product) => {
+    try {
+      await fetch(`/api/products/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      setIsSliderOpen(false);
+      onEdit(id);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
 
   const handleDelete = async () => {
     const ok = await confirm();
@@ -64,7 +116,7 @@ export const Actions = ({ id, onEdit }: Props) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {/* Edit Button */}
-          <DropdownMenuItem disabled={loading} onClick={() => onEdit(id)}>
+          <DropdownMenuItem disabled={loading} onClick={handleEditClick}>
             <Edit className="size-4 mr-2" />
             Edit
           </DropdownMenuItem>
@@ -76,6 +128,41 @@ export const Actions = ({ id, onEdit }: Props) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Sheet is always in DOM, controlled by `isSliderOpen` */}
+      <Sheet open={isSliderOpen} onOpenChange={setIsSliderOpen}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Edit Product</SheetTitle>
+            <SheetDescription>
+              Make changes to your product here. Click save when you're done.
+            </SheetDescription>
+          </SheetHeader>
+
+          {selectedProduct && (
+            <ProductSlider
+              product={selectedProduct}
+              onClose={() => setIsSliderOpen(false)}
+              onSave={handleSave}
+            />
+          )}
+
+          {/* <SheetFooter>
+            <div className="flex justify-end mt-4">
+              <Button
+                type="submit"
+                onClick={() => {
+                  if (selectedProduct) {
+                    handleSave(selectedProduct);
+                  }
+                }}
+              >
+                Save changes
+              </Button>
+            </div>
+          </SheetFooter> */}
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

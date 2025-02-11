@@ -39,3 +39,20 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
     }
 }
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }>
+}) {
+    try {
+        await connectDB();
+
+        const product = await Product.findById((await params).id).lean();
+
+        if (!product) {
+            return NextResponse.json([], {status: 200})
+        }
+
+        return NextResponse.json(product, {status: 200})
+    } catch (error) {
+        return NextResponse.json({error: "Failed to fetch products"}, {status: 500})
+    }
+}
