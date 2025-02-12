@@ -11,7 +11,7 @@ const AddProduct = () => {
 	const [image, setImage] = useState<File | null>(null);
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
@@ -74,25 +74,14 @@ const AddProduct = () => {
 				onChange={handleChange}
 				required
 			/>
-			<select
-    name="category"
-    value={form.category}
-    onChange={handleChange}
-    required
-    className="select select-bordered bg-gray-200"
->
-    <option value="">Select a category</option>
-    <option value="Fudge">Fudge</option>
-    <option value="Chocolate Modak">Chocolate Modak</option>
-    <option value="Truffle Chocolate Balls">Truffle Chocolate Balls</option>
-    <option value="Brownie">Brownie</option>
-    <option value="Muffins">Muffins</option>
-    <option value="Cookies">Cookies</option>
-    <option value="Cakes">Cakes</option>
-    <option value="Ice Cream">Ice Cream</option>
-    <option value="Donuts">Donuts</option>
-    <option value="Swiss Rolls">Swiss Rolls</option>
-</select>
+			<input
+				type="text"
+				name="category"
+				placeholder="Category (e.g., cupcakes, cakes)"
+				value={form.category}
+				onChange={handleChange}
+				required
+			/>
 			<input
 				type="file"
 				accept="image/*"

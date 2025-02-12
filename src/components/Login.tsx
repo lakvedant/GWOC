@@ -11,7 +11,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
   const [timer, setTimer] = useState(30);
 
   useEffect(() => {
-    let interval: NodeJS.Timer;
+    let interval: ReturnType<typeof setInterval>;
     if (step === "otp" && timer > 0) {
       interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     }

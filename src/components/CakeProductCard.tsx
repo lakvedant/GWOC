@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
+import { IKImage } from 'imagekitio-next';
 
 interface CakeCardProps {
   title: string;
@@ -11,24 +12,23 @@ interface CakeCardProps {
 const CakeProductCard: React.FC<CakeCardProps> = ({
   title,
   price,
-  imageUrl = "/api/placeholder/200/200",
+  imageUrl,
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[320px] border border-gray-100 relative group">
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[300px] border border-gray-100 relative group">
       <div className="absolute top-3 right-3 z-10">
-        <Image src="/veg.png" width={16} height={16} alt="veg" className="opacity-80" />
+        <Image src="/veg.png" width={20} height={20} alt="veg" className="opacity-80" />
       </div>
 
-      <div className="relative aspect-square w-full bg-gray-50 p-2">
-        <Image
-          src={imageUrl}
+      <div className="relative aspect-square bg-gray-50 p-2">
+        <IKImage
+          path={imageUrl}
           alt={title}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105 p-6"
+          className="object-cover transition-transform duration-300 group-hover:scale-105 "
           priority
         />
       </div>
-
       <div className="p-4 pb-1 space-y-3 bg-white">
         <div className="flex justify-between items-start">
           <h2 className="text-xl font-semibold text-gray-800 line-clamp-1">

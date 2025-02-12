@@ -33,16 +33,16 @@ const WaveBackground = () => {
         
         {/* Content Section */}
         <div className="relative z-10 max-w-4xl mx-auto pt-12 px-4 text-center">
-          <h1 className="text-5xl font-serif font-bold tracking-wide text-amber-700 mb-3">
+          <h1 className="text-5xl font-serif font-bold tracking-wide text-amber-700 mb-1">
             CAKES
           </h1>
-          <div className="flex justify-center items-center space-x-2 mb-4">
-            <span className="text-blue-200 text-lg">•</span>
-            <span className="text-blue-200 text-lg">•</span>
-            <span className="text-blue-200 text-lg">•</span>
-            <span className="text-blue-200 text-lg">•</span>
+          <div className="flex justify-center items-center space-x-2 mb-1">
+            <span className="text-pink-300 text-3xl">•</span>
+            <span className="text-pink-300 text-3xl">•</span>
+            <span className="text-pink-300 text-3xl">•</span>
+            <span className="text-pink-300 text-3xl">•</span>
           </div>
-          <p className="text-gray-800 text-lg font-light max-w-3xl mx-auto leading-relaxed font-sans">
+          <p className="text-gray-800 text-lg font-light max-w-3xl mx-auto leading-relaxed font-sans ">
             This is where it all began! Our home-style brownies are what made Theobroma the household name it is today. Best enjoyed with a scoop of ice cream and chocolate sauce or devoured as is.
           </p>
         </div>

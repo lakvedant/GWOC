@@ -31,9 +31,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ImagekitProviders>
-        <Navbar />
+        {/* <Navbar /> */}
         {children}
-        <Footer/>
+        {/* <Footer/> */}
         </ImagekitProviders>
       </body>
     </html>

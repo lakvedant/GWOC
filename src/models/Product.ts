@@ -5,8 +5,13 @@ export interface IProduct extends Document {
 	description: string;
 	price: number;
 	category: string;
+	discount?: number;
 	image: string; // URL of the product image
 	available: boolean;
+	valueForOffer?: number;
+	review?: Schema.Types.ObjectId[];
+	weight?: number;
+	createdAt: Date;
 }
 
 const ProductSchema = new Schema<IProduct>({

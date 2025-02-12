@@ -1,17 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IOrder extends Document {
-	customerName: string;
+export interface IOrder extends Document {
+	_id: Schema.Types.ObjectId;
+	userId: Schema.Types.ObjectId;
 	phone: string;
-	items: { productId: mongoose.Types.ObjectId; quantity: number }[];
-	totalAmount: number;
-	paymentStatus: "Pending" | "Completed";
+	products: { productId: mongoose.Types.ObjectId; quantity: number }[];
+	amount: number;
+	deliveryType: string;
+	paymentType: "COD" | "UPI";
+	orderStatus: "Accepted" | "Inprogress" | "Delivered" | "Declined";
 }
 
 const OrderSchema = new Schema<IOrder>({
-	customerName: { type: String, required: true },
+	userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 	phone: { type: String, required: true },
-	items: [
+	products: [
 		{
 			productId: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -21,12 +24,10 @@ const OrderSchema = new Schema<IOrder>({
 			quantity: { type: Number, required: true, min: 1 },
 		},
 	],
-	totalAmount: { type: Number, required: true },
-	paymentStatus: {
-		type: String,
-		enum: ["Pending", "Completed"],
-		default: "Pending",
-	},
+	amount: { type: Number, required: true },
+	deliveryType: { type: String, required: true },
+	paymentType: { type: String, required: true, enum: ["COD", "UPI"] },
+	orderStatus: { type: String, required: true, enum: ["Accepted", "Inprogress", "Delivered", "Declined"] },
 }, {timestamps: true});
 
 const Order = mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
