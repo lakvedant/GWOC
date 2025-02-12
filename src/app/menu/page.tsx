@@ -1,21 +1,18 @@
-import ProductCard from '@/components/MenuProductCard'
-import React from 'react'
+import ProductGrid from '@/components/CakeProdcutGrid';
+import Banner from '@/components/MenuBanner';
+import BakerySidebar from '@/components/MenuSidebar';
+import React from 'react';
 
-const page = () => {
+const Page = () => {
   return (
-    <div>
-        <ProductCard
-  title="Chocolate Truffle Cake"
-  description="Rich chocolate cake layered with smooth truffle cream and decorated with chocolate shavings"
-  price={899}
-  image="/api/placeholder/400/320"
-  category="Premium Cakes"
-  isNewItem={true}
-  weight="1 kg"
-/>
-      
+    <div >
+    <Banner title="Admin Dashboard" description="Manage your bakery items and orders here" />
+    <div className='flex'>
+    <BakerySidebar />
+      <ProductGrid />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

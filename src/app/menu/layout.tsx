@@ -8,8 +8,7 @@ export default function Admin({
   }>) {
     return (
       <>
-      <Banner title="Admin Dashboard" description="Manage your bakery items and orders here" />
-      <BakerySidebar />
+      
           {children}
       </>
     );

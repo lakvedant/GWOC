@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -15,6 +15,7 @@ interface CategoryProps {
   label: string;
   count: number;
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 const CategoryButton = ({ icon, label, count, isActive }: CategoryProps) => (
@@ -48,8 +49,7 @@ const BakerySidebar = () => {
   ];
 
   return (
-    <div className="w-80 h-screen bg-white border-r border-pink-100 pt-10">
-      
+    <div className="bg-white border-r border-pink-100 pt-10 h-screen w-80 lg:w-64 md:w-56 sm:w-48 xs:w-full"> {/* Responsive width */}
       <ScrollArea className="h-[calc(100vh-7rem)] px-4 py-4">
         <div className="space-y-2">
           {categories.map((category) => (
@@ -57,6 +57,7 @@ const BakerySidebar = () => {
               key={category.label}
               {...category}
               isActive={activeCategory === category.label}
+              onClick={() => setActiveCategory(category.label)} // Make buttons interactive
             />
           ))}
         </div>

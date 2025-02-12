@@ -57,19 +57,19 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
-      id: 1, title: "Product 1", price: 99.99, quantity: 1,
+      id: 1, title: "Product 1", price: 2, quantity: 1,
       name: '',
       image: '',
       variant: ''
     },
     {
-      id: 2, title: "Product 2", price: 149.99, quantity: 2,
+      id: 2, title: "Product 2", price: 1, quantity: 2,
       name: '',
       image: '',
       variant: ''
     },
     {
-      id: 3, title: "Product 3", price: 79.99, quantity: 1,
+      id: 3, title: "Product 3", price: 2, quantity: 1,
       name: '',
       image: '',
       variant: ''

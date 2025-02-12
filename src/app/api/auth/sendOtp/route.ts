@@ -15,7 +15,7 @@ export async function POST(
 		const authToken = await getAuthToken();
 
 		const response = await fetch(
-			`${apiBaseUrl}/verification/v3/send?countryCode=91&flowType=WHATSAPP&mobileNumber=${phone}&otpLength=6`,
+			`${apiBaseUrl}/verification/v3/send?countryCode=91&flowType=SMS&mobileNumber=${phone}&otpLength=6`,
 			{
 				method: "POST",
 				headers: { authToken },
