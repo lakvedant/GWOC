@@ -6,12 +6,12 @@ import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin, FaXTwitter, FaPinterest
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-gray-700 py-8 border-t">
+    <footer className="bg-white text-gray-700 py-8 border-t flex">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Left Section - Logo & Socials */}
         <div>
           <h2 className="text-3xl font-bold text-red-600 flex items-center">
-            bakingo<span className="text-sm">🍒</span>
+            Bindi Cupcakery<span className="text-sm">🍒</span>
           </h2>
           <p className="text-sm mt-2">© 2025</p>
           <p className="mt-3">Show us some love ❤️ & connect with us!</p>
@@ -65,7 +65,7 @@ export default function Footer() {
       <div className="mt-8 text-center">
         <h3 className="font-semibold text-lg">Experience Bakingo App On Mobile</h3>
         <div className="flex justify-center items-center mt-3 space-x-4">
-          <Image src="/qr-code.png" alt="QR Code" width={80} height={80} />
+          <Image src="/qrcodeWhatsapp.png" alt="QR Code" width={80} height={80} />
           <div className="flex flex-col space-y-2">
             <Link href="#"><Image src="/google-play.png" alt="Google Play" width={140} height={40} /></Link>
             <Link href="#"><Image src="/app-store.png" alt="App Store" width={140} height={40} /></Link>

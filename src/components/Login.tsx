@@ -71,31 +71,6 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
   };
 
-  const completeSignup = async () => {
-    setError("");
-    if (!name.trim()) {
-      setError("Please enter your name.");
-      return;
-    }
-
-    const res = await fetch("/api/verify-otp", {
-      method: "POST",
-      body: JSON.stringify({ phone, otp, name, email, gender }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      setStep("success");
-      setTimeout(() => {
-        onClose();
-        window.location.href = "/dashboard";
-      }, 2000);
-    } else {
-      setError("Failed to create account. Try again.");
-    }
-  };
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
       <div className="p-6 bg-white rounded-2xl relative">
@@ -120,8 +95,8 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
             </div>
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
-              className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg transition-opacity duration-300 ${
-                phone.length === 10 ? "bg-red-500 opacity-100" : "bg-red-300 opacity-50 cursor-not-allowed"
+              className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
+                phone.length === 10 ? "bg-red-500" : "bg-red-300 cursor-not-allowed"
               }`}
               onClick={sendOtp}
               disabled={phone.length !== 10}
@@ -145,47 +120,13 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
-              className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg transition-opacity duration-300 ${
-                otp.length === 6 ? "bg-red-500 opacity-100" : "bg-red-300 opacity-50 cursor-not-allowed"
+              className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
+                otp.length === 6 ? "bg-red-500" : "bg-red-300 cursor-not-allowed"
               }`}
               onClick={verifyOtp}
               disabled={otp.length !== 6}
             >
               Verify OTP →
-            </button>
-            <p className="text-center mt-3">
-              Resend OTP in <span className="text-red-500 font-semibold">{timer}s</span>
-            </p>
-          </>
-        )}
-
-        {step === "details" && (
-          <>
-            <h2 className="text-2xl font-semibold text-black text-center">Complete Your Profile</h2>
-            <p className="text-gray-500 text-center mt-2">Enter your details</p>
-            <div className="mt-4">
-              <select className="border border-gray-300 rounded-lg px-4 py-3 w-full" value={gender} onChange={(e) => setGender(e.target.value)}>
-                <option value="Mr">Mr</option>
-                <option value="Ms">Ms</option>
-              </select>
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <input
-                type="email"
-                placeholder="Enter your email (optional)"
-                className="mt-3 w-full border border-gray-300 rounded-lg px-4 py-3 text-black"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            <button className="w-full py-3 mt-4 text-lg font-medium text-white rounded-lg bg-red-500" onClick={completeSignup}>
-              Create Account →
             </button>
           </>
         )}
