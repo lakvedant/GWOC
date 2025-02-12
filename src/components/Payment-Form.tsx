@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { QrCode } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface PaymentFormProps {
@@ -14,22 +13,40 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "upi">("cod");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isBlurred, setIsBlurred] = useState(true);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const upiId = "lakvedant-1@okhdfcbank";
-  
-  const getUPIUrl = () => {
-    const upiUrl = `upi://pay?pa=${upiId}&pn=Merchant&am=${total}&cu=INR`;
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
-  };
 
   useEffect(() => {
     if (paymentMethod === "upi") {
       setIsBlurred(true);
-      const timer = setTimeout(() => {
-        setIsBlurred(false);
-      }, 800); // Reduced time to 800ms
+      const timer = setTimeout(() => setIsBlurred(false), 800);
+      
+      // Fetch QR Code from API
+      const fetchQRCode = async () => {
+        try {
+          const response = await fetch("https://dayschedule.com/api/upi-qr", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              upi_id: upiId,
+              payee_name: "Merchant",
+              amount: total,
+              currency: "INR"
+            })
+          });
+          const data = await response.json();
+          setQrCodeUrl(data.qr_code_url);
+        } catch (error) {
+          console.error("Error fetching QR Code:", error);
+        }
+      };
+
+      fetchQRCode();
       return () => clearTimeout(timer);
     }
-  }, [paymentMethod]);
+  }, [paymentMethod, total]);
 
   const handlePayment = async () => {
     setIsProcessing(true);
@@ -37,7 +54,7 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
       await new Promise(resolve => setTimeout(resolve, 1500));
       onPaymentComplete(paymentMethod);
     } catch (error) {
-      console.error('Payment failed:', error);
+      console.error("Payment failed:", error);
     } finally {
       setIsProcessing(false);
     }
@@ -77,13 +94,15 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
         <div className="border p-4 rounded-lg space-y-4">
           <div className="flex justify-center">
             <div className="relative w-48 h-48">
-              <img
-                src={getUPIUrl()}
-                alt="UPI QR Code"
-                className={`w-full h-full transition-all duration-200 ${
-                  isBlurred ? 'blur-sm scale-102' : 'blur-0 scale-100'
-                }`}
-              />
+              {qrCodeUrl ? (
+                <img
+                  src={qrCodeUrl}
+                  alt="UPI QR Code"
+                  className={`w-full h-full transition-all duration-200 ${isBlurred ? "blur-sm scale-102" : "blur-0 scale-100"}`}
+                />
+              ) : (
+                <p>Loading QR Code...</p>
+              )}
             </div>
           </div>
           <div className="text-center space-y-2">
