@@ -15,35 +15,19 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
   const [isBlurred, setIsBlurred] = useState(true);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const upiId = "lakvedant-1@okhdfcbank";
+  const payeeName = "Merchant";
+  const transactionNote = "Payment for Order";
 
   useEffect(() => {
     if (paymentMethod === "upi") {
       setIsBlurred(true);
       const timer = setTimeout(() => setIsBlurred(false), 800);
       
-      // Fetch QR Code from API
-      const fetchQRCode = async () => {
-        try {
-          const response = await fetch("https://dayschedule.com/api/upi-qr", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              upi_id: upiId,
-              payee_name: "Merchant",
-              amount: total,
-              currency: "INR"
-            })
-          });
-          const data = await response.json();
-          setQrCodeUrl(data.qr_code_url);
-        } catch (error) {
-          console.error("Error fetching QR Code:", error);
-        }
-      };
+      // Generate UPI URL
+      const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${total}&tn=${encodeURIComponent(transactionNote)}&cu=INR`;
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      setQrCodeUrl(qrApiUrl);
 
-      fetchQRCode();
       return () => clearTimeout(timer);
     }
   }, [paymentMethod, total]);
