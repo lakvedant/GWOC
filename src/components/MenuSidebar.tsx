@@ -49,7 +49,7 @@ const BakerySidebar = () => {
   ];
 
   return (
-    <div className="bg-white border-r border-pink-100 pt-10 h-screen w-80 lg:w-64 md:w-56 sm:w-48 xs:w-full"> {/* Responsive width */}
+    <div className="bg-white border-r border-pink-100 pt-2 h-screen w-80 lg:w-64 md:w-56 sm:w-48 xs:w-full"> {/* Responsive width */}
       <ScrollArea className="h-[calc(100vh-7rem)] px-4 py-4">
         <div className="space-y-2">
           {categories.map((category) => (

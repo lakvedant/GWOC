@@ -1,46 +1,73 @@
 import React from 'react';
 
-interface BannerProps {
-  title: string;
-  description: string;
-}
-
-const Banner = ({ title, description }: BannerProps) => {
+const WaveBackground = () => {
   return (
-    <div className="relative bg-pink-50/50 py-14 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Decorative background elements */}
-        <div className="absolute left-10 top-1/2 transform -translate-y-1/2 opacity-10">
-          <div className="w-32 h-32 rounded-full bg-pink-200"></div>
-        </div>
-        <div className="absolute right-10 bottom-0 opacity-10">
-          <div className="w-24 h-24 rounded-full bg-pink-200"></div>
-        </div>
-
-        {/* Content */}
-        <div className="text-center relative z-10">
-          <h1 className="text-4xl font-bold text-pink-800 mb-8">
-            {title}
+    <div className="relative w-full h-64 bg-pink-100">
+      <div className="absolute inset-0">
+        {/* Main background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-pink-200/80 to-pink-100/40" />
+        
+        {/* Soft wave shapes */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-48"
+          style={{
+            background: `
+              radial-gradient(100% 100% at 50% 100%, 
+                rgba(251, 207, 232, 0.4) 0%,
+                rgba(251, 207, 232, 0) 100%
+              )
+            `
+          }}
+        />
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-32"
+          style={{
+            background: `
+              radial-gradient(100% 100% at 50% 100%, 
+                rgba(252, 231, 243, 0.6) 0%,
+                rgba(252, 231, 243, 0) 100%
+              )
+            `
+          }}
+        />
+        
+        {/* Content Section */}
+        <div className="relative z-10 max-w-4xl mx-auto pt-12 px-4 text-center">
+          <h1 className="text-5xl font-serif font-bold tracking-wide text-amber-700 mb-3">
+            CAKES
           </h1>
-
-          {/* Decorative dots */}
-          <div className="flex justify-center mb-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-pink-300"></div>
-              <div className="w-2 h-2 rounded-full bg-pink-400"></div>
-              <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-              <div className="w-2 h-2 rounded-full bg-pink-300"></div>
-            </div>
+          <div className="flex justify-center items-center space-x-2 mb-4">
+            <span className="text-blue-200 text-lg">•</span>
+            <span className="text-blue-200 text-lg">•</span>
+            <span className="text-blue-200 text-lg">•</span>
+            <span className="text-blue-200 text-lg">•</span>
           </div>
-
-          {/* Description */}
-          <p className="max-w-3xl mx-auto text-lg text-pink-700 leading-relaxed">
-            {description}
+          <p className="text-gray-800 text-lg font-light max-w-3xl mx-auto leading-relaxed font-sans">
+            This is where it all began! Our home-style brownies are what made Theobroma the household name it is today. Best enjoyed with a scoop of ice cream and chocolate sauce or devoured as is.
           </p>
         </div>
+
+        {/* Curved wave paths */}
+        <svg
+          className="absolute bottom-0 left-0 w-full h-32"
+          viewBox="0 0 1440 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 120V40C240 80 480 100 720 100C960 100 1200 80 1440 40V120H0Z"
+            fill="#FDF2F8"
+            fillOpacity="0.4"
+          />
+          <path
+            d="M0 120V60C240 90 480 105 720 105C960 105 1200 90 1440 60V120H0Z"
+            fill="#FCE7F3"
+            fillOpacity="0.6"
+          />
+        </svg>
       </div>
     </div>
   );
 };
 
-export default Banner;
+export default WaveBackground;

@@ -5,8 +5,8 @@ import React from 'react';
 
 const Page = () => {
   return (
-    <div >
-    <Banner title="Admin Dashboard" description="Manage your bakery items and orders here" />
+    <div className='' >
+    <Banner />
     <div className='flex'>
     <BakerySidebar />
       <ProductGrid />
