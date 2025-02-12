@@ -5,6 +5,7 @@ import CuriousSection from '@/components/ui/front2'
 import CupcakeShowcase from '@/components/ui/hero-section'
 import WhatsAppChat from '@/components/WAIcon'
 import React from 'react'
+import HeroSection from '../components/front'
 
 const page = () => {
   return (

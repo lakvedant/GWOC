@@ -1,7 +1,5 @@
 import Image from "next/image";
 import type { CartItem } from "@/types/checkout";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
 
 interface CartSummaryProps {
   items: CartItem[];
@@ -39,30 +37,30 @@ export function CartSummary({ items, subtotal, discount = 0, shipping = 0 }: Car
               <h3 className="font-medium">{item.title}</h3>
               <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
             </div>
-            <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+            <p className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</p>
           </div>
         ))}
       </div>
       <div className="space-y-4 text-sm">
         <div className="flex justify-between">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>₹{subtotal.toFixed(2)}</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-green-600">
             <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-            <span>-${discountAmount.toFixed(2)}</span>
+            <span>-₹{discountAmount.toFixed(2)}</span>
           </div>
         )}
         <div className="flex justify-between">
           <span>Shipping</span>
-          <span>${shipping.toFixed(2)}</span>
+          <span>₹{shipping.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-medium text-base">
           <span>Total</span>
           <span className="flex items-center">
             <span className="text-sm text-muted-foreground mr-1">USD</span>
-            <span>${total.toFixed(2)}</span>
+            <span>₹{total.toFixed(2)}</span>
           </span>
         </div>
       </div>
