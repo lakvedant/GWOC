@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 interface IReview extends Document {
-	customerName: string;
+	userid: string;
 	rating: number;
 	comment: string;
 	approved: boolean;
 }
 
 const ReviewSchema = new Schema<IReview>({
-	customerName: { type: String, required: true },
+	userid: { type: String, required: true },
 	rating: { type: Number, required: true, min: 1, max: 5 },
 	comment: { type: String, required: true },
 	approved: { type: Boolean, default: false },

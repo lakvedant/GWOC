@@ -8,7 +8,6 @@ export interface CartItem {
   image: string
   variant: string
   quantity: number
-  title: string
 }
 
 export interface ShippingAddress {

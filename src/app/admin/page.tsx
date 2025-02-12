@@ -1,42 +1,64 @@
-"use client";
+import { DashboardStats } from "@/components/Admin/DashboardStats";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { unstable_noStore as noStore } from "next/cache";
 
-import ImageFeed from "@/components/Admin/ProductFeed";
-import ImageUploadForm from "@/components/Admin/ProductUploadForm";
-import { IProduct } from "@/models/Product";
-import { useEffect, useState } from "react";
+// async function getData() {
+//   const now = new Date();
+//   const sevenDaysAgo = new Date();
+//   sevenDaysAgo.setDate(now.getDate() - 7);
 
+//   const data = await prisma.order.findMany({
+//     where: {
+//       createdAt: {
+//         gte: sevenDaysAgo,
+//       },
+//     },
+//     select: {
+//       amount: true,
+//       createdAt: true,
+//     },
+//     orderBy: {
+//       createdAt: "asc",
+//     },
+//   }
+// );
 
-export default function Page() {
-    const [products, setProducts] = useState<IProduct[]>([]);
+//   const result = data.map((item) => ({
+//     date: new Intl.DateTimeFormat("en-US").format(item.createdAt),
+//     revenue: item.amount / 100,
+//   }));
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const data = await fetch("/api/products", 
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).then((res) => res.json()
-        );
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
+//   return result;
+// }
 
-    fetchImages();
-  }, []);
+export default async function Dashboard() {
+  noStore();
+  // const data = await getData();
   return (
     <>
-    <ImageFeed products={products} />
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Upload New Product</h1>
-        <ImageUploadForm />
-      </div>
-    </div>
+      <DashboardStats />
+
+      {/* <div className="grid gap-4 md:gp-8 lg:grid-cols-2 xl:grid-cols-3 mt-10">
+        <Card className="xl:col-span-2">
+          <CardHeader>
+            <CardTitle>Transactions</CardTitle>
+            <CardDescription>
+              Recent transactions from the last 7 days
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Chart data={data} />
+          </CardContent>
+        </Card>
+
+        <RecentSales /> */}
+      {/* </div> */}
     </>
   );
 }
