@@ -7,17 +7,23 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CupcakeShowcase from "@/components/ui/hero-section";
 import ReviewPage from "@/components/Admin/ReviewPage";
+import HomePage from "@/components/PhotoCarousel";
+import ProfilePage from "@/components/ui/ProfilePage";
 
 const page = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar />
       <HeroSection />
       <CuriousSection />
+	  <HomePage />
       <CupcakeShowcase />
       <WhatsAppChat />
-      <FeaturesSection />
-      <ReviewPage />
+      <FeaturesSection /> */}
+      {/* <ReviewPage />
+      <Footer />
+      <HomePage /> */}
+      <ProfilePage />
     </div>
   )
 }
