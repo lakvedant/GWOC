@@ -20,7 +20,6 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
         register,
         handleSubmit,
         setValue,
-        watch,
         formState: { errors },
     } = useForm<IProduct>({
         defaultValues: {

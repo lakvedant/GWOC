@@ -12,13 +12,18 @@ export interface IProduct extends Document {
 	review?: Schema.Types.ObjectId[];
 	weight?: number;
 	createdAt: Date;
-}
+};
 
+export type ProductData = Omit<IProduct, keyof Document> & {
+	_id: string;
+  };
+  
 const ProductSchema = new Schema<IProduct>({
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	price: { type: Number, required: true },
 	category: { type: String, required: true },
+
 	image: { type: String, required: true },
 	available: { type: Boolean, default: true },
 }, { timestamps: true });
