@@ -47,15 +47,15 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
         </div>
         <div className="p-4 pb-1 space-y-3 bg-white">
           <div className="flex justify-between items-start">
-            <h2 className="text-xl font-semibold text-gray-800 line-clamp-1">
+            <h2 className="text-lg font-medium text-gray-800 line-clamp-1">
               {product.name}
             </h2>
           </div>
           
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-1">
-              <span className="text-xl font-bold text-gray-900">₹</span>
-              <span className="text-xl font-bold text-gray-900">{discountedPrice}</span>
+              <span className="text-xl font-semibold text-gray-900">₹</span>
+              <span className="text-xl font-semibold text-gray-900">{discountedPrice}</span>
             </div>
             <Button
               className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-1.5 rounded-full text-sm font-medium"

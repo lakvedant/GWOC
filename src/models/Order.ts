@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IOrder extends Document {
-	_id: Schema.Types.ObjectId;
 	userId: Schema.Types.ObjectId;
+	address: Schema.Types.ObjectId;
 	phone: string;
 	products: { productId: mongoose.Types.ObjectId; quantity: number }[];
 	amount: number;
@@ -13,6 +13,7 @@ export interface IOrder extends Document {
 
 const OrderSchema = new Schema<IOrder>({
 	userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+	address: { type: Schema.Types.ObjectId, ref: "Address", required: true },
 	phone: { type: String, required: true },
 	products: [
 		{
