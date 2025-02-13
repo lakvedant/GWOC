@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -15,6 +15,17 @@ export const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem("cartData") || "[]");
+    setCartItems(savedCart);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cartData", JSON.stringify(cartItems));
+  }, [cartItems]);
+
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -93,7 +104,7 @@ export const Navbar = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-96">
                 <SheetTitle>Your Cart</SheetTitle>
-                <CartSlider onClose={() => setIsCartOpen(false)} />
+                <CartSlider  />
               </SheetContent>
             </Sheet>
           </div>

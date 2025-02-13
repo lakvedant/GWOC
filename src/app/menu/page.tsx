@@ -6,15 +6,28 @@ import BakerySidebar from "@/components/MenuSidebar";
 import Navbar from "@/components/Navbar";
 
 const Page = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Cakes");
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Banner />
-      <div className="flex">
-        <BakerySidebar />
-        <ProductGrid selectedCategory={selectedCategory} />
+      <div className="flex-1 flex flex-col">
+        {/* Banner section */}
+        <Banner 
+          title={selectedCategory.toUpperCase()}
+          description="Discover our delicious selection of treats"
+        />
+        
+        {/* Content section with sidebar and product grid */}
+        <div className="flex flex-1">
+          <BakerySidebar 
+            activeCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+          <div className="flex-1">
+            <ProductGrid selectedCategory={selectedCategory} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import CupcakeShowcase from "@/components/ui/hero-section";
 const page = () => {
   return (
     <div>
+      <Navbar />
       <HeroSection />
       <CuriousSection />
       <CupcakeShowcase />

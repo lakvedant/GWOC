@@ -1,13 +1,13 @@
 // types/checkout.ts
 
 export interface CartItem {
-  title: string
-  id: number
-  name: string
-  price: number
-  image: string
-  variant: string
-  quantity: number
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  variant: string;
+  message?: string;
 }
 
 export interface ShippingAddress {

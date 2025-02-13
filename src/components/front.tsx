@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HeroSection() {
     return (
-        <div className="relative w-full h-screen bg-[#002B0F] flex flex-col items-center justify-center text-center px-4">
+        <div className="relative w-full h-screen bg-[#002B0F]  flex flex-col items-center justify-center text-center px-4">
             <div className="relative">
                 <h1 className="text-white font-extrabold text-6xl sm:text-7xl md:text-8xl leading-tight uppercase -mb-24">
                     Explore Our
