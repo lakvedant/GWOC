@@ -6,6 +6,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CupcakeShowcase from "@/components/ui/hero-section";
+import ReviewPage from "@/components/Admin/ReviewPage";
 
 const page = () => {
   return (
@@ -16,6 +17,7 @@ const page = () => {
       <CupcakeShowcase />
       <WhatsAppChat />
       <FeaturesSection />
+      <ReviewPage />
     </div>
   )
 }
