@@ -25,6 +25,7 @@
     "@tanstack/react-table": "^8.20.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.5.2",
     "framer-motion": "^12.4.2",
     "imagekit": "^6.0.0",
     "imagekitio-next": "^1.0.1",

@@ -11,12 +11,12 @@ import ReviewPage from "@/components/Admin/ReviewPage";
 const page = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar />
       <HeroSection />
       <CuriousSection />
       <CupcakeShowcase />
       <WhatsAppChat />
-      <FeaturesSection />
+      <FeaturesSection /> */}
       <ReviewPage />
     </div>
   )
