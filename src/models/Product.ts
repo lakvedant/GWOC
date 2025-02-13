@@ -9,7 +9,7 @@ export interface IProduct extends Document {
 	image: string; // URL of the product image
 	available: boolean;
 	valueForOffer?: number;
-	review?: Schema.Types.ObjectId[];
+	review?: { rating: number; reviewId: Schema.Types.ObjectId }[];
 	weight?: number;
 	createdAt: Date;
 };

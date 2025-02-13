@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { CheckoutNav } from "@/components/Checkout-nav"
-import { ContactForm } from "@/components/Contact-form"
-import { ShippingForm } from "@/components/Shipping-form"
-import { CartSummary } from "@/components/Cart-Summary"
-import { DeliveryOptionForm } from "@/components/Delivery-option"
-import { PaymentForm } from "@/components/Payment-Form"
-import { useRouter } from "next/navigation"
-import type { CheckoutState, CartItem } from "../../types/checkout"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { CheckoutNav } from "@/components/Checkout-nav";
+import { ContactForm } from "@/components/Contact-form";
+import { ShippingForm } from "@/components/Shipping-form";
+import { CartSummary } from "@/components/Cart-Summary";
+import { DeliveryOptionForm } from "@/components/Delivery-option";
+import { PaymentForm } from "@/components/Payment-Form";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/components/CartProvider";
+import type { CheckoutState, ShippingAddress } from "@/types/checkout";
 
 const initialState: CheckoutState = {
   email: "",
@@ -22,72 +23,53 @@ const initialState: CheckoutState = {
     city: "",
     state: "",
     zipCode: "",
-    country: "US",
+    country: "India",
   },
   saveInformation: false,
-}
-
-interface StoredCartData {
-  items: CartItem[];
-  subtotal: number;
-  discount: number;
-  total: number;
-}
+};
 
 export default function CheckoutPage() {
-  const router = useRouter()
-  const [state, setState] = useState<CheckoutState>(initialState)
-  const [phone, setPhone] = useState("")
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [email, setEmail] = useState("")
-  const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information")
-  const [deliveryMethod, setDeliveryMethod] = useState("")
-  const [shipping, setShipping] = useState(0)
-  const [discount, setDiscount] = useState(0)
+  const router = useRouter();
+  const { cartItems, subtotal, discount } = useCart();
+  const [state, setState] = useState<CheckoutState>(initialState);
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information");
+  const [deliveryMethod, setDeliveryMethod] = useState("");
+  const [shipping, setShipping] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load cart data when component mounts
   useEffect(() => {
-    const loadCartData = () => {
-      const storedData = localStorage.getItem('cartData')
-      if (storedData) {
-        try {
-          const parsedData: StoredCartData = JSON.parse(storedData)
-          setCartItems(parsedData.items)
-          setDiscount(parsedData.discount)
-        } catch (error) {
-          console.error('Failed to parse cart data:', error)
-          router.push('/cart') // Redirect to cart if data is invalid
-        }
-      } else {
-        router.push('/cart') // Redirect to cart if no data exists
-      }
+    setIsLoading(false);
+    if (!cartItems || cartItems.length === 0) {
+      router.push('/cart');
     }
+  }, [cartItems, router]);
 
-    loadCartData()
-  }, [router])
-
-  const handleAddressChange = (field: keyof typeof state.shippingAddress, value: string) => {
-    setState((prev) => ({ ...prev, shippingAddress: { ...prev.shippingAddress, [field]: value } }))
-  }
+  const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
+    setState(prevState => ({
+      ...prevState,
+      shippingAddress: {
+        ...prevState.shippingAddress,
+        [field]: value
+      }
+    }));
+  };
 
   const handleSaveInfoChange = (saveInformation: boolean) => {
-    setState((prev) => ({ ...prev, saveInformation }))
-  }
-
-  const handleSubscribeChange = (subscribeToNews: boolean) => {
-    setState((prev) => ({ ...prev, subscribeToNews }))
-  }
+    setState((prev) => ({ ...prev, saveInformation }));
+  };
 
   const handleInformationSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setStep("delivery")
-  }
+    e.preventDefault();
+    setStep("delivery");
+  };
 
   const handleDeliveryProceed = (method: string) => {
-    setDeliveryMethod(method)
-    setShipping(method === "express" ? 10 : 5)
-    setStep("payment")
-  }
+    setDeliveryMethod(method);
+    setShipping(method === "express" ? 10 : 5);
+    setStep("payment");
+  };
 
   const handlePaymentComplete = async (paymentMethod: string) => {
     try {
@@ -96,7 +78,7 @@ export default function CheckoutPage() {
         subtotal,
         shipping,
         discount,
-        total: total + shipping,
+        total: subtotal * (1 - discount) + shipping,
         paymentMethod,
         deliveryMethod,
         contact: {
@@ -104,29 +86,31 @@ export default function CheckoutPage() {
           phone,
         },
         shippingAddress: state.shippingAddress,
-      }
+      };
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Clear cart data after successful order
-      localStorage.removeItem('cartData')
+      localStorage.removeItem('cartData');
       
       // Redirect to success page
-      router.push('/checkout/success')
+      router.push('/checkout/success');
     } catch (error) {
-      console.error('Failed to create order:', error)
+      console.error('Failed to create order:', error);
     }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white text-black px-4 md:px-40 flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
-  // Calculate totals based on cart items state
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const discountAmount = subtotal * discount
-  const total = subtotal - discountAmount
-  
-  // If no items in cart, redirect to cart page
-  if (cartItems.length === 0) {
-    return null // Return null while redirecting
+  if (!cartItems || cartItems.length === 0) {
+    return null;
   }
 
   return (
@@ -143,10 +127,10 @@ export default function CheckoutPage() {
                   onPhoneChange={setPhone}
                 />
                 <ShippingForm
-                  address={state.shippingAddress}
-                  saveInformation={state.saveInformation}
-                  onAddressChange={handleAddressChange}
-                  onSaveInfoChange={handleSaveInfoChange}
+                 address={state.shippingAddress}
+                 saveInformation={state.saveInformation}
+                 onAddressChange={handleAddressChange}
+                 onSaveInfoChange={handleSaveInfoChange}
                 />
                 <Button type="submit" size="lg" className="w-full md:w-auto">
                   Continue to Delivery Options
@@ -159,7 +143,7 @@ export default function CheckoutPage() {
             ) : (
               <div className="mt-6">
                 <PaymentForm 
-                  total={total + shipping}
+                  total={subtotal * (1 - discount) + shipping}
                   onPaymentComplete={handlePaymentComplete}
                 />
               </div>
@@ -168,14 +152,14 @@ export default function CheckoutPage() {
 
           <div className="lg:pl-8 lg:border-l border-border">
             <CartSummary 
-              items={cartItems} 
+              items={cartItems}
               subtotal={subtotal}
               shipping={shipping}
-              discount={discountAmount}
+              discount={discount}
             />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
