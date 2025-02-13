@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import CupcakeShowcase from "@/components/ui/hero-section";
 import ReviewPage from "@/components/Admin/ReviewPage";
 import HomePage from "@/components/PhotoCarousel";
+import ProfilePage from "@/components/ui/ProfilePage";
 
 const page = () => {
   return (
@@ -19,8 +20,10 @@ const page = () => {
       <CupcakeShowcase />
       <WhatsAppChat />
       <FeaturesSection /> */}
-      <ReviewPage />
-	  <Footer />
+      {/* <ReviewPage />
+      <Footer />
+      <HomePage /> */}
+      <ProfilePage />
     </div>
   )
 }
