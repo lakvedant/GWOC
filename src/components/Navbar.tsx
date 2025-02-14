@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -39,9 +39,8 @@ export const Navbar = () => {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/menu", label: "Menu" },
-    { href: "/reviews", label: "Reviews" },
-    { href: "/about", label: "About Us" },
+    { href: "/about", label: "About" },
+    { href: "/services", label: "Services" },
     { href: "/contact", label: "Contact" },
   ];
 
@@ -50,8 +49,8 @@ export const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed w-full top-0 z-50 transition-all duration-300 font-playfair ${scrolled
-        ? 'bg-rose-50/80 backdrop-blur-lg shadow-lg'
-        : 'bg-rose-50'
+          ? 'bg-rose-50/80 backdrop-blur-lg shadow-lg'
+          : 'bg-rose-50'
         }`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -118,7 +117,6 @@ export const Navbar = () => {
               </Button>
             </motion.div>
 
-            {/* Cart Button */}
             <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
               <SheetTrigger asChild>
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
