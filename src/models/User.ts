@@ -4,7 +4,7 @@ interface IUser extends Document {
   phone: string;
   name: string;
   dob?: string;
-  email?: string;
+  email: string;
   gender?: "Male" | "Female" | "Other";
 }
 

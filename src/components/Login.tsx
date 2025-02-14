@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@mui/material";
 import { IoClose } from "react-icons/io5";
+import { FaEnvelope } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 export default function LoginSignupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [verificationId, setVerificationId] = useState("");
-  const [step, setStep] = useState<"phone" | "otp" | "success">("phone");
+  const [step, setStep] = useState<"phone" | "otp" | "form" | "success">("phone");
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(30);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [salutation, setSalutation] = useState("Mr");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -17,6 +23,42 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
     return () => clearInterval(interval);
   }, [step, timer]);
+
+
+
+  const handleCreateUser = async () => {
+    setLoading(true);
+    setError("");
+  
+    try {
+      const res = await fetch("/api/loginnew", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, name, email }),
+        credentials: 'include' // Important for cookies
+      });
+  
+      const response = await res.json();
+  
+      if (res.ok) {
+        setStep("success");
+        
+        // Redirect after a short delay
+        setTimeout(() => {
+          window.location.href = "/menu";
+        }, 2000);
+      } else {
+        setError(response.message || "Failed to create account.");
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+      setError("Server error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
 
   const sendOtp = async () => {
     setError("");
@@ -48,34 +90,45 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
 
   const verifyOtp = async () => {
     setError("");
-    if (otp.length !== 6) {
+  
+    if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
-
+  
     try {
       const res = await fetch("/api/auth/verifyOtp", {
         method: "POST",
-        body: JSON.stringify({ verificationId, otp }),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ verificationId, otp, phone }),
+        credentials: 'include' // Important for cookies
       });
-
+  
       const response = await res.json();
-      
-      if (res.ok) {
+  
+      if (!res.ok) {
+        setError(response.message || "Invalid OTP. Please try again.");
+        return;
+      }
+  
+      if (response.exists) {
         setStep("success");
+        
+        // Redirect after successful login
         setTimeout(() => {
           onClose();
-          window.location.href = "/dashboard";
+          window.location.href = "/menu";
         }, 2000);
       } else {
-        setError(response.message || "Invalid OTP. Please try again.");
+        setStep("form"); // Show form for new users
       }
+  
     } catch (error) {
-      setError("Failed to verify OTP. Please try again.");
+      console.error("OTP Verification Error:", error);
+      setError("Something went wrong. Please try again.");
     }
   };
-
+  
   return (
     <Dialog 
       open={open} 
@@ -175,6 +228,59 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
             )}
           </>
         )}
+
+        {step === "form" && (
+
+        <div className="p-6 bg-white rounded-2xl relative">
+        <button className="absolute top-4 right-4 text-gray-500 hover:text-pink-600" onClick={onClose}>
+          <IoClose size={24} />
+        </button>
+
+        <h2 className="text-2xl font-semibold text-pink-600 flex items-center gap-2">
+          Hello! 👋
+        </h2>
+        <p className="text-gray-500 mt-1">
+          Please enter your details <span className="text-pink-500 cursor-pointer">(Edit)</span>
+        </p>
+
+        <div className="mt-4">
+          <div className="bg-gray-100 px-4 py-3 rounded-lg text-gray-600">
+            +91 - {phone}
+          </div>
+        </div>
+
+        <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">  
+          <input
+            type="text"
+            placeholder="Your name"
+            className="w-full outline-none bg-transparent text-black placeholder-gray-400"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">
+          <FaEnvelope className="text-gray-500" />
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="ml-3 w-full outline-none bg-transparent text-black placeholder-gray-400"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <button
+          className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
+            name && email ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-300 cursor-not-allowed"
+          }`}
+          disabled={!name || !email}
+          onClick={handleCreateUser}
+        >
+          Create Account
+        </button>
+      </div>
+      )}
 
         {step === "success" && (
           <div className="text-center py-6">

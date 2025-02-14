@@ -1,43 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/db";
-import User from "@/models/User";
+import { NextResponse } from "next/server";
+import User from "@/models/User"; // Ensure correct import for the User model
+import dbConnect from "@/lib/db"; // Ensure DB connection
 
-export async function POST(request: NextRequest) {
-	try {
-		const { phone, name } = await request.json();
+// ✅ Handle POST request to check if the user exists
+export async function POST(req: Request) {
+  try {
+    await dbConnect(); // Ensure database connection
 
-		if (!phone || !name) {
-			return NextResponse.json(
-				{ error: "phone and name are required" },
-				{ status: 400 }
-			);
-		}
+    const { phone } = await req.json(); // Extract phone from request
 
-		await connectDB();
+    if (!phone) {
+      return NextResponse.json({ message: "Phone number is required." }, { status: 400 });
+    }
 
-		// Check if user already exists
-		const existingUser = await User.findOne({ phone });
-		if (existingUser) {
-			return NextResponse.json(
-				{ error: "phone already registered" },
-				{ status: 400 }
-			);
-		}
+    const user = await User.findOne({ phone });
 
-		await User.create({
-			phone,
-			name,
-		});
-
-		return NextResponse.json(
-			{ message: "User registered successfully" },
-			{ status: 201 }
-		);
-	} catch (error) {
-		console.error("Registration error:", error);
-		return NextResponse.json(
-			{ error: "Failed to register user" },
-			{ status: 500 }
-		);
-	}
+    return NextResponse.json({ exists: !!user }, { status: 200 });
+  } catch (error) {
+    console.error("Error checking user:", error);
+    return NextResponse.json({ message: "Server error." }, { status: 500 });
+  }
 }

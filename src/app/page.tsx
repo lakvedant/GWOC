@@ -18,24 +18,17 @@ import ValentineCountdown from "@/components/ui/valentine";
 const page = () => {
   return (
     <div>
-      {/* <Navbar />
+      <Navbar />
+      <HeroSection />
       <CuriousSection />
-	  <HomePage />
+      <HomePage />
       <CupcakeShowcase />
       <WhatsAppChat />
-      <FeaturesSection /> */}
-      {/* <ReviewPage />
+      <FeaturesSection />
+      {/* <ReviewPage /> */}
       <Footer />
-      <HomePage /> */}
+      <HomePage />
       <ProfilePage />
-      <HeroSection />
-
-      {/* <CuriousHero /> */}
-      {/* <CakeWheelHero /> */}
-      <CakeShowcase />
-      <CreativeCakeHero />
-      <ValentineCountdown />
-
     </div>
   )
 }

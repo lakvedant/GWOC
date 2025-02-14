@@ -13,7 +13,7 @@ const CakeWheelHero = () => {
     useEffect(() => {
         setIsVisible(true);
 
-        const handleScroll = (event: WheelEvent) => {
+        const handleScroll = (event: { deltaY: any; }) => {
             const scrollAmount = event.deltaY;
             setRotation(prev => prev - (scrollAmount * 0.2));
         };
