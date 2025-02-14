@@ -1,45 +1,54 @@
-import connectDB from "@/lib/db";
-import Order, { IOrder } from "@/models/Order";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import Order from '@/models/Order';
 
-export async function GET() {
-    try {
-        await connectDB();
+export async function POST(req: Request) {
+  try {
+    await dbConnect();
 
-        const orders = await Order.find({}).sort({
-            createdAt: -1,
-        }).lean();
+    const body = await req.json();
 
-        if (!orders || orders.length === 0) {
-            return NextResponse.json([], {status: 200})
-        }
-
-        return NextResponse.json(orders, {status: 200})
-    } catch (error) {
-        return NextResponse.json({error: "Failed to fetch products"}, {status: 500})
+    // Validate required fields
+    const requiredFields = ['userId', 'address', 'phone', 'products', 'amount', 'deliveryType', 'paymentType'];
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        return NextResponse.json({
+          success: false,
+          message: `Missing required field: ${field}`
+        }, { status: 400 });
+      }
     }
-}
 
-export async function POST(req: NextRequest) {
-    try {
-        await connectDB();
+    // Get the latest order number
+    const latestOrder = await Order.findOne().sort({ orderID: -1 });
+    const nextOrderID = latestOrder ? latestOrder.orderID + 1 : 201;
 
-        const body:IOrder = await req.json();
+    // Create new order with all fields
+    const order = new Order({
+      orderID: nextOrderID,
+      userId: body.userId,
+      address: body.address,
+      phone: body.phone,
+      products: body.products,
+      amount: parseFloat(body.amount),
+      deliveryType: body.deliveryType,
+      paymentType: body.paymentType,
+      orderStatus: 'Accepted',
+      orderDate: new Date(),
+      lastUpdateDate: new Date()
+    });
 
-        if (!body.userId || !body.address || !body.phone || !body.products || !body.amount || !body.deliveryType || !body.paymentType || !body.orderStatus) {
-            return NextResponse.json(
-                {error: "Missing required fields"},
-                {status: 400}
-            )
-        }
+    await order.save();
 
-        const orderData = {
-            ...body,
-        }
-
-        const newOrder = await Order.create(orderData);
-        return NextResponse.json(newOrder, {status: 201})
-    } catch (error) {
-        return NextResponse.json({error: "Failed to add product"}, {status: 500})
-    }
+    return NextResponse.json({
+      success: true,
+      order
+    }, { status: 201 });
+  } catch (error) {
+    console.error('Order creation error:', error);
+    return NextResponse.json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Error creating order'
+    }, { status: 500 });
+  }
 }

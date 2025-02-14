@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Check, Copy, RefreshCw } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 const LocalStorageToken = () => {
   const [token, setToken] = useState('');
@@ -51,6 +52,8 @@ const LocalStorageToken = () => {
   }, []);
 
   return (
+    <>
+    <Navbar />
     <div className="max-w-2xl mx-auto p-6 space-y-4">
       <div className="flex gap-2">
         <button
@@ -104,6 +107,7 @@ const LocalStorageToken = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

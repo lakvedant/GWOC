@@ -11,6 +11,7 @@ import { PaymentForm } from "@/components/Payment-Form";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartProvider";
 import type { CheckoutState, ShippingAddress } from "@/types/checkout";
+import LoginSignupModal from "@/components/Login";
 
 const initialState: CheckoutState = {
   email: "",
@@ -30,10 +31,9 @@ const initialState: CheckoutState = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, subtotal, discount } = useCart();
+  const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information");
   const [deliveryMethod, setDeliveryMethod] = useState("");
   const [shipping, setShipping] = useState(0);
@@ -42,9 +42,28 @@ export default function CheckoutPage() {
   useEffect(() => {
     setIsLoading(false);
     if (!cartItems || cartItems.length === 0) {
-      router.push('/cart');
+      router.push('/checkout');
+      return;
     }
-  }, [cartItems, router]);
+
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true);
+    }
+  }, [cartItems, router, isAuthenticated]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setState(prev => ({
+        ...prev,
+        email: userInfo.email || "",
+        shippingAddress: {
+          ...prev.shippingAddress,
+          firstName: userInfo.name.split(' ')[0] || "",
+          lastName: userInfo.name.split(' ').slice(1).join(' ') || "",
+        }
+      }));
+    }
+  }, [userInfo]);
 
   const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
     setState(prevState => ({
@@ -73,28 +92,43 @@ export default function CheckoutPage() {
 
   const handlePaymentComplete = async (paymentMethod: string) => {
     try {
-      const orderData = {
-        items: cartItems,
-        subtotal,
-        shipping,
-        discount,
-        total: subtotal * (1 - discount) + shipping,
-        paymentMethod,
-        deliveryMethod,
-        contact: {
-          email,
-          phone,
-        },
-        shippingAddress: state.shippingAddress,
+      const addressData = {
+        address: state.shippingAddress.address,
+        apartment: state.shippingAddress.apartment,
+        city: state.shippingAddress.city,
+        state: state.shippingAddress.state,
+        zipCode: state.shippingAddress.zipCode,
       };
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Clear cart data after successful order
-      localStorage.removeItem('cartData');
-      
-      // Redirect to success page
+  
+      const orderData = {
+        userId: userInfo?.userId,
+        address: addressData,
+        phone: userInfo?.phone,
+        products: cartItems.map(item => ({
+          productId: item.id,
+          quantity: item.quantity
+        })),
+        amount: subtotal * (1 - discount) + shipping,
+        deliveryType: deliveryMethod,
+        paymentType: paymentMethod.toUpperCase() === 'COD' ? 'COD' : 'UPI',
+        orderStatus: 'Accepted'
+      };
+  
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create order');
+      }
+  
+      clearCart();
       router.push('/checkout/success');
     } catch (error) {
       console.error('Failed to create order:', error);
@@ -123,14 +157,14 @@ export default function CheckoutPage() {
             {step === "information" ? (
               <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
                 <ContactForm 
-                  phone={phone}
-                  onPhoneChange={setPhone}
+                  phone={userInfo?.phone || ""}
+                  onPhoneChange={() => {}} // Phone is managed by userInfo now
                 />
                 <ShippingForm
-                 address={state.shippingAddress}
-                 saveInformation={state.saveInformation}
-                 onAddressChange={handleAddressChange}
-                 onSaveInfoChange={handleSaveInfoChange}
+                  address={state.shippingAddress}
+                  saveInformation={state.saveInformation}
+                  onAddressChange={handleAddressChange}
+                  onSaveInfoChange={handleSaveInfoChange}
                 />
                 <Button type="submit" size="lg" className="w-full md:w-auto">
                   Continue to Delivery Options
@@ -160,6 +194,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

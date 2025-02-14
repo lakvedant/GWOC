@@ -49,7 +49,7 @@ const SliderController: React.FC<SliderControllerProps> = ({
 	</div>
 );
 
-const ImageSlider: React.FC = () => {
+const PhotoCarousel: React.FC = () => {
 	const [swiperRef, setSwiperRef] = React.useState<SwiperType | null>(null);
 	const prevRef = React.useRef<HTMLDivElement>(null);
 	const nextRef = React.useRef<HTMLDivElement>(null);
@@ -153,4 +153,4 @@ const ImageSlider: React.FC = () => {
 	);
 };
 
-export default ImageSlider;
+export default PhotoCarousel;

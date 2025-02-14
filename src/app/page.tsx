@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CupcakeShowcase from "@/components/ui/hero-section";
 import ReviewPage from "@/components/Admin/ReviewPage";
+import PhotoCarousel from "@/components/PhotoCarousel";
 import HomePage from "@/components/PhotoCarousel";
 import ProfilePage from "@/components/ui/ProfilePage";
 import CreativeCakeHero from "@/components/ui/cakehero";
@@ -21,10 +22,11 @@ const page = () => {
   return (
     <div>
       <Navbar />
+      <ValentineCountdown />
       <HeroSection />
       <CuriousSection />
-      <ImageSlider />
-      <CupcakeShowcase />
+      <PhotoCarousel />
+      {/* <CupcakeShowcase /> */}
       <WhatsAppChat />
       <FeaturesSection />
       {/* <ReviewPage /> */}
