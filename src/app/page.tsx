@@ -15,6 +15,7 @@ import CakeWheelHero from "@/components/ui/front2";
 import CakeShowcase from "@/components/ui/front2";
 import ValentineCountdown from "@/components/ui/valentine";
 import ImageSlider from "@/components/PhotoCarousel";
+import AboutUs from "@/components/ui/aboutus";
 
 const page = () => {
   return (
@@ -30,6 +31,7 @@ const page = () => {
       <Footer />
       <HomePage />
       <ProfilePage />
+      <AboutUs />
     </div>
   )
 }
