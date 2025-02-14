@@ -1,44 +1,32 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { ChevronDown, Star, Clock, Cake, Check } from "lucide-react";
+import { ChevronDown, Star, Clock, Cake, Check, Heart, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const CakeWheelHero = () => {
     const [rotation, setRotation] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 300], [0, -100]);
 
     useEffect(() => {
         setIsVisible(true);
 
-        const handleScroll = (event) => {
+        const handleScroll = (event: WheelEvent) => {
             const scrollAmount = event.deltaY;
-            setRotation(prev => prev - (scrollAmount * 0.5));
+            setRotation(prev => prev - (scrollAmount * 0.2));
         };
 
         window.addEventListener("wheel", handleScroll);
-
-        return () => {
-            window.removeEventListener("wheel", handleScroll);
-        };
+        return () => window.removeEventListener("wheel", handleScroll);
     }, []);
 
     const cakeFeatures = [
-        {
-            title: "Velvety Chocolate Glaze 🍫",
-            description: "Rich Belgian chocolate coating that melts in your mouth"
-        },
-        {
-            title: "Fresh Berry Medley 🍓",
-            description: "Hand-picked strawberries, juicy cherries, and plump blueberries"
-        },
-        {
-            title: "Luxurious Layers 🎂",
-            description: "Multiple layers of moist chocolate sponge and cream"
-        },
-        {
-            title: "Premium Ingredients ✨",
-            description: "Made with finest Madagascar vanilla and Dutch cocoa"
-        }
+        { title: "Velvety Chocolate Glaze 🍫", description: "Rich Belgian chocolate coating that melts in your mouth" },
+        { title: "Fresh Berry Medley 🍓", description: "Hand-picked strawberries, juicy cherries, and plump blueberries" },
+        { title: "Luxurious Layers 🎂", description: "Multiple layers of moist chocolate sponge and cream" },
+        { title: "Premium Ingredients ✨", description: "Made with finest Madagascar vanilla and Dutch cocoa" }
     ];
 
     const servingDetails = [
@@ -50,139 +38,142 @@ const CakeWheelHero = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-rose-50 to-pink-50 relative overflow-hidden">
-            <div className="absolute inset-0">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-            </div>
+            <motion.div style={{ y }} className="absolute inset-0">
+                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-pink-100 rounded-full mix-blend-multiply filter blur-[150px] opacity-30 animate-float"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-rose-100 rounded-full mix-blend-multiply filter blur-[150px] opacity-30 animate-float-delayed"></div>
+            </motion.div>
 
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
-                    <div className="relative">
-                        <div
-                            className={`relative w-full aspect-square transition-transform duration-75 ease-linear ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                                } transition-all duration-700`}
-                            style={{
-                                transform: `rotate(${rotation}deg)`,
-                                transformOrigin: "center center",
-                            }}
-                        >
+            <div className="container mx-auto px-4 py-6 md:py-12">
+                <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
+                    {/* Cake Image Section */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, type: "spring" }}
+                        className="relative order-2 lg:order-1"
+                    >
+                        <div className="relative w-full aspect-square max-w-md mx-auto" style={{ transform: `rotate(${rotation}deg)` }}>
                             <img
                                 src="/cake2.png"
                                 alt="Assorted Cake Slices"
-                                className="w-full h-full object-cover rounded-full"
+                                className="w-full h-full object-contain drop-shadow-2xl hover:drop-shadow-3xl transition-all duration-300"
                             />
                         </div>
 
-                        <Badge className="absolute top-8 left-8 bg-white/90 backdrop-blur-sm text-pink-600 px-4 py-2 animate-fade-in-right">
-                            <Star className="w-4 h-4 mr-2 animate-spin-slow" />
+                        <Badge className="absolute top-4 left-4 lg:top-8 lg:left-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-xl transition-shadow text-sm lg:text-base">
+                            <Star className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 animate-spin-slow" />
                             Premium Selection
                         </Badge>
 
-                        <Badge className="absolute bottom-8 right-8 bg-white/90 backdrop-blur-sm text-pink-600 px-4 py-2 animate-fade-in-left">
-                            <Clock className="w-4 h-4 mr-2 animate-spin-slow" />
+                        <Badge className="absolute bottom-4 right-4 lg:bottom-8 lg:right-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-xl transition-shadow text-sm lg:text-base">
+                            <Clock className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 animate-spin-slow" />
                             Fresh Daily
                         </Badge>
-                    </div>
+                    </motion.div>
 
-                    <div className={`space-y-8 transform ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'} transition-all duration-1000 ease-out`}>
+                    {/* Content Section */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="space-y-6 lg:space-y-8 order-1 lg:order-2"
+                    >
                         <div>
-                            <Badge variant="outline" className="mb-4 animate-bounce-slow">
-                                <Cake className="w-4 h-4 mr-2" />
+                            <Badge variant="outline" className="mb-4 bg-white/80 backdrop-blur-sm border-pink-200 text-pink-600 hover:bg-white text-sm lg:text-base">
+                                <Cake className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                                 🍫 Indulgence Redefined 🍓
                             </Badge>
 
-                            <h1 className="text-6xl font-bold mb-6 transition-all duration-700 hover:text-pink-600">
-                                <span className="text-gray-800 inline-block hover:-translate-y-1 transition-transform duration-300">Decadent</span>
-                                <br />
-                                <span className="text-pink-600 inline-block hover:-translate-y-1 transition-transform duration-300">Chocolate Bliss</span>
+                            <h1 className="text-4xl lg:text-6xl font-bold mb-4 lg:mb-6">
+                                <span className="text-gray-800 block mb-1 lg:mb-2 bg-gradient-to-r from-pink-400 to-rose-600 bg-clip-text text-transparent">
+                                    Decadent Chocolate
+                                </span>
+                                <span className="text-pink-600 block">Bliss Experience</span>
                             </h1>
 
                             {/* Feature Points */}
-                            <div className="space-y-6 mb-8">
+                            <div className="space-y-4 lg:space-y-6 mb-6 lg:mb-8">
                                 {cakeFeatures.map((feature, index) => (
-                                    <div
+                                    <motion.div
                                         key={index}
-                                        className={`backdrop-blur-sm rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:bg-white/50 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
-                                            }`}
-                                        style={{ transitionDelay: `${index * 150}ms` }}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.1 + 0.4 }}
+                                        className="group backdrop-blur-sm rounded-xl p-3 lg:p-4 bg-white/50 shadow-sm hover:bg-white/80 transition-all duration-300 border border-transparent hover:border-pink-100"
                                     >
-                                        <div className="font-semibold text-gray-800 flex items-center gap-2">
-                                            <Check className="w-4 h-4 text-pink-600" />
-                                            {feature.title}
+                                        <div className="font-semibold text-gray-800 flex items-center gap-2 text-sm lg:text-base">
+                                            <Check className="w-4 h-4 lg:w-5 lg:h-5 text-pink-600 group-hover:scale-110 transition-transform" />
+                                            <span className="group-hover:text-pink-700 transition-colors">{feature.title}</span>
                                         </div>
-                                        <div className="text-gray-600 ml-6">
+                                        <div className="text-gray-600 ml-6 lg:ml-7 text-xs lg:text-sm leading-relaxed">
                                             {feature.description}
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
 
                             {/* Serving Details */}
-                            <div className="grid grid-cols-2 gap-3 mb-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 mb-6 lg:mb-8">
                                 {servingDetails.map((detail, index) => (
-                                    <div
+                                    <motion.div
                                         key={index}
-                                        className={`flex items-center gap-2 text-sm text-gray-600 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                                            } transition-all duration-500`}
-                                        style={{ transitionDelay: `${index * 100}ms` }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 + 0.8 }}
+                                        className="flex items-center gap-2 text-xs lg:text-sm text-gray-600 bg-white/50 backdrop-blur-sm p-2 rounded-lg border border-pink-50"
                                     >
-                                        <div className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse"></div>
+                                        <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-pink-400 animate-pulse"></div>
                                         {detail}
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
 
-                            <div className={`flex items-center gap-4 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                                } transition-all duration-700 delay-500`}>
-                                <button className="px-8 py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-200 hover:-translate-y-1 hover:scale-105 active:scale-95">
+                            {/* CTA Section */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1.2 }}
+                                className="flex flex-wrap items-center gap-4 lg:gap-6"
+                            >
+                                <button className="px-6 lg:px-8 py-3 lg:py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-300/40 hover:-translate-y-1 flex items-center gap-2 text-sm lg:text-base">
+                                    <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
                                     Order Now
                                 </button>
-                                <div className="transform hover:scale-105 transition-transform duration-300">
-                                    <div className="text-2xl font-bold text-pink-600">$49.99</div>
-                                    <div className="text-sm text-gray-600">Whole Cake</div>
+                                <div className="flex flex-col">
+                                    <div className="text-xl lg:text-2xl font-bold text-pink-600 flex items-center gap-2">
+                                        $49.99
+                                        <span className="text-xs lg:text-sm font-normal text-gray-500 line-through">$64.99</span>
+                                    </div>
+                                    <div className="text-xs lg:text-sm text-gray-600">Whole Cake (1.5kg)</div>
                                 </div>
-                            </div>
+                                <button className="p-2 lg:p-3 rounded-full bg-white/80 backdrop-blur-sm border border-pink-200 hover:bg-pink-50 transition-colors">
+                                    <Heart className="w-5 h-5 lg:w-6 lg:h-6 text-pink-600" />
+                                </button>
+                            </motion.div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
+            {/* Floating Scroll Indicator */}
+            <motion.div
+                animate={{ y: [0, 20, 0] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="absolute bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-pink-600"
+            >
+            </motion.div>
+
             <style jsx global>{`
-                @keyframes spin-slow {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    50% { transform: translateY(-20px) scale(1.02); }
                 }
-                
-                @keyframes bounce-slow {
-                    0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-10px); }
+                @keyframes float-delayed {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    50% { transform: translateY(20px) scale(0.98); }
                 }
-                
-                @keyframes fade-in-right {
-                    from { opacity: 0; transform: translateX(-20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                
-                @keyframes fade-in-left {
-                    from { opacity: 0; transform: translateX(20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                
-                .animate-spin-slow {
-                    animation: spin-slow 8s linear infinite;
-                }
-                
-                .animate-bounce-slow {
-                    animation: bounce-slow 3s ease-in-out infinite;
-                }
-                
-                .animate-fade-in-right {
-                    animation: fade-in-right 1s ease-out forwards;
-                }
-                
-                .animate-fade-in-left {
-                    animation: fade-in-left 1s ease-out forwards;
-                }
+                .animate-float { animation: float 8s ease-in-out infinite; }
+                .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; }
             `}</style>
         </div>
     );

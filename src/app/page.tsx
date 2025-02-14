@@ -19,7 +19,6 @@ const page = () => {
   return (
     <div>
       {/* <Navbar />
-      <HeroSection />
       <CuriousSection />
 	  <HomePage />
       <CupcakeShowcase />
@@ -29,6 +28,8 @@ const page = () => {
       <Footer />
       <HomePage /> */}
       <ProfilePage />
+      <HeroSection />
+
       {/* <CuriousHero /> */}
       {/* <CakeWheelHero /> */}
       <CakeShowcase />
