@@ -181,18 +181,6 @@ const ProfilePage = () => {
                                                 ))}
                                             </div>
 
-                                            <div className="border-t mt-4 pt-4">
-                                                <h4 className="text-sm font-medium mb-2">Delivery Address</h4>
-                                                <div className="flex items-start gap-2 text-sm text-gray-600">
-                                                    <MapPin size={16} className="text-gray-400 mt-1 flex-shrink-0" />
-                                                    <div>
-                                                        <div className="font-medium text-gray-700">{order.deliveryAddress.type}</div>
-                                                        <div>{order.deliveryAddress.address}</div>
-                                                        <div>{order.deliveryAddress.city}, {order.deliveryAddress.state}</div>
-                                                        <div>PIN: {order.deliveryAddress.pincode}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <div className="border-t mt-4 pt-4 flex justify-between items-center font-medium">
                                                 <span>Total Amount</span>
