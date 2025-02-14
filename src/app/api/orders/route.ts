@@ -1,45 +1,54 @@
-import connectDB from "@/lib/db";
-import Order, { IOrder } from "@/models/Order";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import Order from '@/models/Order';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function GET() {
-    try {
-        await connectDB();
+export async function POST(req: Request) {
+  try {
+    await dbConnect();
 
-        const orders = await Order.find({}).sort({
-            createdAt: -1,
-        }).lean();
+    // Parse the request body
+    const body = await req.json();
 
-        if (!orders || orders.length === 0) {
-            return NextResponse.json([], {status: 200})
-        }
+    // Get the latest order number
+    const latestOrder = await Order.findOne().sort({ orderID: -1 });
+    const nextOrderID = latestOrder ? latestOrder.orderID + 1 : 201;
 
-        return NextResponse.json(orders, {status: 200})
-    } catch (error) {
-        return NextResponse.json({error: "Failed to fetch products"}, {status: 500})
-    }
-}
+    const {
+      userId,
+      address,
+      phone,
+      products,
+      amount,
+      deliveryType,
+      paymentType,
+    } = body;
 
-export async function POST(req: NextRequest) {
-    try {
-        await connectDB();
+    // Create new order
+    const order = new Order({
+      orderID: nextOrderID,
+      userId,
+      address,
+      phone,
+      products,
+      amount,
+      deliveryType,
+      paymentType,
+      orderStatus: 'Accepted'
+    });
 
-        const body:IOrder = await req.json();
+    await order.save();
 
-        if (!body.userId || !body.address || !body.phone || !body.products || !body.amount || !body.deliveryType || !body.paymentType || !body.orderStatus) {
-            return NextResponse.json(
-                {error: "Missing required fields"},
-                {status: 400}
-            )
-        }
+    return NextResponse.json({ 
+      success: true, 
+      order 
+    }, { status: 201 });
 
-        const orderData = {
-            ...body,
-        }
-
-        const newOrder = await Order.create(orderData);
-        return NextResponse.json(newOrder, {status: 201})
-    } catch (error) {
-        return NextResponse.json({error: "Failed to add product"}, {status: 500})
-    }
+  } catch (error) {
+    console.error('Order creation error:', error);
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Error creating order' 
+    }, { status: 500 });
+  }
 }

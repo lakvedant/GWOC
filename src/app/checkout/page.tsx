@@ -30,19 +30,27 @@ const initialState: CheckoutState = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, subtotal, discount } = useCart();
+  const { cartItems, subtotal, discount, userInfo, clearCart } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(userInfo?.phone || "");
+  const [UserId, setUserId] = useState("");
   const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information");
   const [deliveryMethod, setDeliveryMethod] = useState("");
   const [shipping, setShipping] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (userInfo) {
+      setUserId(userInfo.userId);
+      setPhone(userInfo.phone);
+    }
+  }, [userInfo]);
+
+
+  useEffect(() => {
     setIsLoading(false);
     if (!cartItems || cartItems.length === 0) {
-      router.push('/cart');
+      router.push('/');
     }
   }, [cartItems, router]);
 
@@ -73,31 +81,51 @@ export default function CheckoutPage() {
 
   const handlePaymentComplete = async (paymentMethod: string) => {
     try {
-      const orderData = {
-        items: cartItems,
-        subtotal,
-        shipping,
-        discount,
-        total: subtotal * (1 - discount) + shipping,
-        paymentMethod,
-        deliveryMethod,
-        contact: {
-          email,
-          phone,
-        },
-        shippingAddress: state.shippingAddress,
+      // Format the address data
+      const addressData = {
+        address: state.shippingAddress.address,
+        apartment: state.shippingAddress.apartment,
+        city: state.shippingAddress.city,
+        state: state.shippingAddress.state,
+        zipCode: state.shippingAddress.zipCode,
       };
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Clear cart data after successful order
-      localStorage.removeItem('cartData');
+  
+      const orderData = {
+        userId: UserId,
+        address: addressData,
+        phone: phone,
+        products: cartItems.map(item => ({
+          productId: item.id,
+          quantity: item.quantity
+        })),
+        amount: subtotal * (1 - discount) + shipping,
+        deliveryType: deliveryMethod,
+        paymentType: paymentMethod.toUpperCase() === 'COD' ? 'COD' : 'UPI',
+        orderStatus: 'Accepted'
+      };
+  
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create order');
+      }
+  
+      // Clear cart after successful order
+      clearCart();
       
       // Redirect to success page
       router.push('/checkout/success');
     } catch (error) {
       console.error('Failed to create order:', error);
+      // Handle error (show error message to user)
     }
   };
 

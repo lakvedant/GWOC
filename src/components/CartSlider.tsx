@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Toast } from "@/components/ui/toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,12 +45,6 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
 
   return (
     <div className="flex flex-col h-full">
-      {notification && (
-        <Toast className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg">
-          {notification}
-        </Toast>
-      )}
-      
       <div className="px-4 py-2 border-b">
         <h2 className="text-lg font-medium">Shopping Cart ({cartItems.length})</h2>
       </div>
