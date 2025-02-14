@@ -14,6 +14,7 @@ import CuriousHero from "@/components/ui/front2";
 import CakeWheelHero from "@/components/ui/front2";
 import CakeShowcase from "@/components/ui/front2";
 import ValentineCountdown from "@/components/ui/valentine";
+import ImageSlider from "@/components/PhotoCarousel";
 
 const page = () => {
   return (
@@ -21,7 +22,7 @@ const page = () => {
       <Navbar />
       <HeroSection />
       <CuriousSection />
-      <HomePage />
+      <ImageSlider />
       <CupcakeShowcase />
       <WhatsAppChat />
       <FeaturesSection />
