@@ -6,6 +6,9 @@ import { ProductData } from '@/models/Product';
 import { IKImage } from 'imagekitio-next';
 import { CartItem } from '@/types/checkout';
 import { useRouter } from 'next/navigation';
+import { useCart } from './CartProvider';
+
+
 
 type WeightOption = '0.5 Kg' | '1 Kg' | '1.5 Kg' | '2 Kg' | '4 Kg';
 
@@ -59,8 +62,10 @@ const chefWords: { [key: string]: string[] } = {
   ]
 };
 
-const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose, onAddToCart }) => {
+const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) => {
+
   const router = useRouter();
+  const { addToCart } = useCart();  
   const [selectedWeight, setSelectedWeight] = useState<WeightOption>('0.5 Kg');
   const [message, setMessage] = useState('');
   const [isWishlistActive, setIsWishlistActive] = useState(false);
@@ -74,20 +79,20 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose, onA
     ? product.price - (product.price * (product.discount / 100))
     : product.price;
 
-  const handleAddToCart = () => {
-    const cartItem: CartItem = {
-      id: product._id,
-      name: product.name,
-      price: discountedPrice,
-      quantity: 1,
-      image: product.image,
-      variant: selectedWeight,
-      message: message,
-      title: ''
+    const handleAddToCart = () => {
+      const cartItem: CartItem = {
+        id: product._id,
+        name: product.name,
+        price: discountedPrice,
+        quantity: 1,
+        image: product.image,
+        variant: selectedWeight,
+        message: message,
+        title: ''
+      };
+      addToCart(cartItem);  // <-- Add to cart using the context
+      onClose();  // Close the dialog after adding to cart
     };
-    onAddToCart(cartItem);
-    onClose();
-  };
 
   const handleBuyNow = () => {
     handleAddToCart();
@@ -186,21 +191,24 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose, onA
               </div>
 
               {/* Message input */}
-              <div>
-                <label className="block text-gray-800 font-medium mb-2">
-                  Cake Message
-                  <span className="float-right text-gray-400 text-sm">
-                    {message.length}/25
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value.slice(0, 25))}
-                  placeholder="Enter message on cake"
-                  className="w-full p-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none"
-                />
-              </div>
+              {product.category === "Cakes" && (
+                <div>
+                  <label className="block text-gray-800 font-medium mb-2">
+                    Cake Message
+                    <span className="float-right text-gray-400 text-sm">
+                      {message.length}/25
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value.slice(0, 25))}
+                    placeholder="Enter message on cake"
+                    className="w-full p-3 rounded-lg border border-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none"
+                  />
+                </div>
+              )}
+
 
               {/* Description */}
               <div>

@@ -1,6 +1,7 @@
 // types/checkout.ts
 
 export interface CartItem {
+  title: string;
   id: string;
   name: string;
   price: number;
@@ -23,12 +24,19 @@ export interface ShippingAddress {
 }
 
 export interface CheckoutState {
-  email: string
-  subscribeToNews: boolean
-  shippingAddress: ShippingAddress
-  saveInformation: boolean
-  phone?: string
-  deliveryMethod?: string
+  email: string;
+  subscribeToNews: boolean;
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    apartment: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  saveInformation: boolean;
 }
 
 export interface OrderSummary {

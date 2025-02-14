@@ -9,6 +9,7 @@ import { CartSlider } from "./CartSlider";
 import Link from "next/link";
 import LoginSignupModal from "./Login";
 import { Input } from "@/components/ui/input";
+import { useCart } from '@/context/CartContext';
 
 export const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -90,23 +91,25 @@ export const Navbar = () => {
             </Button>
 
             <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-              <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="relative hover:bg-gray-100 rounded-full p-2"
-                >
-                  <ShoppingCart className="h-6 w-6 text-gray-700" />
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-blue-600 rounded-full text-white text-xs flex items-center justify-center">
-                    2
-                  </span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-96">
-                <SheetTitle>Your Cart</SheetTitle>
-                <CartSlider  />
-              </SheetContent>
-            </Sheet>
+              <SheetTitle >Cart</SheetTitle>
+        <SheetTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="relative hover:bg-gray-100 rounded-full p-2"
+          >
+            <ShoppingCart className="h-6 w-6 text-gray-700" />
+            {cartItems.length > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 bg-blue-600 rounded-full text-white text-xs flex items-center justify-center">
+                {cartItems.length}
+              </span>
+            )}
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto">
+          <CartSlider onClose={() => setIsCartOpen(false)} />
+        </SheetContent>
+      </Sheet>
           </div>
 
           {/* Mobile Menu Button */}

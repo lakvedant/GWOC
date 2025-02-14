@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { CartItem } from "@/types/checkout";
+import { IKImage } from "imagekitio-next";
 
 interface CartSummaryProps {
   items: CartItem[];
@@ -22,8 +23,8 @@ export function CartSummary({ items, subtotal, discount = 0, shipping = 0 }: Car
                 {item.quantity}
               </div>
               {item.image ? (
-                <Image
-                  src={item.image}
+                <IKImage
+                  path={item.image}
                   alt={item.title}
                   width={64}
                   height={64}
@@ -59,7 +60,7 @@ export function CartSummary({ items, subtotal, discount = 0, shipping = 0 }: Car
         <div className="flex justify-between font-medium text-base">
           <span>Total</span>
           <span className="flex items-center">
-            <span className="text-sm text-muted-foreground mr-1">USD</span>
+            <span className="text-sm text-muted-foreground mr-1"></span>
             <span>₹{total.toFixed(2)}</span>
           </span>
         </div>
