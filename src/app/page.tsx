@@ -13,17 +13,17 @@ import ProfilePage from "@/components/ui/ProfilePage";
 const page = () => {
   return (
     <div>
-      {/* <Navbar />
+      <Navbar />
       <HeroSection />
       <CuriousSection />
 	  <HomePage />
       <CupcakeShowcase />
       <WhatsAppChat />
-      <FeaturesSection /> */}
-      {/* <ReviewPage />
+      <FeaturesSection />
+      {/* <ReviewPage /> */}
       <Footer />
-      <HomePage /> */}
-      <ProfilePage />
+      {/* <HomePage />
+      <ProfilePage /> */}
     </div>
   )
 }

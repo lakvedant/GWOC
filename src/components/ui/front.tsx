@@ -161,11 +161,11 @@ const HeroSection = () => {
                     <motion.div
                         whileHover={{
                             rotate: 360,
-                            backgroundColor: "#FFD700",
+                            backgroundColor: "#F472B6",
                             scale: 1.2
                         }}
                         transition={{ duration: 0.5 }}
-                        className="w-10 h-10 bg-[#ffeb3b] text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg cursor-pointer"
+                        className="w-10 h-10 opacity-65 bg-pink-50 text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg cursor-pointer"
                         style={{ clipPath: 'polygon(50% 0%, 80% 10%, 100% 40%, 90% 80%, 50% 100%, 10% 80%, 0% 40%, 20% 10%)' }}
                     >
                         {feature.id}
