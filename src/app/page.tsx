@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CupcakeShowcase from "@/components/ui/hero-section";
 import ReviewPage from "@/components/Admin/ReviewPage";
-import HomePage from "@/components/PhotoCarousel";
+import PhotoCarousel from "@/components/PhotoCarousel";
 
 const page = () => {
   return (
@@ -15,12 +15,12 @@ const page = () => {
       <Navbar />
       <HeroSection />
       <CuriousSection />
-	  <HomePage />
-      <CupcakeShowcase />
+      <PhotoCarousel />
+      {/* <CupcakeShowcase /> */}
       <WhatsAppChat />
       <FeaturesSection />
       <ReviewPage />
-	  <Footer />
+	    <Footer />
     </div>
   )
 }

@@ -1,75 +1,129 @@
-'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin, FaXTwitter, FaPinterest } from 'react-icons/fa6';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FaInstagram, FaFacebook, FaTwitter, FaMapMarkerAlt, FaPhone, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-gray-700 py-8 border-t flex">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Left Section - Logo & Socials */}
-        <div>
-          <h2 className="text-3xl font-bold text-red-600 flex items-center">
-            Bindi Cupcakery<span className="text-sm">🍒</span>
-          </h2>
-          <p className="text-sm mt-2">© 2025</p>
-          <p className="mt-3">Show us some love ❤️ & connect with us!</p>
-          <div className="flex space-x-3 mt-2 text-xl text-gray-600">
-            <Link href="#"><FaInstagram className="hover:text-red-600" /></Link>
-            <Link href="#"><FaFacebook className="hover:text-blue-600" /></Link>
-            <Link href="#"><FaYoutube className="hover:text-red-600" /></Link>
-            <Link href="#"><FaLinkedin className="hover:text-blue-600" /></Link>
-            <Link href="#"><FaXTwitter className="hover:text-black" /></Link>
-            <Link href="#"><FaPinterest className="hover:text-red-600" /></Link>
+    <footer className="bg-gradient-to-b from-pink-50 to-pink-100 text-gray-700 pt-16">
+      <div className="container mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          {/* Brand Section */}
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-pink-600 hover:text-pink-700 transition-colors">
+              Bindi's Cupcakery
+            </h2>
+            <p className="text-lg italic text-pink-500">Experience Bliss in Every Bite!</p>
+            <p className="text-gray-600 leading-relaxed">
+              We're known for our delicious eggless, vegetarian treats! From
+              custom cakes and cupcakes to brownies and more, we've got the
+              perfect treat for every occasion.
+            </p>
+          </div>
+
+          {/* Our Menu */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-pink-600">Our Menu</h3>
+            <ul className="space-y-3 list-none">
+              {["Cake Flavours", "Brownie", "Fudge", "Many More...."].map((item) => (
+                <ul key={item} className="list-none">
+                  <Link 
+                    href="#" 
+                    className="text-gray-600 hover:text-pink-600 transition-colors duration-300 flex items-center space-x-2 list-none"
+                  >
+                    <span className="h-1 w-1 bg-pink-400 rounded-full"></span>
+                    <span>{item}</span>
+                  </Link>
+                </ul>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-pink-600">Contact Us</h3>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <FaMapMarkerAlt className="text-pink-500 mt-1 flex-shrink-0" />
+                <p className="text-gray-600">
+                  Kuber Plaza, 3rd Floor, Block-C, Acharya Niketan, Near Bansal Sweets, 
+                  Mayur Vihar Phase-1, Delhi, Pin Code - 110091
+                </p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <FaPhone className="text-pink-500" />
+                <p className="text-gray-600">+91 9876543210</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <FaEnvelope className="text-pink-500" />
+                <p className="text-gray-600">bindicupcakes@gmail.com</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Stay Connected - QR Code Only */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-pink-600 items-end">Stay Connected</h3>
+            <div className="transform hover:scale-105 transition-transform duration-300">
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <Image
+                    src="/qrcodeWhatsapp1.png"
+                    alt="QR Code"
+                    width={120}
+                    height={120}
+                    className="rounded-lg"
+                  />
+                </div>
+                <p className="text-center text-sm mt-4 text-gray-600 font-medium">
+                  Scan to connect on WhatsApp
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Middle Section - Links */}
-        <div>
-          <h3 className="font-semibold text-lg">Know Us</h3>
-          <ul className="mt-2 space-y-1 text-sm text-gray-600">
-            <li><Link href="#">Our Story</Link></li>
-            <li><Link href="#">Contact Us</Link></li>
-            <li><Link href="#">Locate Us</Link></li>
-            <li><Link href="#">Blog</Link></li>
-            <li><Link href="#">Media</Link></li>
-            <li><Link href="#">Careers</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-lg">Need Help</h3>
-          <ul className="mt-2 space-y-1 text-sm text-gray-600">
-            <li><Link href="#">FAQ</Link></li>
-            <li><Link href="#">Cancellation and Refund</Link></li>
-            <li><Link href="#">Privacy Policy</Link></li>
-            <li><Link href="#">Terms and Conditions</Link></li>
-            <li><Link href="#">Customer Grievance</Link></li>
-            <li><Link href="#">Sitemap</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-lg">More Info</h3>
-          <ul className="mt-2 space-y-1 text-sm text-gray-600">
-            <li><Link href="#">Corporate Cakes</Link></li>
-            <li><Link href="#">Coupons & Offers</Link></li>
-            <li><Link href="#">Franchise</Link></li>
-            <li><Link href="#">Download App</Link></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* App Download Section */}
-      <div className="mt-8 text-center">
-        <h3 className="font-semibold text-lg">Experience Bakingo App On Mobile</h3>
-        <div className="flex justify-center items-center mt-3 space-x-4">
-          <Image src="/qrcodeWhatsapp.png" alt="QR Code" width={80} height={80} />
-          <div className="flex flex-col space-y-2">
-            <Link href="#"><Image src="/google-play.png" alt="Google Play" width={140} height={40} /></Link>
-            <Link href="#"><Image src="/app-store.png" alt="App Store" width={140} height={40} /></Link>
+        {/* Decorative Divider */}
+        <div className="relative mt-16 mb-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-pink-200"></div>
           </div>
+          <div className="relative flex justify-center">
+            <span className="bg-pink-50 px-4 text-pink-500">
+              <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        {/* Footer Bottom with Social Media */}
+        <div className="mt-8 space-y-6 text-center">
+          {/* Social Media Icons */}
+          <div className="flex justify-center items-center space-x-8">
+            {[
+              { Icon: FaInstagram, label: "Instagram", color: "hover:text-pink-600", href: "https://www.instagram.com/bindis_cupcakery" },
+              { Icon: FaFacebook, label: "Facebook", color: "hover:text-blue-600", href: "https://www.facebook.com/bindi.malji/" },
+              // { Icon: FaTwitter, label: "Twitter", color: "hover:text-sky-500" },
+              // { Icon: FaWhatsapp, label: "WhatsApp", color: "hover:text-green-500" },
+              { Icon: FaEnvelope, label: "Email", color: "hover:text-red-500", href: "mailto:mjgandhi2305@gmail.com" },
+            ].map(({ Icon, label, color, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                aria-label={label}
+                className={`text-gray-500 ${color} transform hover:scale-110 transition-all duration-300`}
+              >
+                <Icon size={24} />
+              </a>
+            ))}
+          </div>
+          
+          {/* Copyright */}
+          <p className="text-sm text-gray-500">
+            © {new Date().getFullYear()} Bindi's Cupcakery. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
