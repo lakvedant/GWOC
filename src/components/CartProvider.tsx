@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CartItem } from '@/types/checkout';
 
 interface UserInfo {
-  userId: string; // Added userId
+  userId: string;
   name: string;
   phone: string;
   email?: string;
@@ -22,6 +22,7 @@ interface CartContextType {
   subtotal: number;
   discount: number;
   setDiscount: (discount: number) => void;
+  isAuthenticated: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -74,9 +75,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    if (quantity < 1) {
+      removeItem(id);
+      return;
+    }
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+        item.id === id ? { ...item, quantity } : item
       )
     );
   };
@@ -101,6 +106,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const isAuthenticated = Boolean(userInfo?.userId);
 
   return (
     <CartContext.Provider value={{
@@ -114,7 +120,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearUserInfo,
       subtotal,
       discount,
-      setDiscount
+      setDiscount,
+      isAuthenticated
     }}>
       {children}
     </CartContext.Provider>

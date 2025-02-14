@@ -3,7 +3,7 @@ import { Dialog } from "@mui/material";
 import { IoClose } from "react-icons/io5";
 import { FaEnvelope } from "react-icons/fa";
 import { useCart } from './CartProvider';
-import Cookies from "js-cookie";
+
 
 export default function LoginSignupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [phone, setPhone] = useState("");
@@ -14,7 +14,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
   const [timer, setTimer] = useState(30);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [salutation, setSalutation] = useState("Mr");
+
   const [loading, setLoading] = useState(false);
   const { updateUserInfo } = useCart();
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         setStep("success");
         
         setTimeout(() => {
-          window.location.href = "/menu";
+          window.location.href = "/checkout";
         }, 2000);
       } else {
         setError(response.message || "Failed to create account.");
@@ -107,6 +107,10 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
     if (phone==="9898058074") {
       setStep("success");
+      setTimeout(() => {
+        onClose();
+        window.location.href = "/checkout";
+      }, 2000);
       return;
     }
   
@@ -131,7 +135,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         // Redirect after successful login
         setTimeout(() => {
           onClose();
-          window.location.href = "/menu";
+          window.location.href = "/checkout";
         }, 2000);
       } else {
         setStep("form"); // Show form for new users

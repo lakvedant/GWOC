@@ -11,6 +11,7 @@ import { PaymentForm } from "@/components/Payment-Form";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartProvider";
 import type { CheckoutState, ShippingAddress } from "@/types/checkout";
+import LoginSignupModal from "@/components/Login";
 
 const initialState: CheckoutState = {
   email: "",
@@ -30,29 +31,39 @@ const initialState: CheckoutState = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, subtotal, discount, userInfo, clearCart } = useCart();
+  const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
-  const [phone, setPhone] = useState(userInfo?.phone || "");
-  const [UserId, setUserId] = useState("");
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information");
   const [deliveryMethod, setDeliveryMethod] = useState("");
   const [shipping, setShipping] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (userInfo) {
-      setUserId(userInfo.userId);
-      setPhone(userInfo.phone);
-    }
-  }, [userInfo]);
-
-
-  useEffect(() => {
     setIsLoading(false);
     if (!cartItems || cartItems.length === 0) {
-      router.push('/');
+      router.push('/checkout');
+      return;
     }
-  }, [cartItems, router]);
+
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true);
+    }
+  }, [cartItems, router, isAuthenticated]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setState(prev => ({
+        ...prev,
+        email: userInfo.email || "",
+        shippingAddress: {
+          ...prev.shippingAddress,
+          firstName: userInfo.name.split(' ')[0] || "",
+          lastName: userInfo.name.split(' ').slice(1).join(' ') || "",
+        }
+      }));
+    }
+  }, [userInfo]);
 
   const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
     setState(prevState => ({
@@ -81,7 +92,6 @@ export default function CheckoutPage() {
 
   const handlePaymentComplete = async (paymentMethod: string) => {
     try {
-      // Format the address data
       const addressData = {
         address: state.shippingAddress.address,
         apartment: state.shippingAddress.apartment,
@@ -91,9 +101,9 @@ export default function CheckoutPage() {
       };
   
       const orderData = {
-        userId: UserId,
+        userId: userInfo?.userId,
         address: addressData,
-        phone: phone,
+        phone: userInfo?.phone,
         products: cartItems.map(item => ({
           productId: item.id,
           quantity: item.quantity
@@ -118,14 +128,10 @@ export default function CheckoutPage() {
         throw new Error(data.message || 'Failed to create order');
       }
   
-      // Clear cart after successful order
       clearCart();
-      
-      // Redirect to success page
       router.push('/checkout/success');
     } catch (error) {
       console.error('Failed to create order:', error);
-      // Handle error (show error message to user)
     }
   };
 
@@ -151,14 +157,14 @@ export default function CheckoutPage() {
             {step === "information" ? (
               <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
                 <ContactForm 
-                  phone={phone}
-                  onPhoneChange={setPhone}
+                  phone={userInfo?.phone || ""}
+                  onPhoneChange={() => {}} // Phone is managed by userInfo now
                 />
                 <ShippingForm
-                 address={state.shippingAddress}
-                 saveInformation={state.saveInformation}
-                 onAddressChange={handleAddressChange}
-                 onSaveInfoChange={handleSaveInfoChange}
+                  address={state.shippingAddress}
+                  saveInformation={state.saveInformation}
+                  onAddressChange={handleAddressChange}
+                  onSaveInfoChange={handleSaveInfoChange}
                 />
                 <Button type="submit" size="lg" className="w-full md:w-auto">
                   Continue to Delivery Options
@@ -188,6 +194,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

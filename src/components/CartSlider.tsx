@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Toast } from "@/components/ui/toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useCart } from './CartProvider';
-import { IKImage } from 'imagekitio-next';
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCart } from "./CartProvider";
+import { IKImage } from "imagekitio-next";
+import LoginSignupModal from "@/components/Login"; // Import the Login Modal
 
 interface CartSliderProps {
   onClose?: () => void;
@@ -15,45 +17,64 @@ interface CartSliderProps {
 
 export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const router = useRouter();
-  
   const { cartItems, updateQuantity, removeItem, subtotal, discount, setDiscount } = useCart();
-  const [couponCode, setCouponCode] = useState('');
-  const [notification, setNotification] = useState('');
+  const [couponCode, setCouponCode] = useState("");
+  const [notification, setNotification] = useState("");
+  const [isLoginOpen, setIsLoginOpen] = useState(false); // Control Login Modal
+
+  // Simulating a user authentication check (Replace this with actual user state)
+  const { userInfo } = useCart(); // Assuming user info is stored in context
 
   const handleCouponApply = () => {
     const validCoupons: { [key: string]: number } = {
-      'SAVE10': 0.1,
-      'SAVE20': 0.2,
-      'test99': 0.99
+      SAVE10: 0.1,
+      SAVE20: 0.2,
+      TEST99: 0.99,
     };
 
     if (validCoupons[couponCode]) {
       setDiscount(validCoupons[couponCode]);
-      setNotification('Coupon applied successfully!');
+      setNotification("Coupon applied successfully!");
     } else {
-      setNotification('Invalid coupon code');
+      setNotification("Invalid coupon code");
     }
-    setTimeout(() => setNotification(''), 3000);
+    setTimeout(() => setNotification(""), 3000);
   };
 
   const total = subtotal * (1 - discount);
 
   const handleCheckout = () => {
-    if (onClose) onClose();
-    router.push('/checkout');
+    if (userInfo?.userId) {
+      // User is logged in → Proceed to checkout
+      if (onClose) onClose();
+      router.push("/checkout");
+    } else {
+      // User is NOT logged in → Show login modal
+      setIsLoginOpen(true);
+    }
+  };
+
+  // Callback for successful login → Redirect to checkout
+  const handleLoginSuccess = () => {
+    setIsLoginOpen(false); // Close login modal
+    router.push("/checkout"); // Redirect to checkout
   };
 
   return (
     <div className="flex flex-col h-full">
+      {notification && (
+        <Toast className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg">
+          {notification}
+        </Toast>
+      )}
+
       <div className="px-4 py-2 border-b">
         <h2 className="text-lg font-medium">Shopping Cart ({cartItems.length})</h2>
       </div>
 
       <ScrollArea className="flex-1 px-4">
         {cartItems.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            Your cart is empty
-          </div>
+          <div className="text-center py-8 text-gray-500">Your cart is empty</div>
         ) : (
           cartItems.map((item) => (
             <div key={item.id} className="flex items-center gap-4 mb-4 p-4 border-b">
@@ -128,14 +149,13 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
           <span>Total</span>
           <span>₹{total.toFixed(2)}</span>
         </div>
-        <Button
-          className="w-full"
-          onClick={handleCheckout}
-          disabled={cartItems.length === 0}
-        >
+        <Button className="w-full" onClick={handleCheckout} disabled={cartItems.length === 0}>
           Checkout
         </Button>
       </div>
+
+      {/* Login Modal */}
+      <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </div>
   );
 };

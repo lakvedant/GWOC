@@ -144,75 +144,104 @@ const HeroSection = () => {
                 Explore Now!
             </motion.button>
 
-            {features.map((feature, index) => (
-                <motion.div
-                    key={feature.id}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                        duration: 0.5,
-                        delay: 1.2 + index * 0.2,
-                        type: "spring",
-                        stiffness: 200
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    className={`absolute z-20 ${feature.position} flex items-center ${feature.flexDirection}`}
-                >
+            {/* Desktop Features */}
+            <div className="hidden md:block">
+                {features.map((feature, index) => (
                     <motion.div
-                        whileHover={{
-                            rotate: 360,
-                            backgroundColor: "#F472B6",
-                            scale: 1.2
+                        key={feature.id}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                            duration: 0.5,
+                            delay: 1.2 + index * 0.2,
+                            type: "spring",
+                            stiffness: 200
                         }}
-                        transition={{ duration: 0.5 }}
-                        className="w-10 h-10 opacity-65 bg-pink-50 text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg cursor-pointer"
-                        style={{ clipPath: 'polygon(50% 0%, 80% 10%, 100% 40%, 90% 80%, 50% 100%, 10% 80%, 0% 40%, 20% 10%)' }}
+                        whileHover={{ scale: 1.05 }}
+                        className={`absolute z-20 ${feature.position} flex items-center ${feature.flexDirection}`}
                     >
-                        {feature.id}
-                    </motion.div>
-                    <motion.svg
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={{ pathLength: 1, opacity: 1 }}
-                        transition={{ duration: 1, delay: 1.5 + index * 0.2 }}
-                        className="mx-2 w-16 h-6"
-                        viewBox="0 0 100 20"
-                    >
-                        <motion.path
-                            d="M2 10 Q 50 -10, 98 10"
-                            stroke="#F472B6"
-                            strokeWidth="2"
-                            strokeDasharray="5,5"
-                            fill="transparent"
-                            animate={{
-                                strokeDashoffset: [0, -20],
+                        <motion.div
+                            whileHover={{
+                                rotate: 360,
+                                backgroundColor: "#FFD700",
+                                scale: 1.2
                             }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "linear"
-                            }}
-                        />
-                    </motion.svg>
-                    <motion.div
-                        whileHover={{
-                            scale: 1.05,
-                            backgroundColor: "rgba(255, 255, 255, 0.8)",
-                            borderRadius: "10px",
-                            padding: "10px"
-                        }}
-                        className="max-w-xs transition-all duration-300"
-                    >
-                        <motion.h3
-                            className="font-bold text-pink-500 mb-1"
-                            style={{ fontFamily: 'Comic Sans MS, cursive' }}
-                            whileHover={{ scale: 1.1 }}
+                            transition={{ duration: 0.5 }}
+                            className="w-10 h-10 bg-[#ffeb3b] text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg cursor-pointer"
+                            style={{ clipPath: 'polygon(50% 0%, 80% 10%, 100% 40%, 90% 80%, 50% 100%, 10% 80%, 0% 40%, 20% 10%)' }}
                         >
-                            {feature.title}
-                        </motion.h3>
-                        <p className="text-sm text-[#6a1b9a]">{feature.description}</p>
+                            {feature.id}
+                        </motion.div>
+                        <motion.svg
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 1 }}
+                            transition={{ duration: 1, delay: 1.5 + index * 0.2 }}
+                            className="mx-2 w-16 h-6"
+                            viewBox="0 0 100 20"
+                        >
+                            <motion.path
+                                d="M2 10 Q 50 -10, 98 10"
+                                stroke="#F472B6"
+                                strokeWidth="2"
+                                strokeDasharray="5,5"
+                                fill="transparent"
+                                animate={{
+                                    strokeDashoffset: [0, -20],
+                                }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                            />
+                        </motion.svg>
+                        <motion.div
+                            whileHover={{
+                                scale: 1.05,
+                                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                                borderRadius: "10px",
+                                padding: "10px"
+                            }}
+                            className="max-w-xs transition-all duration-300"
+                        >
+                            <motion.h3
+                                className="font-bold text-pink-500 mb-1"
+                                style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                                whileHover={{ scale: 1.1 }}
+                            >
+                                {feature.title}
+                            </motion.h3>
+                            <p className="text-sm text-[#6a1b9a]">{feature.description}</p>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            ))}
+                ))}
+            </div>
+
+            {/* Mobile Features */}
+            <div className="md:hidden mt-16 space-y-6">
+                {features.map((feature, index) => (
+                    <motion.div
+                        key={feature.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                            duration: 0.5,
+                            delay: 0.2 * index
+                        }}
+                        className="flex items-center space-x-4 bg-white/80 p-4 rounded-lg shadow-md"
+                    >
+                        <div className="w-10 h-10 bg-[#ffeb3b] text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg">
+                            {feature.id}
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="font-bold text-pink-500 mb-1" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                                {feature.title}
+                            </h3>
+                            <p className="text-sm text-[#6a1b9a]">{feature.description}</p>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
         </div>
     );
 };
