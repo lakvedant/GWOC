@@ -42,7 +42,7 @@ export async function DashboardStats() {
 				</CardHeader>
 				<CardContent>
 					<p className="text-5xl font-bold">
-						₹{new Intl.NumberFormat("en-US").format(totalAmount(order) / 100)}
+						₹{new Intl.NumberFormat("en-IN").format(totalAmount(order))}
 					</p>
 					<p className="text-xs text-muted-foreground"></p>
 				</CardContent>

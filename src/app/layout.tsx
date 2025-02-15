@@ -36,7 +36,6 @@ export default function RootLayout({
         
         <ImagekitProviders>
         <CartProvider>
-        <Navbar />
         {children}
         </CartProvider>
         </ImagekitProviders>
