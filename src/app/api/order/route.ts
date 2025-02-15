@@ -1,95 +1,48 @@
 import { NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
 
 export async function POST(req: Request) {
   try {
-    await dbConnect(); // ✅ Ensure DB is connected
+    await dbConnect();
+    const body = await req.json();
 
-    let body;
-    try {
-      body = await req.json();
-    } catch (jsonError) {
-      console.error("❌ Invalid JSON format:", jsonError);
-      return NextResponse.json({
-        success: false,
-        message: "Invalid JSON format"
-      }, { status: 400 });
-    }
+    // Get next order ID
+    const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean();
+    const nextOrderID = (Array.isArray(latestOrder) ? 200 : (latestOrder?.orderID || 200)) + 1;
 
-    console.log("📦 Received request body:", body); // ✅ Debug request payload
-
-    // Required fields validation
-    const requiredFields = ['userId', 'address', 'phone', 'products', 'amount', 'deliveryType', 'paymentType'];
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        console.error(`⚠️ Missing required field: ${field}`);
-        return NextResponse.json({
-          success: false,
-          message: `Missing required field: ${field}`
-        }, { status: 400 });
-      }
-    }
-
-    // Validate products array
-    if (!Array.isArray(body.products) || body.products.length === 0) {
-      console.error("⚠️ Invalid or empty products array");
-      return NextResponse.json({
-        success: false,
-        message: "Products must be a non-empty array"
-      }, { status: 400 });
-    }
-
-    // Ensure amount is a valid number
-    const amount = parseFloat(body.amount);
-    if (isNaN(amount) || amount <= 0) {
-      console.error("⚠️ Invalid amount value:", body.amount);
-      return NextResponse.json({
-        success: false,
-        message: "Invalid amount value"
-      }, { status: 400 });
-    }
-
-    // Get latest order number
-    let nextOrderID = 201; // Default for first order
-    try {
-      const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean();
-      if (latestOrder && latestOrder.orderID) {
-        nextOrderID = latestOrder.orderID + 1;
-      }
-    } catch (orderFetchError) {
-      console.error("⚠️ Error fetching latest order:", orderFetchError);
-      return NextResponse.json({
-        success: false,
-        message: "Error retrieving latest order ID"
-      }, { status: 500 });
-    }
-
-    const order = new Order({
+    const newOrder = {
       orderID: nextOrderID,
-      userId: body.userId,
-      address: body.address,
+      userId: new mongoose.Types.ObjectId(body.userId),
+      address: {
+        street: body.address.street,
+        house: body.address.house || '',
+        society: body.address.society || 'N/A',
+        city: body.address.city,
+        state: body.address.state,
+        pincode: body.address.pincode,
+        country: body.address.country,
+      },
       phone: body.phone,
-      products: body.products,
-      amount,
+      products: body.products.map((product: { productId: number; quantity: any; }) => ({
+        productId: new mongoose.Types.ObjectId(product.productId),
+        quantity: product.quantity
+      })),
+      amount: body.amount,
       deliveryType: body.deliveryType,
-      paymentType: body.paymentType.toUpperCase() === 'COD' ? 'COD' : 'UPI',
-      orderStatus: 'Accepted',
-      orderDate: new Date(),
-      lastUpdateDate: new Date()
-    });
+      paymentType: body.paymentType,
+      orderStatus: "Accepted"
+    };
 
-    await order.save();
-
-    console.log("✅ Order created successfully:", order);
-
-    return NextResponse.json({ success: true, order }, { status: 201 });
+    const order = await Order.create(newOrder);
+    return NextResponse.json({ success: true, order });
 
   } catch (error) {
-    console.error("🔥 Order creation error:", error);
+    console.error('Order creation error:', error);
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : "Error creating order"
+      message: error instanceof Error ? error.message : 'Failed to create order'
     }, { status: 500 });
   }
 }

@@ -14,13 +14,20 @@ interface CartSliderProps {
   onClose?: () => void;
 }
 
+// Function to check auth status on the server
+const getAuthStatus = async (): Promise<boolean> => {
+  const response = await fetch("/api/auth-status", { cache: "no-store" });
+  const data = await response.json();  
+  return data.isAuthenticated;
+};
+
 export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const router = useRouter();
   const { cartItems, updateQuantity, removeItem, subtotal, discount, setDiscount } = useCart();
   const [couponCode, setCouponCode] = useState("");
   const [notification, setNotification] = useState("");
   const [isLoginOpen, setIsLoginOpen] = useState(false); // Control Login Modal
-  const [shouldRenderLogin, setShouldRenderLogin] = useState(false); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication status
 
   // Simulating a user authentication check (Replace this with actual user state)
   const { userInfo } = useCart(); // Assuming user info is stored in context
@@ -42,9 +49,17 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   };
 
   const total = subtotal * (1 - discount);
+  // Fetch authentication status on component mount
+  React.useEffect(() => {
+    const fetchAuthStatus = async () => {
+      const authStatus = await getAuthStatus();
+      setIsAuthenticated(authStatus);
+    };
+    fetchAuthStatus();
+  }, []);
 
   const handleCheckout = () => {
-    if (userInfo?.userId) {
+    if (isAuthenticated) {
       // User is logged in → Proceed to checkout
       if (onClose) onClose();
       router.push("/checkout");
@@ -149,9 +164,8 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
         </Button>
       </div>
 
-      {isLoginOpen && (
-          <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      )}
+      {/* Login Modal */}
+      <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </div>
   );
 };

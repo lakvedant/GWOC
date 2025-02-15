@@ -93,25 +93,27 @@ export default function CheckoutPage() {
     }
     
     try {
-      // Store the entire address object directly in the order
+      // Format address fields according to the model's expectations
       const orderData = {
         userId: userInfo.userId,
+        // Ensure all required address fields are provided as strings
         address: {
-          street: state.shippingAddress.address,
-          house: state.shippingAddress.apartment,
-          society: "N/A",
-          city: state.shippingAddress.city,
-          state: state.shippingAddress.state,
-          pincode: state.shippingAddress.zipCode,
-          country: state.shippingAddress.country,
+          street: state.shippingAddress.address || '', // Main address line
+          house: state.shippingAddress.apartment || '', // Apartment/unit number
+          society: 'N/A',
+          city: state.shippingAddress.city || '',
+          state: state.shippingAddress.state || '',
+          pincode: state.shippingAddress.zipCode || '',
+          country: state.shippingAddress.country || 'India',
         },
         phone: userInfo.phone,
+        // Ensure product IDs are valid MongoDB ObjectIds
         products: cartItems.map(item => ({
           productId: item.id,
           quantity: item.quantity
         })),
-        amount: subtotal * (1 - discount) + shipping,
-        deliveryType: deliveryMethod,
+        amount: Number((subtotal * (1 - discount) + shipping).toFixed(2)),
+        deliveryType: deliveryMethod.toLowerCase(),
         paymentType: paymentMethod.toUpperCase() === 'COD' ? 'COD' : 'UPI',
         orderStatus: 'Accepted'
       };
@@ -120,7 +122,9 @@ export default function CheckoutPage() {
 
       const orderResponse = await fetch('/api/order', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(orderData),
       });
 
@@ -128,17 +132,19 @@ export default function CheckoutPage() {
       console.log("📩 API Response:", orderResult);
 
       if (!orderResponse.ok) {
-        throw new Error(orderResult.message || 'Failed to create order');
+        // More detailed error handling
+        const errorMessage = orderResult.message || 'Failed to create order';
+        console.error("🚨 Order error:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       clearCart();
       router.push('/checkout/success');
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
-      alert("Failed to create order. Please try again.");
+      alert(error instanceof Error ? error.message : "Failed to create order. Please try again.");
     }
   };
-  
   return (
     <div className="min-h-screen bg-white text-black px-4 md:px-40">
       <div className="max-w-7xl mx-auto py-8">
