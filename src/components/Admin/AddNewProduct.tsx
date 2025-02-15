@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import FileUpload from "./FileUpload";
 import { IProduct } from "@/models/Product";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface AddNewProductProps {
     onSave: (data: IProduct) => void;
@@ -60,17 +61,11 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
             });
 
             const newProduct = await response.json();
-
-            // Reset form after successful submission
-            setValue("name", "");
-            setValue("description", "");
-            setValue("price", 0);
-            setValue("category", "");
-            setValue("discount", undefined);
-            setValue("image", "");
-            setValue("valueForOffer", undefined);
-            setValue("review", []);
-            setValue("weight", undefined);
+            
+            // Reset form
+            const fields = ['name', 'description', 'price', 'category', 'discount', 'image', 'valueForOffer', 'weight'];
+            fields.forEach(field => setValue(field, ''));
+            setValue('review', []);
             setUploadProgress(0);
 
             onSave(newProduct);
@@ -83,133 +78,172 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="form-control">
-                <label className="label">Name</label>
-                <input
-                    type="text"
-                    className={`input input-bordered bg-gray-200 ${errors.name ? "input-error" : ""}`}
-                    {...register("name", { required: "Name is required" })}
-                />
-                {errors.name && <span className="text-error text-sm mt-1">{errors.name.message}</span>}
-            </div>
-
-            <div className="form-control">
-                <label className="label">Description</label>
-                <textarea
-                    className={`textarea textarea-bordered h-24 bg-gray-200 ${errors.description ? "textarea-error" : ""}`}
-                    {...register("description", { required: "Description is required" })}
-                />
-                {errors.description && <span className="text-error text-sm mt-1">{errors.description.message}</span>}
-            </div>
-
-            <div className="form-control">
-                <label className="label">Price</label>
-                <input
-                    type="number"
-                    className={`input input-bordered bg-gray-200 ${errors.price ? "input-error" : ""}`}
-                    {...register("price", { required: "Price is required", min: 0 })}
-                />
-                {errors.price && <span className="text-error text-sm mt-1">{errors.price.message}</span>}
-            </div>
-
-            <div className="form-control">
-                <label className="label">Category</label>
-                <select
-                    className={`select select-bordered bg-gray-200 ${errors.category ? "select-error" : ""}`}
-                    {...register("category", { required: "Category is required" })}
-                >
-                    <option value="">Select a category</option>
-                    <option value="Fudge">Fudge</option>
-                    <option value="Chocolate Modak">Chocolate Modak</option>
-                    <option value="Truffle Balls">Truffle Balls</option>
-                    <option value="Brownie">Brownie</option>
-                    <option value="Muffins">Muffins</option>
-                    <option value="Cookies">Cookies</option>
-                    <option value="Cakes">Cakes</option>
-                    <option value="Ice Cream">Ice Cream</option>
-                    <option value="Donuts">Donuts</option>
-                    <option value="Swiss Rolls">Swiss Rolls</option>
-                    <option value="Valetine Specials">Valetine Specials</option>
-                </select>
-                {errors.category && <span className="text-error text-sm mt-1">{errors.category.message}</span>}
-            </div>
-
-            <div className="form-control">
-                <label className="label">Discount (%)</label>
-                <input
-                    type="number"
-                    className="input input-bordered bg-gray-200"
-                    {...register("discount", { min: 0, max: 100 })}
-                />
-            </div>
-
-            <div className="form-control">
-                <label className="label">Value for Offer</label>
-                <input
-                    type="number"
-                    className="input input-bordered bg-gray-200"
-                    {...register("valueForOffer", { min: 0 })}
-                />
-            </div>
-
-            <div className="form-control">
-                <label className="label">Weight (grams)</label>
-                <input
-                    type="number"
-                    className="input input-bordered bg-gray-200"
-                    {...register("weight", { min: 0 })}
-                />
-            </div>
-
-            <div className="form-control">
-                <label className="label">Available</label>
-                <div className="flex gap-4">
-                    <label className="flex items-center gap-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Left Column */}
+                <div className="space-y-6">
+                    {/* Name Field */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Product Name</label>
                         <input
-                            type="radio"
-                            value="true"
-                            {...register("available", { required: "Availability is required" })}
-                            className="radio checked:bg-blue-500 bg-gray-200"
+                            type="text"
+                            className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
+                            placeholder="Enter product name"
+                            {...register("name", { required: "Name is required" })}
                         />
-                        Yes
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            value="false"
-                            {...register("available", { required: "Availability is required" })}
-                            className="radio checked:bg-red-500 bg-gray-200"
-                        />
-                        No
-                    </label>
-                </div>
-                {errors.available && <span className="text-error text-sm mt-1">{errors.available.message}</span>}
-            </div>
-
-            <div className="form-control">
-                <label className="label">Upload Image</label>
-                <FileUpload fileType="image" onSuccess={handleUploadSuccess} onProgress={handleUploadProgress} />
-                {uploadProgress > 0 && (
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div className="bg-primary h-2.5 rounded-full transition-all duration-300 bg-gray-200" style={{ width: `${uploadProgress}%` }} />
+                        {errors.name && (
+                            <Alert variant="destructive" className="py-2 px-3">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertDescription>{errors.name.message}</AlertDescription>
+                            </Alert>
+                        )}
                     </div>
-                )}
+
+                    {/* Price Field */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Price (₹)</label>
+                        <input
+                            type="number"
+                            className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
+                            placeholder="0.00"
+                            {...register("price", { required: "Price is required", min: 0 })}
+                        />
+                        {errors.price && (
+                            <Alert variant="destructive" className="py-2 px-3">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertDescription>{errors.price.message}</AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+
+                    {/* Category Field */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Category</label>
+                        <select
+                            className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
+                            {...register("category", { required: "Category is required" })}
+                        >
+                            <option value="">Select a category</option>
+                            <option value="Fudge">Fudge</option>
+                            <option value="Chocolate Modak">Chocolate Modak</option>
+                            <option value="Truffle Balls">Truffle Balls</option>
+                            <option value="Brownie">Brownie</option>
+                            <option value="Muffins">Muffins</option>
+                            <option value="Cookies">Cookies</option>
+                            <option value="Cakes">Cakes</option>
+                            <option value="Ice Cream">Ice Cream</option>
+                            <option value="Donuts">Donuts</option>
+                            <option value="Swiss Rolls">Swiss Rolls</option>
+                            <option value="Valetine Specials">Valentine Specials</option>
+                        </select>
+                        {errors.category && (
+                            <Alert variant="destructive" className="py-2 px-3">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertDescription>{errors.category.message}</AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                    {/* Description Field */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Description</label>
+                        <textarea
+                            className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white min-h-[120px]"
+                            placeholder="Enter product description"
+                            {...register("description", { required: "Description is required" })}
+                        />
+                        {errors.description && (
+                            <Alert variant="destructive" className="py-2 px-3">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertDescription>{errors.description.message}</AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+
+                    {/* Weight and Discount Group */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Weight (g)</label>
+                            <input
+                                type="number"
+                                className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
+                                placeholder="0"
+                                {...register("weight", { min: 0 })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Discount (%)</label>
+                            <input
+                                type="number"
+                                className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
+                                placeholder="0"
+                                {...register("discount", { min: 0, max: 100 })}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <button
-                type="submit"
-                className="btn bg-black text-white hover:bg-gray-800 btn-block hover:cursor-pointer"
-                disabled={loading || !uploadProgress}>
-                {loading ? (
-                    <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Publishing Product...
-                    </>
-                ) : (
-                    "Publish Product"
-                )}
-            </button>
+            {/* Full Width Fields */}
+            <div className="space-y-6 pt-4">
+                {/* Image Upload */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium">Product Image</label>
+                    <FileUpload fileType="image" onSuccess={handleUploadSuccess} onProgress={handleUploadProgress} />
+                    {uploadProgress > 0 && (
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                            <div 
+                                className="bg-black h-2 rounded-full transition-all duration-300" 
+                                style={{ width: `${uploadProgress}%` }} 
+                            />
+                        </div>
+                    )}
+                </div>
+
+                {/* Availability */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium">Availability</label>
+                    <div className="flex gap-6">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                value="true"
+                                {...register("available")}
+                                className="w-4 h-4 text-black focus:ring-black border-gray-300"
+                            />
+                            <span>Available</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                value="false"
+                                {...register("available")}
+                                className="w-4 h-4 text-red-500 focus:ring-red-500 border-gray-300"
+                            />
+                            <span>Out of Stock</span>
+                        </label>
+                    </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    className="w-full py-3 px-4 bg-black text-white rounded-md hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    disabled={loading || !uploadProgress}
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>Publishing Product...</span>
+                        </>
+                    ) : (
+                        "Publish Product"
+                    )}
+                </button>
+            </div>
         </form>
     );
 }
