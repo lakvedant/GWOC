@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,70 +14,53 @@ interface CartSliderProps {
   onClose?: () => void;
 }
 
-// Function to check auth status on the server
+// Function to check auth status on the server (fallback)
 const getAuthStatus = async (): Promise<boolean> => {
   const response = await fetch("/api/auth-status", { cache: "no-store" });
-  const data = await response.json();  
+  const data = await response.json();
   return data.isAuthenticated;
 };
 
 export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const router = useRouter();
-  const { cartItems, updateQuantity, removeItem, subtotal, discount, setDiscount } = useCart();
+  const { cartItems, updateQuantity, removeItem, subtotal, discount, setDiscount, userInfo } = useCart();
   const [couponCode, setCouponCode] = useState("");
   const [notification, setNotification] = useState("");
-  const [isLoginOpen, setIsLoginOpen] = useState(false); // Control Login Modal
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication status
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo); // Use userInfo first
 
-  // Simulating a user authentication check (Replace this with actual user state)
-  const { userInfo } = useCart(); // Assuming user info is stored in context
-
-  const handleCouponApply = () => {
-    const validCoupons: { [key: string]: number } = {
-      SAVE10: 0.1,
-      SAVE20: 0.2,
-      TEST99: 0.99,
-    };
-
-    if (validCoupons[couponCode]) {
-      setDiscount(validCoupons[couponCode]);
-      setNotification("Coupon applied successfully!");
-    } else {
-      setNotification("Invalid coupon code");
+  // Check authentication status only if userInfo is missing
+  useEffect(() => {
+    if (!userInfo) {
+      const fetchAuthStatus = async () => {
+        const authStatus = await getAuthStatus();
+        setIsAuthenticated(authStatus);
+      };
+      fetchAuthStatus();
     }
-    setTimeout(() => setNotification(""), 3000);
-  };
-
-  const total = subtotal * (1 - discount);
-  // Fetch authentication status on component mount
-  React.useEffect(() => {
-    const fetchAuthStatus = async () => {
-      const authStatus = await getAuthStatus();
-      setIsAuthenticated(authStatus);
-    };
-    fetchAuthStatus();
-  }, []);
+  }, [userInfo]);
 
   const handleCheckout = () => {
     if (isAuthenticated) {
-      // User is logged in → Proceed to checkout
       if (onClose) onClose();
       router.push("/checkout");
     } else {
-      // User is NOT logged in → Show login modal
       setIsLoginOpen(true);
     }
   };
 
   // Callback for successful login → Redirect to checkout
   const handleLoginSuccess = () => {
-    setIsLoginOpen(false); // Close login modal
-    router.push("/checkout"); // Redirect to checkout
+    setIsLoginOpen(false);
+    router.push("/checkout");
   };
+
+  function handleCouponApply(event: React.MouseEvent<HTMLButtonElement>): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <div className="flex flex-col h-full">
-
       <div className="px-4 py-2 border-b">
         <h2 className="text-lg font-medium">Shopping Cart ({cartItems.length})</h2>
       </div>
@@ -157,15 +140,15 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
         )}
         <div className="flex justify-between mb-4 font-bold">
           <span>Total</span>
-          <span>₹{total.toFixed(2)}</span>
+          <span>₹{(subtotal * (1 - discount)).toFixed(2)}</span>
         </div>
         <Button className="w-full" onClick={handleCheckout} disabled={cartItems.length === 0}>
           Checkout
         </Button>
       </div>
 
-      {/* Login Modal */}
-      <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      {/* Login Modal (Only show if user is NOT authenticated) */}
+      {!isAuthenticated && <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
     </div>
   );
 };

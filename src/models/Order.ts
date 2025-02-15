@@ -3,15 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IOrder extends Document {
   orderID: number;
   userId: Schema.Types.ObjectId;
-  address: {
-    street: string;
-    house: string;
-    society: string;
-    city: string;
-    state: string;
-    pincode: string;
-    country: string;
-  };
+  address: Schema.Types.ObjectId; // Now an ObjectId referencing Address
   phone: string;
   products: { productId: mongoose.Types.ObjectId; quantity: number }[];
   amount: number;
@@ -24,17 +16,14 @@ const OrderSchema = new Schema<IOrder>(
   {
     orderID: { type: Number, required: true, unique: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    address: {
-      street: { type: String, required: true },
-      house: { type: String, required: true },
-      society: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      pincode: { type: String, required: true },
-      country: { type: String, required: true },
-    },
+    address: { type: Schema.Types.ObjectId, ref: "Address", required: true }, // ✅ Reference Address
     phone: { type: String, required: true },
-    products: [{ productId: { type: Schema.Types.ObjectId, required: true }, quantity: { type: Number, required: true } }],
+    products: [
+      {
+        productId: { type: Schema.Types.ObjectId, required: true },
+        quantity: { type: Number, required: true },
+      },
+    ],
     amount: { type: Number, required: true },
     deliveryType: { type: String, required: true },
     paymentType: { type: String, enum: ["COD", "UPI"], required: true },
@@ -43,7 +32,5 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: true }
 );
 
-// Check if the model exists before compiling
 const Order = mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
-
 export default Order;

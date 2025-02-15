@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Package,
     BookOpen,
@@ -76,26 +76,42 @@ const ProfilePage = () => {
         }
     ];
 
+    interface UserInfo {
+        name: string;
+        email: string;
+        phone: string;
+    }
+
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+    useEffect(() => {
+        const storedUserInfo = localStorage.getItem("userInfo");
+        if (storedUserInfo) {
+            setUserInfo(JSON.parse(storedUserInfo));
+        }
+    }, []);
+
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header Section */}
-            <div className="bg-white shadow-sm">
+           {/* Header Section */}
+           <div className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 py-4">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
                                     <img
-                                        src="userlogo.svg"
+                                        src={ 'userlogo.svg'}
                                         alt="Profile"
                                         className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-pink-100"
                                     />
                                 </div>
-                                <h1 className="text-lg md:text-xl font-semibold">Miten</h1>
+                                <h1 className="text-lg md:text-xl font-semibold">{userInfo?.name || 'User'}</h1>
                             </div>
                             <button
                                 className="md:hidden"
@@ -107,11 +123,11 @@ const ProfilePage = () => {
                         <div className="text-sm md:text-base text-gray-600 space-y-1">
                             <div className="flex items-center gap-2">
                                 <Mail size={16} className="text-gray-400" />
-                                <span className="text-sm">mjgandhi2305@gmail.com</span>
+                                <span className="text-sm">{userInfo?.email || 'No Email'}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Phone size={16} className="text-gray-400" />
-                                <span className="text-sm">8799377093</span>
+                                <span className="text-sm">{userInfo?.phone || 'No Phone'}</span>
                             </div>
                         </div>
                     </div>
@@ -138,8 +154,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('orders');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<BookOpen size={20} />}
                                 text="Address Book"
@@ -147,8 +162,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('address');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<MessageSquare size={20} />}
                                 text="My Reviews"
@@ -156,8 +170,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('reviews');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<User size={20} />}
                                 text="My Profile"
@@ -165,8 +178,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('profile');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                         </nav>
                     </div>
 
@@ -254,7 +266,15 @@ const ProfilePage = () => {
     );
 };
 
-const MenuItem = ({ icon, text, active, onClick, badge }) => {
+interface MenuItemProps {
+    icon: React.ReactNode;
+    text: string;
+    active: boolean;
+    onClick: () => void;
+    badge?: string;
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ icon, text, active, onClick, badge }) => {
     return (
         <button
             onClick={onClick}
