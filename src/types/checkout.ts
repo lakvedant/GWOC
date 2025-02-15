@@ -12,8 +12,6 @@ export interface CartItem {
 }
 
 export interface ShippingAddress {
-  firstName: string
-  lastName: string
   address: string
   society?: string
   apartment?: string
@@ -24,11 +22,7 @@ export interface ShippingAddress {
 }
 
 export interface CheckoutState {
-  email: string;
-  subscribeToNews: boolean;
   shippingAddress: {
-    firstName: string;
-    lastName: string;
     address: string;
     apartment: string;
     city: string;

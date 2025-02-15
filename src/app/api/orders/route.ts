@@ -7,11 +7,14 @@ export async function POST(req: Request) {
     await dbConnect();
 
     const body = await req.json();
+    console.log("📦 Received request body:", body); // ✅ Log full request body
 
-    // Validate required fields
+    // Required fields
     const requiredFields = ['userId', 'address', 'phone', 'products', 'amount', 'deliveryType', 'paymentType'];
+    
     for (const field of requiredFields) {
       if (!body[field]) {
+        console.error(`⚠️ Missing required field: ${field}`);
         return NextResponse.json({
           success: false,
           message: `Missing required field: ${field}`
@@ -19,11 +22,10 @@ export async function POST(req: Request) {
       }
     }
 
-    // Get the latest order number
+    // Get latest order number
     const latestOrder = await Order.findOne().sort({ orderID: -1 });
     const nextOrderID = latestOrder ? latestOrder.orderID + 1 : 201;
 
-    // Create new order with all fields
     const order = new Order({
       orderID: nextOrderID,
       userId: body.userId,
@@ -40,12 +42,9 @@ export async function POST(req: Request) {
 
     await order.save();
 
-    return NextResponse.json({
-      success: true,
-      order
-    }, { status: 201 });
+    return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error) {
-    console.error('Order creation error:', error);
+    console.error("🔥 Order creation error:", error);
     return NextResponse.json({
       success: false,
       message: error instanceof Error ? error.message : 'Error creating order'

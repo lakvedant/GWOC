@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { CartSlider } from "./CartSlider";
 import Link from "next/link";
@@ -16,10 +15,26 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cartData") || "[]");
     setCartItems(savedCart);
-  }, []);
+
+    // Handle clicking outside to close cart
+    const handleClickOutside = (event: MouseEvent) => {
+      const cartPanel = document.getElementById("cart-panel");
+      if (cartPanel && !cartPanel.contains(event.target as Node) && !(event.target as Element).closest(".cart-trigger")) {
+        setIsCartOpen(false);
+      }
+    };
+
+    if (isCartOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCartOpen]);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -30,7 +45,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-40">
       <div className="mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
@@ -83,27 +98,20 @@ export const Navbar = () => {
             </Button>
 
             {/* Cart Button */}
-            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-              <SheetTitle></SheetTitle>
-              <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="lg"
-                  className="relative flex items-center space-x-2 hover:bg-pink-50 hover:text-pink-600 rounded-full px-6 py-3 transition-colors duration-200"
-                >
-                  <ShoppingCart className="h-6 w-6" />
-                  <span className="text-base font-medium">Cart</span>
-                  {cartItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-6 w-6 bg-pink-600 rounded-full text-white text-sm flex items-center justify-center animate-pulse">
-                      {cartItems.length}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto">
-                <CartSlider onClose={() => setIsCartOpen(false)} />
-              </SheetContent>
-            </Sheet>
+            <Button 
+              variant="ghost" 
+              size="lg"
+              className="cart-trigger relative flex items-center space-x-2 hover:bg-pink-50 hover:text-pink-600 rounded-full px-6 py-3 transition-colors duration-200"
+              onClick={() => setIsCartOpen(!isCartOpen)}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              <span className="text-base font-medium">Cart</span>
+              {cartItems.length > 0 && (
+                <span className="absolute -top-1 -right-1 h-6 w-6 bg-pink-600 rounded-full text-white text-sm flex items-center justify-center animate-pulse">
+                  {cartItems.length}
+                </span>
+              )}
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -151,6 +159,26 @@ export const Navbar = () => {
           ))}
         </div>
       </div>
+
+      {/* Custom Cart Slider */}
+      <div
+        id="cart-panel"
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+          isCartOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="h-full overflow-y-auto">
+          <CartSlider onClose={() => setIsCartOpen(false)} />
+        </div>
+      </div>
+
+      {/* Overlay when cart is open */}
+      {isCartOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsCartOpen(false)}
+        />
+      )}
 
       {/* Login Modal */}
       {isLoginOpen && (

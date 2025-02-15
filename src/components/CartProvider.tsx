@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CartItem } from '@/types/checkout';
@@ -35,13 +35,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load cart and user info from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('cartItems');
-    const savedUserInfo = localStorage.getItem('userInfo');
-    
     if (savedCart) {
       setCartItems(JSON.parse(savedCart));
     }
+
+    const savedUserInfo = localStorage.getItem('userInfo');
     if (savedUserInfo) {
-      setUserInfo(JSON.parse(savedUserInfo));
+      try {
+        const parsedUserInfo: UserInfo = JSON.parse(savedUserInfo);
+        if (parsedUserInfo.userId) {
+          setUserInfo(parsedUserInfo);
+        } else {
+          localStorage.removeItem('userInfo');
+        }
+      } catch (error) {
+        console.error('🚨 Invalid user info in localStorage:', error);
+        localStorage.removeItem('userInfo');
+      }
     }
   }, []);
 
@@ -59,10 +69,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (newItem: CartItem) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => 
-        item.id === newItem.id && item.variant === newItem.variant
-      );
-      
+      const existingItem = prevItems.find(item => item.id === newItem.id && item.variant === newItem.variant);
       if (existingItem) {
         return prevItems.map(item =>
           item.id === newItem.id && item.variant === newItem.variant
@@ -79,11 +86,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeItem(id);
       return;
     }
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+    setCartItems(prevItems => prevItems.map(item => (item.id === id ? { ...item, quantity } : item)));
   };
 
   const removeItem = (id: string) => {
@@ -109,20 +112,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAuthenticated = Boolean(userInfo?.userId);
 
   return (
-    <CartContext.Provider value={{
-      cartItems,
-      userInfo,
-      addToCart,
-      updateQuantity,
-      removeItem,
-      clearCart,
-      updateUserInfo,
-      clearUserInfo,
-      subtotal,
-      discount,
-      setDiscount,
-      isAuthenticated
-    }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        userInfo,
+        addToCart,
+        updateQuantity,
+        removeItem,
+        clearCart,
+        updateUserInfo,
+        clearUserInfo,
+        subtotal,
+        discount,
+        setDiscount,
+        isAuthenticated
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -130,7 +135,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;

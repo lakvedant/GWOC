@@ -4,7 +4,6 @@ import { IoClose } from "react-icons/io5";
 import { FaEnvelope } from "react-icons/fa";
 import { useCart } from './CartProvider';
 
-
 export default function LoginSignupModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -17,6 +16,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
 
   const [loading, setLoading] = useState(false);
   const { updateUserInfo } = useCart();
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (step === "otp" && timer > 0) {
@@ -24,8 +24,6 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
     return () => clearInterval(interval);
   }, [step, timer]);
-
-
 
   const handleCreateUser = async () => {
     setLoading(true);
@@ -42,12 +40,18 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       const response = await res.json();
   
       if (res.ok) {
-        const data = await res.json(); // Assuming response contains userId
-        updateUserInfo({ 
-          userId: data.userId, // Include userId
-          name, 
-          phone 
-        });
+        const userInfo = {
+          userId: response.userId,
+          name,
+          phone,
+          email
+        };
+        
+        // Store in localStorage
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        
+        // Update cart context
+        updateUserInfo(userInfo);
         setStep("success");
         
         setTimeout(() => {
@@ -63,8 +67,6 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       setLoading(false);
     }
   };
-  
-
 
   const sendOtp = async () => {
     setError("");
@@ -72,7 +74,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       setError("Please enter a valid 10-digit mobile number.");
       return;
     }
-    if (phone==="9898058074") {
+    if (phone === "9898058074") {
       setStep("otp");
       return;
     }
@@ -105,7 +107,15 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
-    if (phone==="9898058074") {
+    if (phone === "9898058074") {
+      const demoUserInfo = {
+        userId: "demo123",
+        name: "Demo User",
+        phone: "9898058074",
+        email: "demo@example.com"
+      };
+      localStorage.setItem('userInfo', JSON.stringify(demoUserInfo));
+      updateUserInfo(demoUserInfo);
       setStep("success");
       setTimeout(() => {
         onClose();
@@ -119,7 +129,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ verificationId, otp, phone }),
-        credentials: 'include' // Important for cookies
+        credentials: 'include'
       });
   
       const response = await res.json();
@@ -130,15 +140,22 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       }
   
       if (response.exists) {
+        const userInfo = {
+          userId: response.userId,
+          name: response.name,
+          phone: response.phone,
+          email: response.email
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        updateUserInfo(userInfo);
         setStep("success");
         
-        // Redirect after successful login
         setTimeout(() => {
           onClose();
           window.location.href = "/checkout";
         }, 2000);
       } else {
-        setStep("form"); // Show form for new users
+        setStep("form");
       }
   
     } catch (error) {
@@ -149,6 +166,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
   
   return (
     <Dialog 
+      className="z-50"
       open={open} 
       onClose={onClose} 
       fullWidth 
@@ -248,57 +266,56 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         )}
 
         {step === "form" && (
+          <div className="p-6 bg-white rounded-2xl relative">
+            <button className="absolute top-4 right-4 text-gray-500 hover:text-pink-600" onClick={onClose}>
+              <IoClose size={24} />
+            </button>
 
-        <div className="p-6 bg-white rounded-2xl relative">
-        <button className="absolute top-4 right-4 text-gray-500 hover:text-pink-600" onClick={onClose}>
-          <IoClose size={24} />
-        </button>
+            <h2 className="text-2xl font-semibold text-pink-600 flex items-center gap-2">
+              Hello! 👋
+            </h2>
+            <p className="text-gray-500 mt-1">
+              Please enter your details <span className="text-pink-500 cursor-pointer">(Edit)</span>
+            </p>
 
-        <h2 className="text-2xl font-semibold text-pink-600 flex items-center gap-2">
-          Hello! 👋
-        </h2>
-        <p className="text-gray-500 mt-1">
-          Please enter your details <span className="text-pink-500 cursor-pointer">(Edit)</span>
-        </p>
+            <div className="mt-4">
+              <div className="bg-gray-100 px-4 py-3 rounded-lg text-gray-600">
+                +91 - {phone}
+              </div>
+            </div>
 
-        <div className="mt-4">
-          <div className="bg-gray-100 px-4 py-3 rounded-lg text-gray-600">
-            +91 - {phone}
+            <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">  
+              <input
+                type="text"
+                placeholder="Your name"
+                className="w-full outline-none bg-transparent text-black placeholder-gray-400"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">
+              <FaEnvelope className="text-gray-500" />
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="ml-3 w-full outline-none bg-transparent text-black placeholder-gray-400"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <button
+              className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
+                name && email ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-300 cursor-not-allowed"
+              }`}
+              disabled={!name || !email}
+              onClick={handleCreateUser}
+            >
+              Create Account
+            </button>
           </div>
-        </div>
-
-        <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">  
-          <input
-            type="text"
-            placeholder="Your name"
-            className="w-full outline-none bg-transparent text-black placeholder-gray-400"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-
-        <div className="mt-3 flex items-center border border-gray-300 rounded-lg px-4 py-3">
-          <FaEnvelope className="text-gray-500" />
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="ml-3 w-full outline-none bg-transparent text-black placeholder-gray-400"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <button
-          className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
-            name && email ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-300 cursor-not-allowed"
-          }`}
-          disabled={!name || !email}
-          onClick={handleCreateUser}
-        >
-          Create Account
-        </button>
-      </div>
-      )}
+        )}
 
         {step === "success" && (
           <div className="text-center py-6">

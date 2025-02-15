@@ -14,11 +14,7 @@ import type { CheckoutState, ShippingAddress } from "@/types/checkout";
 import LoginSignupModal from "@/components/Login";
 
 const initialState: CheckoutState = {
-  email: "",
-  subscribeToNews: false,
   shippingAddress: {
-    firstName: "",
-    lastName: "",
     address: "",
     apartment: "",
     city: "",
@@ -91,6 +87,11 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentComplete = async (paymentMethod: string) => {
+    if (!userInfo || !userInfo.userId) {
+      console.error("🚨 Missing userId in order submission");
+      return alert("User information is missing. Please log in again.");
+    }
+    
     try {
       const addressData = {
         address: state.shippingAddress.address,
@@ -114,15 +115,16 @@ export default function CheckoutPage() {
         orderStatus: 'Accepted'
       };
   
+      console.log("📝 Sending order data:", orderData); // ✅ Logs the data before API call
+  
       const response = await fetch('/api/orders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
       });
   
       const data = await response.json();
+      console.log("📩 API Response:", data); // ✅ Logs API response
   
       if (!response.ok) {
         throw new Error(data.message || 'Failed to create order');
@@ -131,22 +133,10 @@ export default function CheckoutPage() {
       clearCart();
       router.push('/checkout/success');
     } catch (error) {
-      console.error('Failed to create order:', error);
+      console.error("🚨 Order creation failed:", error);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white text-black px-4 md:px-40 flex items-center justify-center">
-        <div>Loading...</div>
-      </div>
-    );
-  }
-
-  if (!cartItems || cartItems.length === 0) {
-    return null;
-  }
-
+  
   return (
     <div className="min-h-screen bg-white text-black px-4 md:px-40">
       <div className="max-w-7xl mx-auto py-8">
