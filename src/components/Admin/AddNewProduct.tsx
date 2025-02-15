@@ -130,6 +130,7 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                     <option value="Ice Cream">Ice Cream</option>
                     <option value="Donuts">Donuts</option>
                     <option value="Swiss Rolls">Swiss Rolls</option>
+                    <option value="Valetine Specials">Valetine Specials</option>
                 </select>
                 {errors.category && <span className="text-error text-sm mt-1">{errors.category.message}</span>}
             </div>

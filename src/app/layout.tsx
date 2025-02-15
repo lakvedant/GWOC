@@ -5,6 +5,7 @@ import { CartProvider } from "@/components/CartProvider";
 
 
 import ImagekitProviders from "@/components/Admin/Imagekit-Providers";
+import Navbar from "@/components/Navbar";
 
 
 const geistSans = Geist({
@@ -32,8 +33,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        
         <ImagekitProviders>
         <CartProvider>
+        <Navbar />
         {children}
         </CartProvider>
         </ImagekitProviders>

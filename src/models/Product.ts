@@ -10,7 +10,7 @@ export interface IProduct extends Document {
 	available: boolean;
 	valueForOffer?: number;
 	review?: { rating: number; reviewId: Schema.Types.ObjectId }[];
-	weight?: number;
+	weight?: string;
 	createdAt: Date;
 };
 

@@ -71,6 +71,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
   const [isWishlistActive, setIsWishlistActive] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const shortText = product.description.slice(0, 175); 
+  const isPieceBased = !selectedWeight.includes("g") && !selectedWeight.includes("kg");
 
   const weights: WeightOption[] = ['0.5 Kg', '1 Kg', '1.5 Kg', '2 Kg', '4 Kg'];
   
@@ -84,7 +85,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
         id: product._id,
         name: product.name,
         price: discountedPrice,
-        quantity: 1,
+        quantity: isPieceBased ? parseInt(selectedWeight) : 1, 
         image: product.image,
         variant: selectedWeight,
         message: message,
@@ -173,21 +174,43 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
                     Serving Info
                   </button>
                 </div>
+
                 <div className="grid grid-cols-5 gap-2">
-                  {weights.map((weight) => (
-                    <button
-                      key={weight}
-                      onClick={() => setSelectedWeight(weight)}
-                      className={`p-2 rounded border text-sm transition-colors ${
-                        selectedWeight === weight
-                          ? 'border-pink-500 text-pink-500 bg-pink-50'
-                          : 'border-gray-200 text-gray-600 hover:border-pink-200'
-                      }`}
-                    >
-                      {weight}
-                    </button>
-                  ))}
-                </div>
+  {(() => {
+    let weightOptions: string[] = [];
+    let isPieceBased = false;
+
+    if (product.category === "Cakes" || product.category === "Chocolate Modak") {
+      weightOptions = ["500g", "1kg", "1.5kg", "2kg", "3kg"];
+    } else if (product.category === "Cookies" || product.category === "Muffins") {
+      weightOptions = ["100g", "250g", "500g", "1kg"];
+    } else {
+      weightOptions = ["1 Pc", "2 Pc", "5 Pc", "8 Pc", "10 Pc"];
+      isPieceBased = true;
+    }
+
+    return weightOptions.map((option) => (
+      <button
+        key={option}
+        onClick={() => {
+          if (isPieceBased) {
+            setSelectedWeight(option as WeightOption);
+          } else {
+            setSelectedWeight(option as WeightOption);
+          }
+        }}
+        className={`p-2 rounded border text-sm transition-colors ${
+          selectedWeight === option
+            ? "border-pink-500 text-pink-500 bg-pink-50"
+            : "border-gray-200 text-gray-600 hover:border-pink-200"
+        }`}
+      >
+        {option}
+      </button>
+    ));
+  })()}
+</div>
+
               </div>
 
               {/* Message input */}

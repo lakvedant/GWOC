@@ -13,9 +13,63 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
   const [timer, setTimer] = useState(30);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
   const [loading, setLoading] = useState(false);
   const { updateUserInfo } = useCart();
+
+  const TEST_PHONE = "9898058074";
+  const TEST_OTP = "123456";
+
+  const checkUserInfo = async () => {
+    setError("");
+    setLoading(true);
+    
+    try {
+      const res = await fetch("/api/checkUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+        credentials: 'include'
+      });
+  
+      const response = await res.json();
+      console.log(response);
+  
+      if (!res.ok) {
+        setError(response.message || "Failed to check user info.");
+        return false;
+      }
+  
+      if (response.exists) {
+        const userInfo = {
+          userId: response.userId,
+          name: response.name,
+          phone: response.phone,
+          email: response.email
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        updateUserInfo(userInfo);
+        setStep("success");
+        setTimeout(() => {
+          onClose();
+          window.location.href = "/checkout";
+        }, 2000);
+        return;
+      }
+      else {
+      setStep("form");
+      return ;
+      }
+      
+      
+  
+    } catch (error) {
+      console.error("User Info Check Error:", error);
+      setError("Something went wrong. Please try again.");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -47,14 +101,12 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
           email
         };
         
-        // Store in localStorage
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        
-        // Update cart context
         updateUserInfo(userInfo);
         setStep("success");
         
         setTimeout(() => {
+          onClose();
           window.location.href = "/checkout";
         }, 2000);
       } else {
@@ -70,16 +122,22 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
 
   const sendOtp = async () => {
     setError("");
+    setLoading(true);
+    
     if (phone.length !== 10) {
       setError("Please enter a valid 10-digit mobile number.");
-      return;
-    }
-    if (phone === "9898058074") {
-      setStep("otp");
+      setLoading(false);
       return;
     }
 
     try {
+      if (phone === TEST_PHONE) {
+        setStep("otp");
+        setTimer(30);
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch("/api/auth/sendOtp", {
         method: "POST",
         body: JSON.stringify({ phone }),
@@ -97,34 +155,32 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
       }
     } catch (error) {
       setError("Failed to send OTP. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const verifyOtp = async () => {
     setError("");
+    setLoading(true);
   
     if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
+      setLoading(false);
       return;
     }
-    if (phone === "9898058074") {
-      const demoUserInfo = {
-        userId: "demo123",
-        name: "Demo User",
-        phone: "9898058074",
-        email: "demo@example.com"
-      };
-      localStorage.setItem('userInfo', JSON.stringify(demoUserInfo));
-      updateUserInfo(demoUserInfo);
-      setStep("success");
-      setTimeout(() => {
-        onClose();
-        window.location.href = "/checkout";
-      }, 2000);
-      return;
-    }
-  
+
     try {
+      if (phone === TEST_PHONE) {
+        if (otp === TEST_OTP) {
+          await checkUserInfo();
+        } else {
+          setError("Invalid OTP. Please try again.");
+        }
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch("/api/auth/verifyOtp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,31 +195,17 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         return;
       }
   
-      if (response.exists) {
-        const userInfo = {
-          userId: response.userId,
-          name: response.name,
-          phone: response.phone,
-          email: response.email
-        };
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        updateUserInfo(userInfo);
-        setStep("success");
-        
-        setTimeout(() => {
-          onClose();
-          window.location.href = "/checkout";
-        }, 2000);
-      } else {
-        setStep("form");
-      }
+      await checkUserInfo();
   
     } catch (error) {
       console.error("OTP Verification Error:", error);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-  
+
+
   return (
     <Dialog 
       className="z-50"
@@ -205,19 +247,20 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
                 maxLength={10}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                disabled={loading}
               />
             </div>
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
               className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg transition-all duration-200 ${
-                phone.length === 10 
+                phone.length === 10 && !loading
                   ? "bg-pink-500 hover:bg-pink-600" 
                   : "bg-pink-300 cursor-not-allowed"
               }`}
               onClick={sendOtp}
-              disabled={phone.length !== 10}
+              disabled={phone.length !== 10 || loading}
             >
-              Get OTP →
+              {loading ? "Please wait..." : "Get OTP →"}
             </button>
           </>
         )}
@@ -237,18 +280,19 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
               maxLength={6}
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+              disabled={loading}
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
               className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg transition-all duration-200 ${
-                otp.length === 6 
+                otp.length === 6 && !loading
                   ? "bg-pink-500 hover:bg-pink-600" 
                   : "bg-pink-300 cursor-not-allowed"
               }`}
               onClick={verifyOtp}
-              disabled={otp.length !== 6}
+              disabled={otp.length !== 6 || loading}
             >
-              Verify OTP →
+              {loading ? "Verifying..." : "Verify OTP →"}
             </button>
             {timer > 0 ? (
               <p className="text-gray-500 text-sm text-center mt-3">
@@ -258,6 +302,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
               <button
                 className="w-full text-pink-500 hover:text-pink-600 text-sm mt-3 transition-colors"
                 onClick={sendOtp}
+                disabled={loading}
               >
                 Resend OTP
               </button>
@@ -267,15 +312,11 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
 
         {step === "form" && (
           <div className="p-6 bg-white rounded-2xl relative">
-            <button className="absolute top-4 right-4 text-gray-500 hover:text-pink-600" onClick={onClose}>
-              <IoClose size={24} />
-            </button>
-
             <h2 className="text-2xl font-semibold text-pink-600 flex items-center gap-2">
               Hello! 👋
             </h2>
             <p className="text-gray-500 mt-1">
-              Please enter your details <span className="text-pink-500 cursor-pointer">(Edit)</span>
+              Please enter your details
             </p>
 
             <div className="mt-4">
@@ -291,6 +332,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
                 className="w-full outline-none bg-transparent text-black placeholder-gray-400"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                disabled={loading}
               />
             </div>
 
@@ -302,17 +344,18 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
                 className="ml-3 w-full outline-none bg-transparent text-black placeholder-gray-400"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
               />
             </div>
 
             <button
               className={`w-full py-3 mt-4 text-lg font-medium text-white rounded-lg ${
-                name && email ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-300 cursor-not-allowed"
+                name && email && !loading ? "bg-pink-500 hover:bg-pink-600" : "bg-pink-300 cursor-not-allowed"
               }`}
-              disabled={!name || !email}
+              disabled={!name || !email || loading}
               onClick={handleCreateUser}
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </div>
         )}

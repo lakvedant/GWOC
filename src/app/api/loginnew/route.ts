@@ -1,9 +1,6 @@
-import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 import User from '@/models/User';
 import dbConnect from '@/lib/db';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Ensure you have this secret set
 
 export async function POST(req: Request) {
   try {
@@ -25,14 +22,12 @@ export async function POST(req: Request) {
     const user = new User({ phone, name, email });
     await user.save();
 
-    // Generate a JWT token
-    const token = jwt.sign(
-      { userId: user._id, phone: user.phone }, 
-      JWT_SECRET, 
-      { expiresIn: '7d' } // Token expires in 1 hour
-    );
-
-    return NextResponse.json({ token, message: 'User created successfully' }, { status: 200 });
+    return NextResponse.json({ 
+      userId: user._id,
+      name: user.name,
+      phone: user.phone,
+      email: user.email
+    }, { status: 200 });
   } catch (error) {
     console.error("Error creating user:", error);
     return NextResponse.json({ message: "Server error." }, { status: 500 });

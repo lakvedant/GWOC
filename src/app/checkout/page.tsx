@@ -93,18 +93,19 @@ export default function CheckoutPage() {
     }
     
     try {
-      const addressData = {
-        address: state.shippingAddress.address,
-        apartment: state.shippingAddress.apartment,
-        city: state.shippingAddress.city,
-        state: state.shippingAddress.state,
-        zipCode: state.shippingAddress.zipCode,
-      };
-  
+      // Store the entire address object directly in the order
       const orderData = {
-        userId: userInfo?.userId,
-        address: addressData,
-        phone: userInfo?.phone,
+        userId: userInfo.userId,
+        address: {
+          street: state.shippingAddress.address,
+          house: state.shippingAddress.apartment,
+          society: "N/A",
+          city: state.shippingAddress.city,
+          state: state.shippingAddress.state,
+          pincode: state.shippingAddress.zipCode,
+          country: state.shippingAddress.country,
+        },
+        phone: userInfo.phone,
         products: cartItems.map(item => ({
           productId: item.id,
           quantity: item.quantity
@@ -114,26 +115,27 @@ export default function CheckoutPage() {
         paymentType: paymentMethod.toUpperCase() === 'COD' ? 'COD' : 'UPI',
         orderStatus: 'Accepted'
       };
-  
-      console.log("📝 Sending order data:", orderData); // ✅ Logs the data before API call
-  
-      const response = await fetch('/api/orders', {
+
+      console.log("📝 Sending order data:", orderData);
+
+      const orderResponse = await fetch('/api/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
       });
-  
-      const data = await response.json();
-      console.log("📩 API Response:", data); // ✅ Logs API response
-  
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to create order');
+
+      const orderResult = await orderResponse.json();
+      console.log("📩 API Response:", orderResult);
+
+      if (!orderResponse.ok) {
+        throw new Error(orderResult.message || 'Failed to create order');
       }
-  
+
       clearCart();
       router.push('/checkout/success');
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
+      alert("Failed to create order. Please try again.");
     }
   };
   

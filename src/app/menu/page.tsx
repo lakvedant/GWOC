@@ -9,24 +9,23 @@ const Page = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("Cakes");
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1 flex flex-col">
-        {/* Banner section */}
-        <Banner 
-          title={selectedCategory.toUpperCase()}
-          description="Discover our delicious selection of treats"
+    <div className="min-h-screen flex flex-col pt-20"> 
+      {/* The pt-20 ensures the content starts below the fixed Navbar */}
+      
+      {/* Banner section */}
+      <Banner 
+        title={selectedCategory.toUpperCase()}
+        description="Discover our delicious selection of treats"
+      />
+
+      {/* Content section with sidebar and product grid */}
+      <div className="flex flex-1">
+        <BakerySidebar 
+          activeCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
         />
-        
-        {/* Content section with sidebar and product grid */}
-        <div className="flex flex-1">
-          <BakerySidebar 
-            activeCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
-          <div className="flex-1">
-            <ProductGrid selectedCategory={selectedCategory} />
-          </div>
+        <div className="flex-1">
+          <ProductGrid selectedCategory={selectedCategory} />
         </div>
       </div>
     </div>
