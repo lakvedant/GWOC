@@ -86,65 +86,64 @@ export default function CheckoutPage() {
     setStep("payment");
   };
 
+  // Frontend - handlePaymentComplete function
   const handlePaymentComplete = async (paymentMethod: string) => {
     if (!userInfo || !userInfo.userId) {
       console.error("🚨 Missing userId in order submission");
       return alert("User information is missing. Please log in again.");
     }
-    
+  
     try {
-      // Format address fields according to the model's expectations
-      const orderData = {
-        userId: userInfo.userId,
-        // Ensure all required address fields are provided as strings
-        address: {
-          street: state.shippingAddress.address || '', // Main address line
-          house: state.shippingAddress.apartment || '', // Apartment/unit number
-          society: 'N/A',
-          city: state.shippingAddress.city || '',
-          state: state.shippingAddress.state || '',
-          pincode: state.shippingAddress.zipCode || '',
-          country: state.shippingAddress.country || 'India',
-        },
-        phone: userInfo.phone,
-        // Ensure product IDs are valid MongoDB ObjectIds
-        products: cartItems.map(item => ({
-          productId: item.id,
-          quantity: item.quantity
-        })),
-        amount: Number((subtotal * (1 - discount) + shipping).toFixed(2)),
-        deliveryType: deliveryMethod.toLowerCase(),
-        paymentType: paymentMethod.toUpperCase() === 'COD' ? 'COD' : 'UPI',
-        orderStatus: 'Accepted'
-      };
-
-      console.log("📝 Sending order data:", orderData);
-
-      const orderResponse = await fetch('/api/order', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData),
+      // Create address first
+      const addressResponse = await fetch("/api/address", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userInfo.userId,
+          street: state.shippingAddress.address,
+          house: state.shippingAddress.apartment,
+          city: state.shippingAddress.city,
+          state: state.shippingAddress.state,
+          pincode: state.shippingAddress.zipCode,
+          country: state.shippingAddress.country
+        }),
       });
-
-      const orderResult = await orderResponse.json();
-      console.log("📩 API Response:", orderResult);
-
-      if (!orderResponse.ok) {
-        // More detailed error handling
-        const errorMessage = orderResult.message || 'Failed to create order';
-        console.error("🚨 Order error:", errorMessage);
-        throw new Error(errorMessage);
-      }
-
+  
+      const addressResult = await addressResponse.json();
+      if (!addressResponse.ok) throw new Error(addressResult.message);
+  
+      // Create order with addressId
+      const orderResponse = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userInfo.userId,
+          addressId: addressResult.address._id, // ✅ Use address ID
+          phone: userInfo.phone,
+          products: cartItems.map(item => ({
+            productId: item.id.toString(),
+            quantity: item.quantity
+          })),
+          amount: subtotal + shipping,
+          deliveryType: deliveryMethod.toLowerCase(),
+          paymentType: paymentMethod.toUpperCase() === "COD" ? "COD" : "UPI"
+        }),
+      });
+  
+      if (!orderResponse.ok) throw new Error("Order creation failed");
       clearCart();
-      router.push('/checkout/success');
+      router.push("/checkout/success");
+  
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
-      alert(error instanceof Error ? error.message : "Failed to create order. Please try again.");
+      if (error instanceof Error) {
+        alert(error.message || "Failed to create order.");
+      } else {
+        alert("Failed to create order.");
+      }
     }
   };
+  
   return (
     <div className="min-h-screen bg-white text-black px-4 md:px-40">
       <div className="max-w-7xl mx-auto py-8">

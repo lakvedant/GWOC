@@ -6,6 +6,7 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
 import { CartSlider } from "@/components/CartSlider";
 import UserDropdown from "@/components/UserProfile";

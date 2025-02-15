@@ -138,8 +138,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('orders');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<BookOpen size={20} />}
                                 text="Address Book"
@@ -147,8 +146,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('address');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<MessageSquare size={20} />}
                                 text="My Reviews"
@@ -156,8 +154,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('reviews');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                             <MenuItem
                                 icon={<User size={20} />}
                                 text="My Profile"
@@ -165,8 +162,7 @@ const ProfilePage = () => {
                                 onClick={() => {
                                     setActiveSection('profile');
                                     setIsMobileMenuOpen(false);
-                                }}
-                            />
+                                } } badge={undefined}                            />
                         </nav>
                     </div>
 
@@ -254,7 +250,15 @@ const ProfilePage = () => {
     );
 };
 
-const MenuItem = ({ icon, text, active, onClick, badge }) => {
+interface MenuItemProps {
+    icon: React.ReactNode;
+    text: string;
+    active: boolean;
+    onClick: () => void;
+    badge?: string;
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ icon, text, active, onClick, badge }) => {
     return (
         <button
             onClick={onClick}
