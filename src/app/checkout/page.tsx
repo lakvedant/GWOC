@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartProvider";
 import type { CheckoutState, ShippingAddress } from "@/types/checkout";
 import LoginSignupModal from "@/components/Login";
+import Navbar from "@/components/Navbar";
 
 const initialState: CheckoutState = {
   shippingAddress: {
@@ -145,7 +146,10 @@ export default function CheckoutPage() {
   };
   
   return (
-    <div className="min-h-screen bg-white text-black px-4 md:px-40">
+    <>
+      <Navbar />
+    
+    <div className="min-h-screen bg-white text-black py-20 px-4 md:px-40">
       <div className="max-w-7xl mx-auto py-8">
         <div className="grid lg:grid-cols-[1fr_400px] gap-8">
           <div>
@@ -193,5 +197,6 @@ export default function CheckoutPage() {
       </div>
 
     </div>
+    </>
   );
 }

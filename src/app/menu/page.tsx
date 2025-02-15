@@ -9,6 +9,8 @@ const Page = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("Cakes");
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen flex flex-col pt-20"> 
       {/* The pt-20 ensures the content starts below the fixed Navbar */}
       
@@ -29,6 +31,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

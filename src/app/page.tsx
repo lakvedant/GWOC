@@ -26,14 +26,15 @@ const page = () => {
       <HeroSection />
       <CuriousSection />
       <PhotoCarousel />
+      
       {/* <CupcakeShowcase /> */}
       <WhatsAppChat />
-      <FeaturesSection />
+      {/* <FeaturesSection /> */}
       {/* <ReviewPage /> */}
       <Footer />
-      <HomePage />
-      <ProfilePage />
-      <AboutUs />
+      {/* <HomePage /> */}
+      {/* <ProfilePage /> */}
+      {/* <AboutUs /> */}
     </div>
   )
 }

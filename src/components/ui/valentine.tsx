@@ -11,28 +11,7 @@ const ValentineCountdown = () => {
             title: "Rose Day",
             description: "Start a love-filled February with the perfect gifts",
             bgColor: "from-pink-100 to-rose-200",
-            image: "/api/placeholder/600/400"
-        },
-        {
-            date: "8 Feb",
-            title: "Propose Day",
-            description: "Express your love with our special collection",
-            bgColor: "from-red-100 to-pink-200",
-            image: "/api/placeholder/600/400"
-        },
-        {
-            date: "9 Feb",
-            title: "Chocolate Day",
-            description: "Sweeten your love with delicious treats",
-            bgColor: "from-rose-100 to-red-200",
-            image: "/api/placeholder/600/400"
-        },
-        {
-            date: "10 Feb",
-            title: "Teddy Day",
-            description: "Cuddle with love and sweetness",
-            bgColor: "from-pink-100 to-red-100",
-            image: "/api/placeholder/600/400"
+            image: "/valentine.jpg"
         }
     ];
 
@@ -44,10 +23,10 @@ const ValentineCountdown = () => {
         setCurrentSlide((prev) => (prev - 1 + valentineDays.length) % valentineDays.length);
     };
 
-    useEffect(() => {
-        const timer = setInterval(nextSlide, 5000);
-        return () => clearInterval(timer);
-    }, []);
+    // useEffect(() => {
+    //     const timer = setInterval(nextSlide, 50000);
+    //     return () => clearInterval(timer);
+    // }, []);
 
     return (
         <div className="relative min-h-screen overflow-hidden">

@@ -50,7 +50,7 @@ export const Navbar = () => {
             {["Home", "About", "Menu", "Contact"].map((label) => (
               <Link
                 key={label}
-                href={`/${label.toLowerCase()}`}
+                href={label !== "Home" ? `/${label.toLowerCase()}` : ("/")}
                 className="px-5 py-2 text-rose-900 hover:text-rose-700 text-sm font-semibold rounded-full hover:bg-rose-100"
               >
                 {label}

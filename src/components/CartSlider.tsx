@@ -60,7 +60,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full z-50">
       <div className="px-4 py-2 border-b">
         <h2 className="text-lg font-medium">Shopping Cart ({cartItems.length})</h2>
       </div>

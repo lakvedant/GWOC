@@ -20,12 +20,12 @@ interface SliderControllerProps {
 
 const images = [
 	"/cupcake1.png",
-	"/cupcake1.png",
-	"/cupcake1.png",
-	"/cupcake1.png",
-	"/cupcake1.png",
-	"/cupcake1.png",
-	"/cupcake1.png",
+	"/Valentine Special .jpg",
+	"/Valentine Special Chocolate Cake.jpg",
+	"/cupcake2.png",
+	"/Valentine Special CupCake.jpg",
+	"/images.jpg",
+	"/Cake.jpg",
 ];
 
 const SliderController: React.FC<SliderControllerProps> = ({
@@ -35,13 +35,13 @@ const SliderController: React.FC<SliderControllerProps> = ({
 	<div className="slider-controller">
 		<div
 			ref={prevRef}
-			className="swiper-button-prev slider-arrow hover:scale-125 transition-transform duration-300 bg-pink-600/80 backdrop-blur-sm p-3 w-16 h-16 rounded-full shadow-xl hover:shadow-2xl"
+			className="swiper-button-prev slider-arrow hover:scale-125 transition-transform duration-300 backdrop-blur-sm p-3 w-16 h-16 rounded-full shadow-xl hover:shadow-2xl text-white"
 		>
-			<ChevronLeft className="w-6 h-6 text-white" />
+			<ChevronLeft className="w-6 h-6" />
 		</div>
 		<div
 			ref={nextRef}
-			className="swiper-button-next slider-arrow hover:scale-125 transition-transform duration-300 bg-pink-600/80 backdrop-blur-sm p-3 rounded-full shadow-xl hover:shadow-2xl"
+			className="swiper-button-next slider-arrow hover:scale-125 transition-transform duration-300 backdrop-blur-sm p-3 rounded-full shadow-xl hover:shadow-2xl"
 		>
 			<ChevronRight className="w-8 h-8 text-white" />
 		</div>
