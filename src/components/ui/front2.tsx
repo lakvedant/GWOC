@@ -44,19 +44,19 @@ const CakeWheelHero = () => {
             </motion.div>
 
             <div className="container mx-auto px-4 py-6 md:py-12">
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
-                    {/* Cake Image Section */}
+                <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[90vh]">
+                    {/* Cake Image Section - Updated size */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, type: "spring" }}
-                        className="relative order-2 lg:order-1"
+                        className="relative order-2 lg:order-1 w-full h-full flex items-center justify-center"
                     >
-                        <div className="relative w-full aspect-square max-w-md mx-auto" style={{ transform: `rotate(${rotation}deg)` }}>
+                        <div className="relative w-full aspect-square max-w-2xl mx-auto" style={{ transform: `rotate(${rotation}deg)` }}>
                             <img
                                 src="/cake2.png"
                                 alt="Assorted Cake Slices"
-                                className="w-full h-full object-contain drop-shadow-2xl hover:drop-shadow-3xl transition-all duration-300"
+                                className="w-full h-full object-contain drop-shadow-2xl hover:drop-shadow-3xl transition-all duration-300 scale-125"
                             />
                         </div>
 
@@ -154,14 +154,6 @@ const CakeWheelHero = () => {
                     </motion.div>
                 </div>
             </div>
-
-            {/* Floating Scroll Indicator */}
-            <motion.div
-                animate={{ y: [0, 20, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="absolute bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-pink-600"
-            >
-            </motion.div>
 
             <style jsx global>{`
                 @keyframes float {

@@ -19,13 +19,13 @@ interface SliderControllerProps {
 }
 
 const images = [
-	"/cupcake1.png",
-	"/Valentine Special .jpg",
-	"/Valentine Special Chocolate Cake.jpg",
-	"/cupcake2.png",
-	"/Valentine Special CupCake.jpg",
-	"/images.jpg",
-	"/Cake.jpg",
+	"/c1.jpg",
+	"/c2.jpg",
+	"/c3.jpg",
+	"/c4.jpg",
+	"/c5.jpg",
+	"/c6.jpg",
+	"/c7.jpg",
 ];
 
 const SliderController: React.FC<SliderControllerProps> = ({

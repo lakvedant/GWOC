@@ -24,9 +24,10 @@ const page = () => {
       <Navbar />
       <ValentineCountdown />
       <HeroSection />
+      <CreativeCakeHero />
       <CuriousSection />
       <PhotoCarousel />
-      
+
       {/* <CupcakeShowcase /> */}
       <WhatsAppChat />
       {/* <FeaturesSection /> */}
