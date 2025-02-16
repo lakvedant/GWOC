@@ -47,7 +47,7 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center flex-1 justify-center space-x-1">
-            {["Home", "About", "Menu", "Contact"].map((label) => (
+            {["Home", "About", "Products", "Contact"].map((label) => (
               <Link
                 key={label}
                 href={label !== "Home" ? `/${label.toLowerCase()}` : ("/")}
