@@ -2,7 +2,7 @@ import { getAuthToken } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const apiBaseUrl = "https://cpaas.messagecentral.com";
-const customerId = process.env.CUSTOMER_ID!;
+// const customerId = process.env.CUSTOMER_ID!;
 
 export async function POST(
 	req: NextRequest,

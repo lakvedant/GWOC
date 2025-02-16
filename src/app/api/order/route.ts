@@ -44,7 +44,11 @@ export async function POST(req: Request) {
 
     // Generate next order ID
     const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean();
+<<<<<<< HEAD
     const nextOrderID = (Array.isArray(latestOrder) ? 200 : (latestOrder?.orderID || 200)) + 1;
+=======
+    const nextOrderID = (Array.isArray(latestOrder) ? 200 : latestOrder?.orderID || 200) + 1;
+>>>>>>> c6f9b26a601567b39eb339ea92681449d28182e6
 
     // Create the order
     const order = await Order.create({
@@ -115,8 +119,12 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Order creation error:", error);
+<<<<<<< HEAD
     const errorMessage = error instanceof Error ? error.message : "Failed to create order";
     return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
+=======
+    return NextResponse.json({ success: false, message: error || "Failed to create order" }, { status: 500 });
+>>>>>>> c6f9b26a601567b39eb339ea92681449d28182e6
   }
 }
 

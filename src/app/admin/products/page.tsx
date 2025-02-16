@@ -20,10 +20,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import Link from "next/link";
 
-interface AddNewProductProps {
-  onSave: (data: IProduct) => void;
-  onClose: () => void;
-}
+// interface AddNewProductProps {
+//   onSave: (data: IProduct) => void;
+//   onClose: () => void;
+// }
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Loader2, AlertCircle, Plus, Minus, Trash } from "lucide-react";
+import { Loader2, AlertCircle, Plus, Trash } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { IOrder } from "@/models/Order";
 import { IProduct } from "@/models/Product";
@@ -28,8 +28,7 @@ export default function AddNewOrder({ onSave, onClose }: AddNewOrderProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    watch,
+    formState: { errors }
   } = useForm<Partial<IOrder>>({
     defaultValues: {
       name: "",

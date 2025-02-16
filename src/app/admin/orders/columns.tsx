@@ -5,7 +5,6 @@ import { ArrowUpDown } from "lucide-react";
 import { Actions } from "./actions";
 import { IOrder } from "@/models/Order";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const getStatusColor = (status: string) => {
   const colors = {
@@ -46,6 +45,13 @@ export const columns: ColumnDef<IOrder>[] = [
         Customer Name
         <ArrowUpDown className="size-4" />
       </Button>
+    ),
+  },
+  {
+    accessorKey: "instructions",
+    header: "Instructions",
+    cell: ({ row }) => (
+      <span className="font-medium">{row.original.instructions}</span>
     ),
   },
   {

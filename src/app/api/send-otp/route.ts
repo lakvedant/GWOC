@@ -23,6 +23,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to send OTP" }, { status: 500 });
+    return NextResponse.json({ message: "Failed to send OTP", error }, { status: 500 });
   }
 }

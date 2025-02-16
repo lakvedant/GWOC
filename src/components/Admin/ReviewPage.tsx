@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Star, ThumbsUp } from "lucide-react";
+import Image from "next/image";
 
 const reviews = [
     {
@@ -115,13 +116,13 @@ const ReviewPage = () => {
                     />
                     <StatCard
                         leftIcon={<Star className="text-yellow-400 w-6 h-6" />}
-                        rightIcon={<img src="/pngegg.png" alt="Google" className="w-[100px] object-contain" />}
+                        rightIcon={<Image fill src="/pngegg.png" alt="Google" className="w-[100px] object-contain" />}
                         value="4.5"
                         subtext="Google"
                     />
                     <StatCard
                         leftIcon={<Star className="text-blue-600 w-6 h-6" />}
-                        rightIcon={<img src="/facebook.png" alt="Facebook" className="w-[500px] object-contain" />}
+                        rightIcon={<Image fill src="/facebook.png" alt="Facebook" className="w-[500px] object-contain" />}
                         value="4.5"
                         subtext="Facebook"
                     />

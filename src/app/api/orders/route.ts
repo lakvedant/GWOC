@@ -1,6 +1,6 @@
 import connectDB from "@/lib/db";
-import Order, { IOrder } from "@/models/Order";
-import { NextResponse, NextRequest } from "next/server";
+import Order from "@/models/Order";
+import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 export async function GET() {
@@ -17,7 +17,7 @@ export async function GET() {
 
         return NextResponse.json(orders, {status: 200})
     } catch (error) {
-        return NextResponse.json({error: "Failed to fetch orders"}, {status: 500})
+        return NextResponse.json({message: "Failed to fetch orders", error}, {status: 500})
     }
 }
 

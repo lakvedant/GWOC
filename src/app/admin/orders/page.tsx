@@ -107,7 +107,7 @@ const OrdersPage = () => {
                   <DataTable 
                     columns={columns} 
                     data={orders} 
-                    filterKey="orderID" 
+                    filterKey="name" 
                     onDelete={handleDelete}
                   />
                 )}
