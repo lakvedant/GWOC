@@ -112,7 +112,7 @@ const HeroSection = () => {
                 </div>
                 <motion.div
                     animate={floatingAnimation}
-                    className="text-[#B11268] font-extrabold text-5xl sm:text-7xl md:text-7xl leading-tight uppercase -mt-32 absolute z-30 ml-30"
+                    className="text-[#B11268] font-extrabold text-5xl sm:text-7xl md:text-7xl leading-tight uppercase -mt-32 absolute z-10 ml-30"
                 >
                     Happiness Awaits!
                 </motion.div>
