@@ -1,0 +1,1 @@
+export const IMAGEKIT_URI = process.env.IMAGEKIT_BASE_URL!;

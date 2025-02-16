@@ -11,14 +11,19 @@ import connectDB from "@/lib/db";
 import { Chart } from "@/components/Admin/Chart";
 import { RecentSales } from "@/components/Admin/RecentSales";
 
+interface OrderData {
+  amount: number;
+  createdAt: Date;
+}
+
 async function getData() {
   const now = new Date();
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(now.getDate() - 30);
 
-  connectDB();
+  await connectDB();
 
-  const data = await Order
+  const data: OrderData[] = await Order
     .find({
       createdAt: {
         $gte: thirtyDaysAgo,
@@ -33,7 +38,7 @@ async function getData() {
     })
     .exec();
 
-  const result = data.map((item: any) => ({
+  const result = data.map((item: OrderData) => ({
     date: new Intl.DateTimeFormat("en-US").format(item.createdAt),
     revenue: item.amount,
   }));
@@ -44,7 +49,7 @@ async function getData() {
 export default async function Dashboard() {
   const data = await getData();
   return (
-    <>
+    <div className="p-5">
       <DashboardStats />
 
       <div className="grid gap-4 md:gp-8 lg:grid-cols-2 xl:grid-cols-3 mt-5">
@@ -62,6 +67,6 @@ export default async function Dashboard() {
 
         <RecentSales />
       </div>
-    </>
+    </div>
   );
 }

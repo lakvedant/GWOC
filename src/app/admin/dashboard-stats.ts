@@ -25,6 +25,6 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     const data = await getData();
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data' });
+    res.status(500).json({ message: 'Failed to fetch data', error });
   }
 }

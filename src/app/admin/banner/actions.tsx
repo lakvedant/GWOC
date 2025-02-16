@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useConfirm from "@/components/Admin/use-confirm";
-import { IProduct } from "@/models/Product";
-import { EditProduct} from "@/components/Admin/EditProduct";
+import { IPhotoCarouselSchema } from "@/models/PhotoCarousel";
+import { EditPhotoCarousel } from "@/components/Admin/EditPhotoCarousel";
 import {
   Sheet,
   SheetContent,
@@ -22,13 +22,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-interface Product {
-  name: string;
+interface PhotoCarousel {
+  title: string;
   description: string;
-  price: number;
-  category: string;
-  image: string; // URL of the product image
-  available: boolean;
+  image: string; // URL of the photo
 }
 
 type Props = {
@@ -40,40 +37,40 @@ export const Actions = ({ id, onEdit }: Props) => {
   const router = useRouter();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
-    "You are about to delete this product. This action cannot be undone."
+    "You are about to delete this photo. This action cannot be undone."
   );
 
   const [loading, setLoading] = useState(false);
   const [isSliderOpen, setIsSliderOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<IPhotoCarouselSchema | null>(null);
 
   const handleEditClick = async () => {
     try {
-      const response = await fetch(`/api/products/${id}`);
-      if (!response.ok) throw new Error("Failed to fetch product");
+      const response = await fetch(`/api/photo-carousel/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch photo");
 
-      const product = await response.json();
-      setSelectedProduct(product);
+      const photo = await response.json();
+      setSelectedPhoto(photo);
       setIsSliderOpen(true);
     } catch (error) {
-      console.error("Error fetching product:", error);
+      console.error("Error fetching photo:", error);
     }
   };
 
-  const handleSave = async (updatedProduct: Product) => {
+  const handleSave = async (updatedPhoto: PhotoCarousel) => {
     try {
-      await fetch(`/api/products/${id}`, {
+      await fetch(`/api/photo-carousel/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedProduct),
+        body: JSON.stringify(updatedPhoto),
       });
 
       setIsSliderOpen(false);
       onEdit(id);
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error updating photo:", error);
     }
   };
 
@@ -83,7 +80,7 @@ export const Actions = ({ id, onEdit }: Props) => {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`/api/photo-carousel/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -91,13 +88,13 @@ export const Actions = ({ id, onEdit }: Props) => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete product");
+        throw new Error("Failed to delete photo");
       }
 
-      console.log("Product deleted successfully:", id);
-      router.refresh(); // Refresh product list after deletion
+      console.log("Photo deleted successfully:", id);
+      router.refresh(); // Refresh photo list after deletion
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error("Error deleting photo:", error);
     } finally {
       setLoading(false);
     }
@@ -131,34 +128,19 @@ export const Actions = ({ id, onEdit }: Props) => {
       <Sheet open={isSliderOpen} onOpenChange={setIsSliderOpen}>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>Edit Product</SheetTitle>
+            <SheetTitle>Edit Photo</SheetTitle>
             <SheetDescription>
-              Make changes to your product here. Click save when you&apos;re done.
+              Make changes to your photo here. Click save when you&apos;re done.
             </SheetDescription>
           </SheetHeader>
 
-          {selectedProduct && (
-            <EditProduct
-              product={selectedProduct}
+          {selectedPhoto && (
+            <EditPhotoCarousel
+              photo={selectedPhoto}
               onClose={() => setIsSliderOpen(false)}
               onSave={handleSave}
             />
           )}
-
-          {/* <SheetFooter>
-            <div className="flex justify-end mt-4">
-              <Button
-                type="submit"
-                onClick={() => {
-                  if (selectedProduct) {
-                    handleSave(selectedProduct);
-                  }
-                }}
-              >
-                Save changes
-              </Button>
-            </div>
-          </SheetFooter> */}
         </SheetContent>
       </Sheet>
     </>

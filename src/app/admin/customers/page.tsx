@@ -66,18 +66,8 @@ const CustomersPage = () => {
   const handleAddNewClose = () => setIsAddNewOpen(false);
 
   const handleAddNewSave = async (newCustomer: IUser) => {
-    try {
-      const response = await fetch("/api/customers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newCustomer),
-      });
-      const addedCustomer = await response.json();
-      setCustomers((prev) => [...prev, addedCustomer]);
-      handleAddNewClose();
-    } catch (error) {
-      console.error("Error adding new customer:", error);
-    }
+    setCustomers((prev) => [...prev, newCustomer]);
+    handleAddNewClose();
   };
 
   return (

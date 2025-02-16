@@ -18,7 +18,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
         return NextResponse.json(updatedProduct, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+        return NextResponse.json({ message: "Failed to update product", error }, { status: 500 });
     }
 }
 
@@ -36,7 +36,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
         return NextResponse.json({ message: "Product deleted successfully" }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+        return NextResponse.json({ message: "Failed to delete product", error }, { status: 500 });
     }
 }
 
@@ -53,6 +53,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
         return NextResponse.json(product, {status: 200})
     } catch (error) {
-        return NextResponse.json({error: "Failed to fetch products"}, {status: 500})
+        return NextResponse.json({message: "Failed to fetch products", error}, {status: 500})
     }
 }

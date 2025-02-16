@@ -5,7 +5,6 @@ import { CartProvider } from "@/components/CartProvider";
 
 
 import ImagekitProviders from "@/components/Admin/Imagekit-Providers";
-import Navbar from "@/components/Navbar";
 
 
 const geistSans = Geist({

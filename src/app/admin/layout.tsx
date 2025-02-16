@@ -1,11 +1,11 @@
 "use client";
 import ImagekitProviders from "@/components/Admin/Imagekit-Providers";
 import {
+  Camera,
   Home,
   LineChart,
   Package,
   PanelLeft,
-  Settings,
   ShoppingCart,
   Users2
 } from 'lucide-react';
@@ -14,13 +14,6 @@ import Link from 'next/link';
 import Image from "next/image";
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { NavItem } from './nav-item';
 
 export default function DashboardLayout({
   children
@@ -49,6 +42,7 @@ const navItems = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/customers", label: "Customers", icon: Users2 },
+  { href: "/admin/banner", label: "Banners", icon: Camera },
   { href: "/admin/analytics", label: "Analytics", icon: LineChart },
 ];
 

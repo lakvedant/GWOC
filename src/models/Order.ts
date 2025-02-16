@@ -11,6 +11,7 @@ export interface IOrder extends Document {
   amount: number;
   paymentType: "COD" | "UPI";
   orderStatus: "Pending" | "Accepted" | "Ready" | "Picked" | "Declined";
+  createdAt: Date;
 }
 
 const OrderSchema = new Schema<IOrder>(
@@ -23,7 +24,7 @@ const OrderSchema = new Schema<IOrder>(
     upiImage: { type: String },
     products: [
       {
-        productId: { type: Schema.Types.ObjectId, required: true },
+        productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
         quantity: { type: Number, required: true },
       },
     ],

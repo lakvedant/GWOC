@@ -23,7 +23,9 @@ export async function POST(req: Request) {
     const user = new User({ phone, name, email });
     await user.save();
 
-    send({ name, email, "Hello Lakshit" });
+    const message = "Hello Lakshit";
+
+    send({ name, email, message });
 
     return NextResponse.json({ 
       userId: user._id,

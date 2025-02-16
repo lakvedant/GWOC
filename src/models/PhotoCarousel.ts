@@ -13,6 +13,6 @@ const PhotoCarouselSchema = new Schema<IPhotoCarouselSchema>({
 	image: { type: String, required: true },
 }, { timestamps: true });
 
-const PhotoCarousel = mongoose.models.PhotoCarousel || mongoose.model<IPhotoCarouselSchema>("Product", PhotoCarouselSchema);
+const PhotoCarousel = mongoose.models.PhotoCarousel || mongoose.model<IPhotoCarouselSchema>("PhotoCarousel", PhotoCarouselSchema);
 
 export default PhotoCarousel;

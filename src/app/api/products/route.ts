@@ -16,7 +16,7 @@ export async function GET() {
 
         return NextResponse.json(products, {status: 200})
     } catch (error) {
-        return NextResponse.json({error: "Failed to fetch products"}, {status: 500})
+        return NextResponse.json({message: "Failed to fetch products", error}, {status: 500})
     }
 }
 
@@ -40,6 +40,6 @@ export async function POST(req: NextRequest) {
         const newProduct = await Product.create(productData);
         return NextResponse.json(newProduct, {status: 201})
     } catch (error) {
-        return NextResponse.json({error: "Failed to add product"}, {status: 500})
+        return NextResponse.json({message: "Failed to add product", error}, {status: 500})
     }
 }

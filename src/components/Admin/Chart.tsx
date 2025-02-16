@@ -18,15 +18,19 @@ interface iAppProps {
   }[];
 }
 
-const aggregateData = (data: any) => {
-  const aggregated = data.reduce((acc: any, curr: any) => {
+interface AggregatedData {
+  [date: string]: number;
+}
+
+const aggregateData = (data: { date: string; revenue: number }[]) => {
+  const aggregated = data.reduce((acc: AggregatedData, curr: { date: string; revenue: number }) => {
     if (acc[curr.date]) {
       acc[curr.date] += curr.revenue;
     } else {
       acc[curr.date] = curr.revenue;
     }
     return acc;
-  }, {});
+  }, {} as AggregatedData);
 
   return Object.keys(aggregated).map((date) => ({
     date,
