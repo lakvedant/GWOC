@@ -6,24 +6,35 @@ export interface IUser extends Document {
   dob?: string;
   email: string;
   gender?: "Male" | "Female" | "Other";
-  orders: Types.ObjectId[]; // ✅ Use `Types.ObjectId` for better Mongoose compatibility
+  orders: Types.ObjectId[];
+  products: {
+    productId: Types.ObjectId;
+    isReviewed: boolean;
+    reviewId?: Types.ObjectId;
+  }[];
   createdAt: Date;
-  updatedAt: Date; // ✅ Explicitly include updatedAt in the interface
+  updatedAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(
   {
     phone: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    dob: { type: String, default: null }, // ✅ Set default to `null` instead of `undefined`
-    email: { type: String, required: true, unique: true }, // ✅ Ensure emails are unique
-    gender: { type: String, enum: ["Male", "Female", "Other"], default: null }, 
-    orders: [{ type: Schema.Types.ObjectId, ref: "Order", default: [] }], // ✅ Default empty array ensures field exists
+    dob: { type: String, default: null },
+    email: { type: String, required: true, unique: true },
+    gender: { type: String, enum: ["Male", "Female", "Other"], default: null },
+    orders: [{ type: Schema.Types.ObjectId, ref: "Order", default: [] }],
+    products: [
+      {
+        productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        isReviewed: { type: Boolean, required: true, default: false },
+        reviewId: { type: Schema.Types.ObjectId, ref: "Review", default: null },
+      },
+    ],
   },
   { timestamps: true }
 );
 
-// ✅ Ensure the model isn't redefined when running in development mode
 const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 
 export default User;

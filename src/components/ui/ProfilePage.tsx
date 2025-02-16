@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
     Package,
     MessageSquare,
@@ -14,20 +14,27 @@ import {
 } from 'lucide-react';
 
 interface Product {
-    productId: {
-        name: string;
-        price: number;
-    };
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    category: string;
+}
+
+interface OrderProduct {
+    productId: string;
     quantity: number;
 }
 
 interface Order {
+    orderStatus: ReactNode;
+    amount: ReactNode;
     _id: string;
     orderID: number;
     createdAt: string;
     status: string;
     paymentType: string;
-    products: Product[];
+    products: OrderProduct[];
     totalAmount: number;
     deliveryAddress: {
         type: string;
@@ -42,58 +49,116 @@ interface UserInfo {
     name: string;
     email: string;
     phone: string;
+    userId: string;
+}
+
+interface ProductApiResponse {
+    success: boolean;
+    product: Product;
+    message?: string;
 }
 
 const ProfilePage = () => {
     const [activeSection, setActiveSection] = useState('orders');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [orders, setOrders] = useState<Order[]>([]);
+    const [products, setProducts] = useState<Record<string, Product>>({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
+    
     useEffect(() => {
-        const fetchOrders = async () => {
+        const fetchUserInfo = () => {
+            const storedUserInfo = localStorage.getItem("userInfo");
+            if (storedUserInfo) {
+                setUserInfo(JSON.parse(storedUserInfo));
+                console.log(JSON.parse(storedUserInfo));
+                return JSON.parse(storedUserInfo);
+            }
+            return null;
+        };
+
+        const fetchProductInfo = async (productId: string) => {
+            try {
+                const response = await fetch(`/api/product/${productId}`);
+                const data: ProductApiResponse = await response.json();
+                
+                if (!response.ok || !data.success) {
+                    console.error(`Failed to fetch product ${productId}:`, data.message);
+                    return null;
+                }
+                
+                return data.product;
+            } catch (error) {
+                console.error(`Error fetching product ${productId}:`, error);
+                return null;
+            }
+        };
+    
+        const fetchOrders = async (userInfo: UserInfo) => {
             try {
                 setIsLoading(true);
                 setError(null);
-                
-                // Get userId from localStorage or your auth system
-                const userId = localStorage.getItem('userId');
-                if (!userId) {
-                    throw new Error('User ID not found');
-                }
 
-                const response = await fetch(`/api/orders?userId=${userId}`);
+                const url = `/api/order?userId=${userInfo.userId}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
                 if (!response.ok) {
-                    throw new Error('Failed to fetch order');
+                    throw new Error(`Failed to fetch orders: ${response.status}`);
                 }
 
                 const data = await response.json();
-                if (!data.success) {
-                    throw new Error(data.message || 'Failed to fetch orders');
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid response format");
                 }
 
-                setOrders(data.orders);
+                setOrders(data);
+
+                // Fetch product information for all products in orders
+                const productIds = new Set(data.flatMap(order => 
+                    order.products.map((product: { productId: String; }) => product.productId)
+                ));
+
+                const productPromises = Array.from(productIds).map(fetchProductInfo);
+                const productResults = await Promise.all(productPromises);
+
+                const productMap: Record<string, Product> = {};
+                productResults.forEach((product) => {
+                    if (product) {
+                        productMap[product.id] = product;
+                    }
+                });
+
+                setProducts(productMap);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An error occurred');
+                console.error('Error fetching orders:', err);
+                setError(err instanceof Error ? err.message : "An error occurred");
             } finally {
                 setIsLoading(false);
             }
         };
-
-        const storedUserInfo = localStorage.getItem("userInfo");
-        if (storedUserInfo) {
-            setUserInfo(JSON.parse(storedUserInfo));
-        }
-
-        fetchOrders();
+        
+        const initialize = async () => {
+            const userInfo = fetchUserInfo();
+            console.log(userInfo);
+            if (userInfo) {
+                await fetchOrders(userInfo);
+            }
+        };
+    
+        initialize();
     }, []);
-
+    
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
-
+    
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -214,38 +279,54 @@ const ProfilePage = () => {
                                                             <span>{formatDate(order.createdAt)}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="flex md:flex-col items-start md:items-end gap-3 md:gap-2">
-                                                        <span className={`px-3 py-1 rounded-full text-sm ${
-                                                            order.status === 'Delivered'
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-pink-100 text-pink-800'
-                                                        }`}>
-                                                            {order.status}
-                                                        </span>
-                                                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                                                            <CreditCard size={16} />
-                                                            <span>{order.paymentType}</span>
-                                                        </div>
+                                                    <div className="flex md:flex-col items-center gap-3 md:items-end  md:gap-2">
+                                                        {/* Order Status */}
+                                                            <span className={`px-3 py-1 rounded-full text-sm ${
+                                                                order.status === 'Delivered'
+                                                                    ? 'bg-green-100 text-green-800'
+                                                                    : 'bg-pink-100 text-pink-800'
+                                                            }`}>
+                                                                {order.orderStatus}
+                                                            </span>
+
+                                                            {/* Payment Type Wrapped in Curved Style */}
+                                                            <div className="flex items-center gap-2 text-sm">
+                                                                <CreditCard size={16} className="text-gray-500" />
+                                                                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-800">
+                                                                    {order.paymentType}
+                                                                </span>
+                                                            </div>
                                                     </div>
+
                                                 </div>
 
                                                 <div className="border-t pt-4">
                                                     <h4 className="text-sm font-medium mb-2">Products</h4>
                                                     {order.products.map((product, index) => (
-                                                        <div key={index} className="flex justify-between items-center py-2 text-sm">
-                                                            <div className="flex items-center gap-2 flex-wrap">
-                                                                <Package2 size={16} className="text-gray-400" />
-                                                                <span>{product.productId.name}</span>
-                                                                <span className="text-gray-500">x{product.quantity}</span>
-                                                            </div>
-                                                            <span>₹{product.productId.price * product.quantity}</span>
-                                                        </div>
-                                                    ))}
+                                                <div key={index} className="flex justify-between items-center py-2 text-sm">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        {/* {products[product.productId]?.image ? (
+                                                            <img 
+                                                                src={products[product.productId].image} 
+                                                                alt={products[product.productId]?.name} 
+                                                                className="w-8 h-8 object-cover rounded"
+                                                            />
+                                                        ) : (
+                                                            <Package2 size={16} className="text-gray-400" />
+                                                        )} */}
+                                                        <span>{products[product.productId]?.name || 'Product not found'}</span>
+                                                        <span className="text-gray-500">x{product.quantity}</span>
+                                                    </div>
+                                                    <span>
+                                                        ₹{(products[product.productId]?.price || 0) * product.quantity}
+                                                    </span>
+                                                </div>
+                                            ))}
                                                 </div>
 
                                                 <div className="border-t mt-4 pt-4 flex justify-between items-center font-medium">
                                                     <span>Total Amount</span>
-                                                    <span>₹{order.totalAmount}</span>
+                                                    <span>₹{order.amount}</span>
                                                 </div>
                                             </div>
                                         ))}

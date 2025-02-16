@@ -261,7 +261,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
               <div className="grid grid-cols-3 gap-4 bg-gray-50 rounded-lg p-4">
                 <div className="flex flex-col items-center text-center">
                   <Clock className="w-8 h-8 text-pink-500 mb-2" />
-                  <span className="text-sm font-medium">On-Time Delivery</span>
+                  <span className="text-sm font-medium">Made to Order</span>
                 </div>
                 <div className="flex flex-col items-center text-center">
                   <span className="text-2xl mb-2">🍰</span>

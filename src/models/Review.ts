@@ -1,10 +1,11 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 interface IReview extends Document {
 	userName: string;
 	userid: string;
 	rating: number;
 	comment: string;
 	approved: boolean;
+	productId: Types.ObjectId;
 	productName: string;
 }
 

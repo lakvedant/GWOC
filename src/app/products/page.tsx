@@ -12,11 +12,11 @@ const categories = [
   { name: "Cakes", image: "/ccake.jpg" },
   { name: "Donuts", image: "/cdonuts.jpg" },
   { name: "Cookies", image: "/images/cookies.jpg" },
-  { name: "Ice Creams", image: "/images/ice_creams.jpg" },
+  { name: "Ice Cream", image: "/images/ice_creams.jpg" },
   { name: "Muffins", image: "/images/muffins.jpg" },
-  { name: "Brownies", image: "/images/brownies.jpg" },
+  { name: "Brownie", image: "/images/brownies.jpg" },
   { name: "Fudge", image: "/images/fudge.jpg" },
-  { name: "Chocolate Truffle Balls", image: "/images/chocolate_truffle_balls.jpg" },
+  { name: "Truffle Balls", image: "/images/chocolate_truffle_balls.jpg" },
   { name: "Chocolate Modak", image: "/images/chocolate_modak.jpg" }
 ];
 

@@ -65,49 +65,49 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentComplete = async (paymentType: PaymentType, upiImage?: string) => {
-    if (!userInfo?.userId) {
-      console.error("🚨 Missing userId in order submission");
-      return alert("User information is missing. Please log in again.");
+  if (!userInfo?.userId) {
+    console.error("🚨 Missing userId in order submission");
+    return alert("User information is missing. Please log in again.");
+  }
+
+  if (paymentType === "UPI" && !upiImage) {
+    console.error("🚨 UPI payment selected, but no image uploaded.");
+    return alert("Please upload a screenshot of your UPI payment before proceeding.");
+  }
+
+  try {
+    const orderResponse = await fetch("/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: userInfo.userId,
+        name: state.name,
+        phone: state.phone,
+        instructions: state.instructions,
+        upiImage,
+        products: cartItems.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+        amount: subtotal * (1 - discount),
+        paymentType, // ✅ Use correct payment type
+        orderStatus: "Pending",
+      }),
+    });
+
+    if (!orderResponse.ok) {
+      const error = await orderResponse.json();
+      throw new Error(error.message || "Order creation failed");
     }
-  
-    if (paymentType === "UPI" && !upiImage) {
-      console.error("🚨 UPI payment selected, but no image uploaded.");
-      return alert("Please upload a screenshot of your UPI payment before proceeding.");
-    }
-  
-    try {
-      const orderResponse = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userInfo.userId,
-          name: state.name,
-          phone: state.phone,
-          instructions: state.instructions,
-          upiImage,
-          products: cartItems.map((item) => ({
-            productId: item.id,
-            quantity: item.quantity,
-          })),
-          amount: subtotal * (1 - discount),
-          paymentType, // ✅ Use correct payment type
-          orderStatus: "Pending",
-        }),
-      });
-  
-      if (!orderResponse.ok) {
-        const error = await orderResponse.json();
-        throw new Error(error.message || "Order creation failed");
-      }
-  
-      clearCart();
-      router.push("/checkout/success");
-    } catch (error) {
-      console.error("🚨 Order creation failed:", error);
-      alert(error instanceof Error ? error.message : "Failed to create order.");
-    }
-  };
-  
+
+    clearCart();
+    router.push("/checkout/success");
+  } catch (error) {
+    console.error("🚨 Order creation failed:", error);
+    alert(error instanceof Error ? error.message : "Failed to create order.");
+  }
+};
+
 
   return (
     <>
