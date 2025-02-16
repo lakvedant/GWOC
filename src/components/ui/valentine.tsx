@@ -9,9 +9,30 @@ const ValentineCountdown = () => {
         {
             date: "7 Feb",
             title: "Rose Day",
-            description: "Start a love-filled February with the perfect gifts",
+            description: "Begin your love story with the timeless gesture of roses. Choose from our curated collection of fresh blooms to express your feelings in the most romantic way.",
             bgColor: "from-pink-100 to-rose-200",
-            image: "/valentine.jpg"
+            image: "/api/placeholder/600/400"
+        },
+        {
+            date: "10 Feb",
+            title: "Teddy Day",
+            description: "Make your love feel extra special with our adorable collection of plush teddy bears. Each comes with a personalized message to make this moment unforgettable.",
+            bgColor: "from-red-100 to-pink-200",
+            image: "/api/placeholder/600/400"
+        },
+        {
+            date: "12 Feb",
+            title: "Promise Day",
+            description: "Seal your promises with our exquisite collection of promise rings and bracelets. Create lasting memories with thoughtfully crafted jewelry pieces.",
+            bgColor: "from-purple-100 to-pink-200",
+            image: "/api/placeholder/600/400"
+        },
+        {
+            date: "14 Feb",
+            title: "Valentine's Day",
+            description: "Celebrate the grand finale of love with our premium Valentine's packages. From romantic dinners to luxury gift hampers, make this day truly special.",
+            bgColor: "from-red-200 to-rose-300",
+            image: "/api/placeholder/600/400"
         }
     ];
 
@@ -23,23 +44,23 @@ const ValentineCountdown = () => {
         setCurrentSlide((prev) => (prev - 1 + valentineDays.length) % valentineDays.length);
     };
 
-    // useEffect(() => {
-    //     const timer = setInterval(nextSlide, 50000);
-    //     return () => clearInterval(timer);
-    // }, []);
+    useEffect(() => {
+        const timer = setInterval(nextSlide, 5000);
+        return () => clearInterval(timer);
+    }, []);
 
     return (
         <div className="relative min-h-screen overflow-hidden">
             {/* Main Carousel */}
-            <div
-                className="relative w-full h-screen transition-transform duration-700 ease-out flex"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
+            <div className="relative w-full h-screen">
                 {valentineDays.map((day, index) => (
                     <div
                         key={index}
-                        className={`absolute inset-0 w-full h-full bg-gradient-to-r ${day.bgColor} transition-opacity duration-700
-                            ${currentSlide === index ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r ${day.bgColor} transition-all duration-700 ease-out
+                            ${index === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
+                        style={{
+                            transform: `translateX(${(index - currentSlide) * 100}%)`
+                        }}
                     >
                         <div className="container mx-auto h-full px-4">
                             <div className="grid lg:grid-cols-2 gap-8 h-full items-center">
@@ -50,9 +71,9 @@ const ValentineCountdown = () => {
                                     </div>
 
                                     <h1 className="text-6xl font-serif font-bold text-gray-800">
-                                        Countdown to
+                                        {day.title}
                                         <br />
-                                        <span className="text-red-500">Valentine's</span> begins!
+                                        <span className="text-red-500">Special</span>
                                     </h1>
 
                                     <p className="text-xl text-gray-600">
@@ -60,20 +81,17 @@ const ValentineCountdown = () => {
                                     </p>
 
                                     <button className="bg-red-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-600 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
-                                        ORDER NOW
+                                        SHOP NOW
                                     </button>
                                 </div>
 
                                 <div className="relative">
                                     <img
-                                        src={day.image}
+                                        src="valentine.jpg"
                                         alt={day.title}
                                         className="rounded-lg shadow-2xl animate-float"
                                     />
-                                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
-                                        <span className="font-medium text-red-500">{day.title}</span>
-                                        <span className="text-gray-500 ml-2">{day.date}</span>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -96,7 +114,7 @@ const ValentineCountdown = () => {
             </button>
 
             {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 flex gap-1 p-4 justify-center">
+            <div className="absolute bottom-20 left-0 right-0 flex gap-1 p-4 justify-center">
                 {valentineDays.map((_, index) => (
                     <div
                         key={index}
@@ -107,22 +125,6 @@ const ValentineCountdown = () => {
                             className={`absolute inset-0 bg-red-500 rounded-full transition-transform duration-500
                                 ${currentSlide === index ? 'scale-x-100' : 'scale-x-0'}`}
                         ></div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Valentine's Days Timeline */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-4 flex justify-between items-center overflow-x-auto">
-                {valentineDays.map((day, index) => (
-                    <div
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`flex items-center gap-2 cursor-pointer px-4 py-1 rounded-full transition-all
-                            ${currentSlide === index ? 'bg-white/20' : 'hover:bg-white/10'}`}
-                    >
-                        <Heart className={`w-4 h-4 ${currentSlide === index ? 'animate-bounce' : ''}`} />
-                        <span className="whitespace-nowrap">{day.title}</span>
-                        <span className="text-sm opacity-75">{day.date}</span>
                     </div>
                 ))}
             </div>
