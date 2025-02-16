@@ -144,8 +144,8 @@ const ProfilePage = () => {
                     )}
 
                     {/* Left Sidebar Navigation - Mobile Drawer */}
-                    <div className={`fixed md:relative inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                        } md:translate-x-0 w-72 bg-white md:bg-transparent z-50 transition-transform duration-300 ease-in-out md:block`}>
+                    <div className={`fixed  md:relative inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                        } md:translate-x-0 w-72 bg-white md:bg-transparent z-10 transition-transform duration-300 ease-in-out md:block`}>
                         <nav className="space-y-3 p-4 md:p-0">
                             <MenuItem
                                 icon={<Package size={20} />}
@@ -155,14 +155,7 @@ const ProfilePage = () => {
                                     setActiveSection('orders');
                                     setIsMobileMenuOpen(false);
                                 } } badge={undefined}                            />
-                            <MenuItem
-                                icon={<BookOpen size={20} />}
-                                text="Address Book"
-                                active={activeSection === 'address'}
-                                onClick={() => {
-                                    setActiveSection('address');
-                                    setIsMobileMenuOpen(false);
-                                } } badge={undefined}                            />
+                            
                             <MenuItem
                                 icon={<MessageSquare size={20} />}
                                 text="My Reviews"
@@ -232,30 +225,6 @@ const ProfilePage = () => {
                                             </div>
                                         </div>
                                     ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {activeSection === 'address' && (
-                            <div>
-                                <h2 className="text-xl font-semibold mb-4">Address Book</h2>
-                                <div className="grid grid-cols-1 gap-4">
-                                    {sampleAddresses.map((address) => (
-                                        <div key={address.id} className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
-                                            <div className="flex justify-between items-start mb-3">
-                                                <h3 className="font-medium">{address.type}</h3>
-                                                <button className="text-pink-600 text-sm">Edit</button>
-                                            </div>
-                                            <div className="text-gray-600 space-y-1 text-sm">
-                                                <p>{address.address}</p>
-                                                <p>{address.city}, {address.state}</p>
-                                                <p>PIN: {address.pincode}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    <button className="border-2 border-dashed border-pink-200 rounded-lg p-6 flex items-center justify-center text-pink-600 hover:bg-pink-50 transition-colors">
-                                        + Add New Address
-                                    </button>
                                 </div>
                             </div>
                         )}

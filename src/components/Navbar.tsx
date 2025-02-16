@@ -34,7 +34,7 @@ export const Navbar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed w-full top-0 z-50 transition-all duration-300 font-playfair ${
+      className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${
         scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
       }`}
     >

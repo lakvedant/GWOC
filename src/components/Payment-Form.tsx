@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Camera, Loader2 } from "lucide-react";
+import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
+import FileUpload from "@/components/Admin/FileUpload";
 
 interface PaymentFormProps {
   total: number;
-  onPaymentComplete: (method: string) => void;
+  onPaymentComplete: (paymentType: "cod" | "upi", upiImage?: string) => Promise<void>;
 }
 
 export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
@@ -14,6 +17,9 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isBlurred, setIsBlurred] = useState(true);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [paymentImage, setPaymentImage] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
   const upiId = "lakvedant-1@okhdfcbank";
   const payeeName = "Merchant";
   const transactionNote = "Payment for Order";
@@ -32,17 +38,35 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
     }
   }, [paymentMethod, total]);
 
+  const handleUploadSuccess = (response: IKUploadResponse) => {
+    setPaymentImage(response.filePath);
+  };
+
+  const handleUploadProgress = (progress: number) => {
+    setUploadProgress(progress);
+  };
+
   const handlePayment = async () => {
     setIsProcessing(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onPaymentComplete(paymentMethod);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+  
+      if (paymentMethod === "upi" && !paymentImage) {
+        throw new Error("Please upload payment screenshot");
+      }
+  
+      // ✅ Convert payment method to match the expected enum values
+      const formattedPaymentType: PaymentType = paymentMethod === "upi" ? "UPI" : "COD";
+  
+      await onPaymentComplete(formattedPaymentType, paymentImage);
     } catch (error) {
       console.error("Payment failed:", error);
+      alert(error instanceof Error ? error.message : "Payment failed");
     } finally {
       setIsProcessing(false);
     }
   };
+  
 
   return (
     <div className="space-y-6">
@@ -50,7 +74,11 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
         <h2 className="text-xl font-semibold">Payment Method</h2>
         <RadioGroup
           value={paymentMethod}
-          onValueChange={(value: "cod" | "upi") => setPaymentMethod(value)}
+          onValueChange={(value: "cod" | "upi") => {
+            setPaymentMethod(value);
+            setPaymentImage("");
+            setUploadProgress(0);
+          }}
           className="space-y-4"
         >
           <div className="flex items-center space-x-3 border p-4 rounded-lg">
@@ -94,21 +122,46 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
             <p className="text-sm text-muted-foreground">or pay using UPI ID:</p>
             <p className="font-mono bg-muted p-2 rounded select-all">{upiId}</p>
           </div>
-          <Alert>
-            <AlertDescription>
-              Please complete the payment in your UPI app before clicking "Confirm Payment"
-            </AlertDescription>
-          </Alert>
+          
+          <div className="space-y-4">
+            <Alert>
+              <AlertDescription>
+                Please complete the payment in your UPI app and upload the payment screenshot before confirming
+              </AlertDescription>
+            </Alert>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Payment Screenshot</label>
+                <FileUpload 
+                  fileType="image" 
+                  onSuccess={handleUploadSuccess} 
+                  onProgress={handleUploadProgress} 
+                />
+                {uploadProgress > 0 && (
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div 
+                      className="bg-black h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${uploadProgress}%` }} 
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
       <Button
         className="w-full"
         onClick={handlePayment}
-        disabled={isProcessing}
+        disabled={isProcessing || (paymentMethod === "upi" && !paymentImage)}
       >
         {isProcessing ? (
-          "Processing..."
+          <div className="flex items-center justify-center gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Processing...</span>
+          </div>
         ) : paymentMethod === "cod" ? (
           "Place Order (Cash on Delivery)"
         ) : (

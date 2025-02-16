@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import User from '@/models/User';
 import dbConnect from '@/lib/db';
+import send from "@/hooks/sendMail";
 
 export async function POST(req: Request) {
   try {
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
     // Create new user
     const user = new User({ phone, name, email });
     await user.save();
+
+    send({ name, email, "Hello Lakshit" });
 
     return NextResponse.json({ 
       userId: user._id,

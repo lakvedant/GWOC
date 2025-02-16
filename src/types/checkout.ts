@@ -1,92 +1,103 @@
 // types/checkout.ts
 
 export interface CartItem {
-  title: string;
   id: string;
   name: string;
   price: number;
   quantity: number;
   image: string;
-  variant: string;
+  variant?: string;
   message?: string;
-}
-
-export interface ShippingAddress {
-  address: string
-  society?: string
-  apartment?: string
-  city: string
-  state: string
-  zipCode: string
-  country: string
+  title: string;
 }
 
 export interface CheckoutState {
-  shippingAddress: {
-    address: string;
-    apartment: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  };
-  saveInformation: boolean;
+  name: string;
+  phone: string;
+  instructions: string;
+  paymentType: PaymentType;
+}
+
+export type PaymentType = "COD" | "UPI";
+
+export type OrderStatus = "Pending" | "Accepted" | "Ready" | "Picked" | "Declined";
+
+export interface Order {
+  orderID: number;
+  userId: string;
+  name: string;
+  phone: string;
+  instructions: string;
+  upiImage?: string;
+  products: {
+    productId: string;
+    quantity: number;
+  }[];
+  amount: number;
+  paymentType: PaymentType;
+  orderStatus: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface OrderSummary {
-  subtotal: number
-  shipping?: number
-  discount?: number
-  total: number
+  subtotal: number;
+  discount: number;
+  total: number;
 }
 
-export interface PaymentDetails {
-  method: 'cod' | 'upi'
-  status: 'pending' | 'completed' | 'failed'
-  upiId?: string
-  transactionId?: string
-}
-
-export interface Order {
-  id: string
-  items: CartItem[]
-  shippingAddress: ShippingAddress
-  contact: {
-    email: string
-    phone: string
-  }
-  payment: PaymentDetails
-  deliveryMethod: string
-  orderSummary: OrderSummary
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered'
-  createdAt: string
-  updatedAt: string
-}
-
-export type DeliveryMethod = {
-  id: string
-  name: string
-  description: string
-  price: number
-  estimatedDays: string
-}
-
-export interface CheckoutFormData {
-  email: string
-  phone: string
-  subscribeToNews: boolean
-  shippingAddress: ShippingAddress
-  deliveryMethod: string
-  paymentMethod: 'cod' | 'upi'
-  saveInformation: boolean
-}
-
+// Validation Types
 export type ValidationErrors = {
-  [K in keyof CheckoutFormData]?: string
+  name?: string;
+  phone?: string;
+  instructions?: string;
+  paymentType?: string;
 }
 
-export interface CouponCode {
-  code: string
-  discountPercentage: number
-  valid: boolean
+// Component Props Types
+export interface ContactFormProps {
+  name: string;
+  phone: string;
+  instructions: string;
+  onNameChange: (value: string) => void;
+  onPhoneChange: (value: string) => void;
+  onInstructionsChange: (value: string) => void;
+}
+
+export interface PaymentFormProps {
+  total: number;
+  onPaymentComplete: (paymentType: PaymentType, upiImage?: string) => void;
+}
+
+export interface CartSummaryProps {
+  items: CartItem[];
+  subtotal: number;
+  discount: number;
+  shipping?: number;
+}
+
+export interface PickupFormProps {
+  onProceed: () => void;
+  isLoading?: boolean;
+}
+
+// User related types
+export interface UserInfo {
+  userId: string;
+  name: string;
+  phone: string;
+  email?: string;
+}
+
+// Cart Context Types
+export interface CartContextType {
+  cartItems: CartItem[];
+  subtotal: number;
+  discount: number;
+  userInfo: UserInfo | null;
+  isAuthenticated: boolean;
+  clearCart: () => void;
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (itemId: string) => void;
+  updateQuantity: (itemId: string, quantity: number) => void;
 }

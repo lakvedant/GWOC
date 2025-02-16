@@ -5,6 +5,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Actions } from "./actions";
 import { IProduct } from "@/models/Product";
 import { IKImage } from "imagekitio-next";
+import { Button } from "@/components/ui/button";
 
 export const columns: ColumnDef<IProduct>[] = [
   {
@@ -26,13 +27,13 @@ export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <button
-        className="flex items-center gap-1"
+      <Button
+        variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Name
         <ArrowUpDown className="size-4" />
-      </button>
+      </Button>
     ),
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
   },
@@ -46,39 +47,39 @@ export const columns: ColumnDef<IProduct>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => (
-      <button
-        className="flex items-center gap-1"
+      <Button
+        variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Price (₹)
         <ArrowUpDown className="size-4" />
-      </button>
+      </Button>
     ),
     cell: ({ row }) => <span>₹{row.original.price.toFixed(2)}</span>,
   },
   {
     accessorKey: "category",
     header: ({ column }) => (
-      <button
-        className="flex items-center gap-1"
+      <Button
+        variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Category
         <ArrowUpDown className="size-4" />
-      </button>
+      </Button>
     ),
     cell: ({ row }) => <span className="capitalize">{row.original.category}</span>,
   },
   {
     accessorKey: "Date",
     header: ({ column }) => (
-      <button
-        className="flex items-center gap-1"
+      <Button
+        variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc" ? false: true)}
       >
         Date
         <ArrowUpDown className="size-4" />
-      </button>
+      </Button>
     ),
     enableSorting: true,
     cell: ({ row }) => <span className="capitalize">{new Date(row.original.createdAt).toLocaleDateString()}</span>,

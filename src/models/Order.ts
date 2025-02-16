@@ -3,21 +3,24 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IOrder extends Document {
   orderID: number;
   userId: Schema.Types.ObjectId;
-  address: Schema.Types.ObjectId; // Now an ObjectId referencing Address
+  name: string;
   phone: string;
+  instructions: string;
+  upiImage?: string;
   products: { productId: mongoose.Types.ObjectId; quantity: number }[];
   amount: number;
-  deliveryType: string;
   paymentType: "COD" | "UPI";
-  orderStatus: "Accepted" | "Inprogress" | "Delivered" | "Declined";
+  orderStatus: "Pending" | "Accepted" | "Ready" | "Picked" | "Declined";
 }
 
 const OrderSchema = new Schema<IOrder>(
   {
     orderID: { type: Number, required: true, unique: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    address: { type: Schema.Types.ObjectId, ref: "Address", required: true }, // ✅ Reference Address
+    name: { type: String, required: true },
     phone: { type: String, required: true },
+    instructions: { type: String },
+    upiImage: { type: String },
     products: [
       {
         productId: { type: Schema.Types.ObjectId, required: true },
@@ -25,9 +28,13 @@ const OrderSchema = new Schema<IOrder>(
       },
     ],
     amount: { type: Number, required: true },
-    deliveryType: { type: String, required: true },
     paymentType: { type: String, enum: ["COD", "UPI"], required: true },
-    orderStatus: { type: String, enum: ["Accepted", "Inprogress", "Delivered", "Declined"], required: true },
+    orderStatus: { 
+      type: String, 
+      enum: ["Pending", "Accepted", "Ready", "Picked", "Declined"], 
+      required: true,
+      default: "Pending"
+    },
   },
   { timestamps: true }
 );

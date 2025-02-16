@@ -24,8 +24,8 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "./use-confirm";
 import { Input } from "@/components/ui/input";
-import useConfirm from "./use-confirm";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div>
+		<div className="w-full overflow-auto">
 			<ConfirmDialog />
 			<div className="flex items-center py-4">
 				<Input
@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
 				)}
 			</div>
 			<div className="rounded-md border">
-				<Table>
+				<Table className="w-full">
 					<TableHeader>
 						{table.getHeaderGroups().map(headerGroup => (
 							<TableRow key={headerGroup.id}>

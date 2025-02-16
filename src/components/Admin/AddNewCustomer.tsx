@@ -47,7 +47,7 @@ export default function AddNewCustomer({ onSave, onClose }: AddNewCustomerProps)
             // Reset form after successful submission
             setValue("name", "");
             setValue("phone", "");
-            setValue("email", 0);
+            setValue("email", "");
             setUploadProgress(0);
 
             onSave(newProduct);
@@ -75,26 +75,26 @@ export default function AddNewCustomer({ onSave, onClose }: AddNewCustomerProps)
                 <label className="label">Phone</label>
                 <input
                     type="text"
-                    className={`input input-bordered bg-gray-200 ${errors.name ? "input-error" : ""}`}
+                    className={`input input-bordered bg-gray-200 ${errors.phone ? "input-error" : ""}`}
                     {...register("name", { required: "Name is required" })}
                 />
-                {errors.description && <span className="text-error text-sm mt-1">{errors.description.message}</span>}
+                {errors.phone && <span className="text-error text-sm mt-1">{errors.phone.message}</span>}
             </div>
 
             <div className="form-control">
                 <label className="label">Email</label>
                 <input
-                    type="number"
-                    className={`input input-bordered bg-gray-200 ${errors.price ? "input-error" : ""}`}
+                    type="email"
+                    className={`input input-bordered bg-gray-200 ${errors.email ? "input-error" : ""}`}
                     {...register("price", { required: "Price is required", min: 0 })}
                 />
-                {errors.price && <span className="text-error text-sm mt-1">{errors.price.message}</span>}
+                {errors.email && <span className="text-error text-sm mt-1">{errors.email.message}</span>}
             </div>
 
             <button
                 type="submit"
                 className="btn bg-black text-white hover:bg-gray-800 btn-block hover:cursor-pointer"
-                disabled={loading || !uploadProgress}>
+                disabled={loading}>
                 {loading ? (
                     <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />

@@ -1,19 +1,9 @@
 "use client";
 import ImagekitProviders from "@/components/Admin/Imagekit-Providers";
-
-
-import ImageFeed from "@/components/Admin/ProductFeed";
-import ImageUploadForm from "@/components/Admin/ProductUploadForm";
-import { IProduct } from "@/models/Product";
-import { useEffect, useState } from "react";
-
-
-
 import {
   Home,
   LineChart,
   Package,
-  Package2,
   PanelLeft,
   Settings,
   ShoppingCart,
@@ -21,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import Link from 'next/link';
+import Image from "next/image";
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -29,57 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-
-// import { Analytics } from '@vercel/analytics/react';
-// import { User } from './user';
-// import { VercelLogo } from '@/components/icons';
-// import Providers from './providers';
 import { NavItem } from './nav-item';
-import Image from "next/image";
-// import { SearchInput } from './search';
-
-
-
-// export default function Page() {
-  //   const [products, setProducts] = useState<IProduct[]>([]);
-
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     try {
-  //       const data = await fetch("/api/products", 
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }).then((res) => res.json()
-  //       );
-  //       setProducts(data);
-  //     } catch (error) {
-  //       console.error("Error fetching videos:", error);
-  //     }
-  //   };
-
-  //   fetchImages();
-  // }, []);
-  // return (
-  //   <>
-  //   <ImageFeed products={products} />
-  //   <div className="container mx-auto px-4 py-8">
-  //     <div className="max-w-2xl mx-auto">
-  //       <h1 className="text-3xl font-bold mb-8">Upload New Product</h1>
-  //       <ImageUploadForm />
-  //     </div>
-  //   </div>
-  //   </>
-  // );
-// }
-
-
-
-
-
-
 
 export default function DashboardLayout({
   children
@@ -87,76 +28,49 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-        <ImagekitProviders>
-    {/* <Providers> */}
+    <ImagekitProviders>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
         <DesktopNav />
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <div className="flex flex-col gap-2 sm:gap-4 sm:py-4 sm:pl-64">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
             <MobileNav />
-            {/* <SearchInput /> */}
-            {/* <User /> */}
           </header>
-          <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
+          <main>
             {children}
           </main>
         </div>
-        {/* <Analytics /> */}
       </main>
-    {/* </Providers> */}
     </ImagekitProviders>
-    </>
   );
 }
 
+const navItems = [
+  { href: "/admin", label: "Dashboard", icon: Home },
+  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/customers", label: "Customers", icon: Users2 },
+  { href: "/admin/analytics", label: "Analytics", icon: LineChart },
+];
+
 function DesktopNav() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
-          href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base bg-gray-50"
-        >
-          <Image src={"/cupcake.png"} width={50} height={50} alt="logo" />
-          <span className="sr-only">Acme Inc</span>
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-64 flex-col border-r bg-background sm:flex">
+      <div className="flex items-center justify-center py-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo.png" width={500} height={500} alt="logo" className="rounded-full" />
         </Link>
-
-        <NavItem href="/admin" label="Dashboard">
-          <Home className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/admin/orders" label="Orders">
-          <ShoppingCart className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/admin/products" label="Products">
-          <Package className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/admin/customers" label="Customers">
-          <Users2 className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="/admin/analytics" label="Analytics">
-          <LineChart className="h-5 w-5" />
-        </NavItem>
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
-        </TooltipProvider>
+      </div>
+      <nav className="flex flex-col gap-4 px-6 py-4">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <item.icon className="h-5 w-5" />
+            {item.label}
+          </Link>
+        ))}
       </nav>
     </aside>
   );
@@ -171,50 +85,30 @@ function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="sm:max-w-xs">
-        <nav className="grid gap-6 text-lg font-medium">
+      <SheetContent side="left" className="w-[280px] p-0 sm:max-w-xs">
+        <nav className="flex min-h-screen flex-col gap-6 p-6">
           <Link
-            href="#"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            href="/"
+            className="flex items-center gap-2"
           >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
+              <Image src="/cupcake.png" width={40} height={40} alt="logo" className="rounded-full" />
+            </div>
+            <span className="text-lg font-semibold">Dashboard</span>
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Home className="h-5 w-5" />
-            Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <ShoppingCart className="h-5 w-5" />
-            Orders
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
-          >
-            <Package className="h-5 w-5" />
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <Users2 className="h-5 w-5" />
-            Customers
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <LineChart className="h-5 w-5" />
-            Settings
-          </Link>
+
+          <div className="flex flex-col space-y-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <item.icon className="h-5 w-5" />
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
       </SheetContent>
     </Sheet>

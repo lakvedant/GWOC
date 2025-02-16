@@ -3,27 +3,20 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckoutNav } from "@/components/Checkout-nav";
-import { ContactForm } from "@/components/Contact-form";
-import { ShippingForm } from "@/components/Shipping-form";
 import { CartSummary } from "@/components/Cart-Summary";
-import { DeliveryOptionForm } from "@/components/Delivery-option";
+import { PickupForm } from "@/components/Delivery-option";
 import { PaymentForm } from "@/components/Payment-Form";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartProvider";
-import type { CheckoutState, ShippingAddress } from "@/types/checkout";
-import LoginSignupModal from "@/components/Login";
 import Navbar from "@/components/Navbar";
+import type { CheckoutState, PaymentType } from "@/types/checkout";
+import BillingForm from "@/components/Billing-form";
 
 const initialState: CheckoutState = {
-  shippingAddress: {
-    address: "",
-    apartment: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "India",
-  },
-  saveInformation: false,
+  name: "",
+  phone: "",
+  instructions: "",
+  paymentType: "COD",
 };
 
 export default function CheckoutPage() {
@@ -31,18 +24,15 @@ export default function CheckoutPage() {
   const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [step, setStep] = useState<"information" | "shipping" | "delivery" | "payment">("information");
-  const [deliveryMethod, setDeliveryMethod] = useState("");
-  const [shipping, setShipping] = useState(0);
+  const [step, setStep] = useState<"information" | "pickup" | "payment">("information");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(false);
     if (!cartItems || cartItems.length === 0) {
-      router.push('/checkout');
+      router.push("/");
       return;
     }
-
     if (!isAuthenticated) {
       setIsLoginModalOpen(true);
     }
@@ -50,153 +40,113 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (userInfo) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        email: userInfo.email || "",
-        shippingAddress: {
-          ...prev.shippingAddress,
-          firstName: userInfo.name.split(' ')[0] || "",
-          lastName: userInfo.name.split(' ').slice(1).join(' ') || "",
-        }
+        name: userInfo.name || "",
+        phone: userInfo.phone || "",
       }));
     }
   }, [userInfo]);
 
-  const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
-    setState(prevState => ({
-      ...prevState,
-      shippingAddress: {
-        ...prevState.shippingAddress,
-        [field]: value
-      }
+  const handleContactChange = (field: keyof CheckoutState, value: string) => {
+    setState((prev) => ({
+      ...prev,
+      [field]: value,
     }));
-  };
-
-  const handleSaveInfoChange = (saveInformation: boolean) => {
-    setState((prev) => ({ ...prev, saveInformation }));
   };
 
   const handleInformationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep("delivery");
+    setStep("pickup");
   };
 
-  const handleDeliveryProceed = (method: string) => {
-    setDeliveryMethod(method);
-    setShipping(method === "express" ? 10 : 5);
+  const handlePickupProceed = () => {
     setStep("payment");
   };
 
-  // Frontend - handlePaymentComplete function
-  const handlePaymentComplete = async (paymentMethod: string) => {
-    if (!userInfo || !userInfo.userId) {
+  const handlePaymentComplete = async (paymentType: PaymentType, upiImage?: string) => {
+    if (!userInfo?.userId) {
       console.error("🚨 Missing userId in order submission");
       return alert("User information is missing. Please log in again.");
     }
   
+    if (paymentType === "UPI" && !upiImage) {
+      console.error("🚨 UPI payment selected, but no image uploaded.");
+      return alert("Please upload a screenshot of your UPI payment before proceeding.");
+    }
+  
     try {
-      // Create address first
-      const addressResponse = await fetch("/api/address", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userInfo.userId,
-          street: state.shippingAddress.address,
-          house: state.shippingAddress.apartment,
-          city: state.shippingAddress.city,
-          state: state.shippingAddress.state,
-          pincode: state.shippingAddress.zipCode,
-          country: state.shippingAddress.country
-        }),
-      });
-  
-      const addressResult = await addressResponse.json();
-      if (!addressResponse.ok) throw new Error(addressResult.message);
-  
-      // Create order with addressId
       const orderResponse = await fetch("/api/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: userInfo.userId,
-          addressId: addressResult.address._id, // ✅ Use address ID
-          phone: userInfo.phone,
-          products: cartItems.map(item => ({
-            productId: item.id.toString(),
-            quantity: item.quantity
+          name: state.name,
+          phone: state.phone,
+          instructions: state.instructions,
+          upiImage,
+          products: cartItems.map((item) => ({
+            productId: item.id,
+            quantity: item.quantity,
           })),
-          amount: subtotal + shipping,
-          deliveryType: deliveryMethod.toLowerCase(),
-          paymentType: paymentMethod.toUpperCase() === "COD" ? "COD" : "UPI"
+          amount: subtotal * (1 - discount),
+          paymentType, // ✅ Use correct payment type
+          orderStatus: "Pending",
         }),
       });
   
-      if (!orderResponse.ok) throw new Error("Order creation failed");
+      if (!orderResponse.ok) {
+        const error = await orderResponse.json();
+        throw new Error(error.message || "Order creation failed");
+      }
+  
       clearCart();
       router.push("/checkout/success");
-  
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
-      if (error instanceof Error) {
-        alert(error.message || "Failed to create order.");
-      } else {
-        alert("Failed to create order.");
-      }
+      alert(error instanceof Error ? error.message : "Failed to create order.");
     }
   };
   
+
   return (
     <>
       <Navbar />
-    
-    <div className="min-h-screen bg-white text-black py-20 px-4 md:px-40">
-      <div className="max-w-7xl mx-auto py-8">
-        <div className="grid lg:grid-cols-[1fr_400px] gap-8">
-          <div>
-            <CheckoutNav currentStep={step} />
-            
-            {step === "information" ? (
-              <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
-                <ContactForm 
-                  phone={userInfo?.phone || ""}
-                  onPhoneChange={() => {}} // Phone is managed by userInfo now
-                />
-                <ShippingForm
-                  address={state.shippingAddress}
-                  saveInformation={state.saveInformation}
-                  onAddressChange={handleAddressChange}
-                  onSaveInfoChange={handleSaveInfoChange}
-                />
-                <Button type="submit" size="lg" className="w-full md:w-auto">
-                  Continue to Delivery Options
-                </Button>
-              </form>
-            ) : step === "delivery" ? (
-              <div className="mt-6">
-                <DeliveryOptionForm onProceed={handleDeliveryProceed} />
-              </div>
-            ) : (
-              <div className="mt-6">
-                <PaymentForm 
-                  total={subtotal * (1 - discount) + shipping}
-                  onPaymentComplete={handlePaymentComplete}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="lg:pl-8 lg:border-l border-border">
-            <CartSummary 
-              items={cartItems}
-              subtotal={subtotal}
-              shipping={shipping}
-              discount={discount}
-            />
+      <div className="min-h-screen bg-white text-black py-20 px-4 md:px-40">
+        <div className="max-w-7xl mx-auto py-8">
+          <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+            <div>
+              <CheckoutNav currentStep={step} />
+              {step === "information" ? (
+                <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
+                  <BillingForm
+                    name={state.name}
+                    phone={state.phone}
+                    instructions={state.instructions}
+                    onNameChange={(value: string) => handleContactChange("name", value)}
+                    onPhoneChange={(value: string) => handleContactChange("phone", value)}
+                    onInstructionsChange={(value: string) => handleContactChange("instructions", value)}
+                  />
+                  <Button type="submit" size="lg" className="w-full md:w-auto">
+                    Continue to Pickup Details
+                  </Button>
+                </form>
+              ) : step === "pickup" ? (
+                <div className="mt-6">
+                  <PickupForm onProceed={handlePickupProceed} isLoading={isLoading} />
+                </div>
+              ) : (
+                <div className="mt-6">
+                  <PaymentForm total={subtotal * (1 - discount)} onPaymentComplete={handlePaymentComplete} />
+                </div>
+              )}
+            </div>
+            <div className="lg:pl-8 lg:border-l border-border">
+              <CartSummary items={cartItems} subtotal={subtotal} discount={discount} />
+            </div>
           </div>
         </div>
       </div>
-
-    </div>
     </>
   );
 }
