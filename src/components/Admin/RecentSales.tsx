@@ -8,6 +8,7 @@ async function getData() {
   
     const data = await Order.find()
       .select({
+        name: 1,
         amount: 1,
         id: 1,
         user: 1,
@@ -44,7 +45,7 @@ export async function RecentSales() {
             </Avatar> */}
             <User2 className="h-9 w-9" />
             <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium">{item.userId?.name}</p>
+              <p className="text-sm font-medium">{item.name}</p>
               <p className="text-sm text-muted-foreground">
                 {item.userId?.phone}
               </p>

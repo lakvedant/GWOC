@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import dbConnect from "@/lib/db";
 import Order from "@/models/Order";
+import User from "@/models/User";
 
 export async function POST(req: Request) {
   try {
@@ -9,79 +10,65 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // Validate required fields
-    if (!body.userId || !body.name || !body.phone || !body.products || !body.amount) {
-      return NextResponse.json({
-        success: false,
-        message: "Missing required fields"
-      }, { status: 400 });
+    const { userId, name, phone, products, amount, paymentType, upiImage, instructions } = body;
+    if (!userId || !name || !phone || !products || !amount) {
+      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
-    // Validate ObjectId format for userId
-    if (!mongoose.isValidObjectId(body.userId)) {
-      return NextResponse.json({
-        success: false,
-        message: "Invalid userId format"
-      }, { status: 400 });
+    // Validate userId format
+    if (!mongoose.isValidObjectId(userId)) {
+      return NextResponse.json({ success: false, message: "Invalid userId format" }, { status: 400 });
     }
 
-    // Validate and format products array
-    const validatedProducts = body.products.map((product: { productId: string; quantity: number }) => {
+    // Validate products
+    const validatedProducts = products.map((product: { productId: string; quantity: number }) => {
       if (!mongoose.isValidObjectId(product.productId)) {
         throw new Error(`Invalid productId format: ${product.productId}`);
       }
-      return {
-        productId: new mongoose.Types.ObjectId(product.productId),
-        quantity: product.quantity
-      };
+      return { productId: new mongoose.Types.ObjectId(product.productId), quantity: product.quantity };
     });
 
     // Validate payment type
-    if (!["COD", "UPI"].includes(body.paymentType)) {
-      return NextResponse.json({
-        success: false,
-        message: "Invalid payment type. Must be either 'COD' or 'UPI'"
-      }, { status: 400 });
+    if (!["COD", "UPI"].includes(paymentType)) {
+      return NextResponse.json({ success: false, message: "Invalid payment type (COD/UPI only)" }, { status: 400 });
+    }
+    if (paymentType === "UPI" && !upiImage) {
+      return NextResponse.json({ success: false, message: "UPI payment requires a screenshot" }, { status: 400 });
     }
 
-    // If payment type is UPI, ensure upiImage is provided
-    if (body.paymentType === "UPI" && !body.upiImage) {
-      return NextResponse.json({
-        success: false,
-        message: "UPI payment requires a payment screenshot"
-      }, { status: 400 });
-    }
-
-    // Get next order ID
-    const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean() as { orderID?: number } | null;
+    // Generate next order ID
+    const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean();
     const nextOrderID = (latestOrder?.orderID || 200) + 1;
 
-    const newOrder = {
+    // Create the order
+    const order = await Order.create({
       orderID: nextOrderID,
-      userId: new mongoose.Types.ObjectId(body.userId),
-      name: body.name,
-      phone: body.phone,
-      instructions: body.instructions || "",
-      upiImage: body.upiImage,
+      userId: new mongoose.Types.ObjectId(userId),
+      name,
+      phone,
+      instructions: instructions || "",
+      upiImage,
       products: validatedProducts,
-      amount: body.amount,
-      paymentType: body.paymentType as "COD" | "UPI",
-      orderStatus: "Pending"
-    };
-
-    const order = await Order.create(newOrder);
-    
-    return NextResponse.json({ 
-      success: true, 
-      order,
-      message: "Order created successfully" 
+      amount,
+      paymentType,
+      orderStatus: "Pending",
     });
 
+    // Add order ID to user's orders array
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { orders: order._id } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, order, message: "Order created & linked to user" },{ status: 202 });
   } catch (error) {
     console.error("Order creation error:", error);
-    return NextResponse.json({
-      success: false,
-      message: error instanceof Error ? error.message : "Failed to create order"
-    }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message || "Failed to create order" }, { status: 500 });
   }
 }
 
