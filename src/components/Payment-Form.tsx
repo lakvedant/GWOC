@@ -6,10 +6,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Camera, Loader2 } from "lucide-react";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
 import FileUpload from "@/components/Admin/FileUpload";
+import { PaymentType } from "@/types/checkout";
 
 interface PaymentFormProps {
+
   total: number;
-  onPaymentComplete: (paymentType: "cod" | "upi", upiImage?: string) => Promise<void>;
+
+  onPaymentComplete: (paymentType: PaymentType, upiImage?: string) => Promise<void>;
+
 }
 
 export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
