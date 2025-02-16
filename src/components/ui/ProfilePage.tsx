@@ -12,6 +12,7 @@ import {
     Menu,
     X
 } from 'lucide-react';
+import ReviewsSection from '../ReviewSection';
 
 interface Product {
     id: string;
@@ -171,7 +172,7 @@ const ProfilePage = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Header Section */}
             <div className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 py-4">
+                <div className=" mx-6 px-4 py-4">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -205,7 +206,7 @@ const ProfilePage = () => {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className=" mx-6 px-4 py-6">
                 <div className="flex flex-col md:flex-row gap-6">
                     {/* Mobile Menu Overlay */}
                     {isMobileMenuOpen && (
@@ -332,6 +333,20 @@ const ProfilePage = () => {
                                         ))}
                                     </div>
                                 )}
+                            </div>
+                        )}
+                       
+                        {activeSection === 'orders' && (
+                            <div>
+                                {/* Your existing orders section code */}
+                            </div>
+                        )}
+                        
+                        {activeSection === 'reviews' && userInfo && <ReviewsSection userId={userInfo.userId} userName={userInfo.name} />}
+                        
+                        {activeSection === 'profile' && (
+                            <div>
+                                {/* Your profile section code */}
                             </div>
                         )}
                     </div>

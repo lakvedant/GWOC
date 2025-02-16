@@ -1,18 +1,24 @@
-// app/api/product/[id]/route.ts
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import Product, { IProduct } from "@/models/Product";
+import Product from "@/models/Product";
 import connectDB from "@/lib/db";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id?: string } } // ✅ Correct way to access params
 ) {
   try {
     await connectDB();
-    
-    const id = params.id;
-    
+
+    const { id } = context.params; // ✅ Correct way to destructure params
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Product ID is required" },
+        { status: 400 }
+      );
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { success: false, message: "Invalid product ID format" },
@@ -20,8 +26,10 @@ export async function GET(
       );
     }
 
-    const product = await Product.findById(id).select('name price image available category');
-    
+    const product = await Product.findById(id).select(
+      "name price image available category"
+    );
+
     if (!product) {
       return NextResponse.json(
         { success: false, message: "Product not found" },
@@ -43,10 +51,9 @@ export async function GET(
         name: product.name,
         price: product.price,
         image: product.image,
-        category: product.category
-      }
+        category: product.category,
+      },
     });
-
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json(

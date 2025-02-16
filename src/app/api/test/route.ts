@@ -1,39 +1,16 @@
-import { NextResponse } from "next/server";
-import connectDB from "@/lib/db";
-import User from "@/models/User";
+import { NextRequest, NextResponse } from "next/server";
+import Review from "@/models/Review"; // Adjust the path based on your project structure
 
-export async function PUT() {
-    try {
-        await connectDB();
+export async function GET(req: NextRequest) {
+  try {
+    const reviews = await Review.find(); // Fetch all reviews
 
-        // Update all users who do not have an 'orders' field
-        const result =await User.updateMany({}, { $set: { orders: [] } });
-
-
-        return NextResponse.json({ 
-            success: true, 
-            modifiedCount: result.modifiedCount, 
-            message: `${result.modifiedCount} users updated`
-        }, { status: 200 });
-    } catch (error) {
-        console.error("Error updating users:", error);
-        return NextResponse.json({ success: false, message: "Failed to update users" }, { status: 500 });
-    }
-}
-
-export async function GET() {
-    try {
-        await connectDB();
-
-        // Fetch all users ensuring orders field is included
-        const users = await User.find({}).lean();
-
-        return NextResponse.json({ 
-            success: true, 
-            users 
-        }, { status: 200 });
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        return NextResponse.json({ success: false, message: "Failed to fetch users" }, { status: 500 });
-    }
+    return NextResponse.json({ success: true, reviews }, { status: 200 });
+  } catch (error) {
+    console.error("❌ Error fetching reviews:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error", error: (error as any).message },
+      { status: 500 }
+    );
+  }
 }
