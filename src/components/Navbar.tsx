@@ -6,7 +6,7 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CartSlider } from "@/components/CartSlider";
 import UserDropdown from "@/components/UserProfile";
 
@@ -18,12 +18,32 @@ export const Navbar = () => {
   const [cartItems, setCartItems] = useState([]);
   const [scrollY, setScrollY] = useState(0);
 
-
-
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cartData") || "[]");
     setCartItems(savedCart);
   }, []);
+
+  // Cart badge component
+  const CartBadge = ({ count }: { count: number }) => (
+    <AnimatePresence>
+      {count > 0 && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0 }}
+          className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
+        >
+          <motion.span 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="text-white text-xs font-bold"
+          >
+            {count}
+          </motion.span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   return (
     <motion.nav
@@ -45,7 +65,7 @@ export const Navbar = () => {
             {["Home", "About", "Products", "Contact"].map((label) => (
               <Link
                 key={label}
-                href={label !== "Home" ? `/${label.toLowerCase()}` : ("/")}
+                href={label !== "Home" ? `/${label.toLowerCase()}` : "/"}
                 className="px-5 py-2 text-rose-900 hover:text-rose-700 text-sm font-semibold rounded-full hover:bg-rose-100"
               >
                 {label}
@@ -70,14 +90,15 @@ export const Navbar = () => {
             <UserDropdown />
 
             {/* Cart Button */}
-            <Button variant="ghost" size="lg" className="relative flex items-center space-x-2" onClick={() => setIsCartOpen(true)}>
+            <Button 
+              variant="ghost" 
+              size="lg" 
+              className="relative flex items-center space-x-2" 
+              onClick={() => setIsCartOpen(true)}
+            >
               <ShoppingCart className="h-6 w-6" />
               <span className="text-base font-medium">Cart</span>
-              {cartItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 h-6 w-6 bg-pink-600 rounded-full text-white text-sm flex items-center justify-center animate-pulse">
-                  {cartItems.length}
-                </span>
-              )}
+              <CartBadge count={cartItems.length} />
             </Button>
           </div>
 
@@ -85,11 +106,7 @@ export const Navbar = () => {
           <div className="md:hidden flex items-center space-x-4">
             <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
               <ShoppingCart className="h-6 w-6 text-rose-700" />
-              {cartItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full text-white text-xs flex items-center justify-center">
-                  {cartItems.length}
-                </span>
-              )}
+              <CartBadge count={cartItems.length} />
             </Button>
 
             <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -107,7 +124,12 @@ export const Navbar = () => {
       </div>
 
       {/* Overlay */}
-      {isCartOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsCartOpen(false)} />}
+      {isCartOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40" 
+          onClick={() => setIsCartOpen(false)} 
+        />
+      )}
     </motion.nav>
   );
 };

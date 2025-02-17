@@ -8,13 +8,18 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { IKImage } from "imagekitio-next";
-import LoginSignupModal from "@/components/Login"; // Import the Login Modal
+import LoginSignupModal from "@/components/Login"; 
 
 interface CartSliderProps {
   onClose?: () => void;
 }
 
-// Function to check auth status on the server (fallback)
+const COUPONS: { [key: string]: number } = {
+  "SAVE10": 0.10, // 10% off
+  "DISCOUNT20": 0.20, // 20% off
+  "FREESHIP": 0.15, // 15% off
+};
+
 const getAuthStatus = async (): Promise<boolean> => {
   const response = await fetch("/api/auth-status", { cache: "no-store" });
   const data = await response.json();
@@ -27,9 +32,8 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const [couponCode, setCouponCode] = useState("");
   const [notification, setNotification] = useState("");
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo); // Use userInfo first
+  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo); 
 
-  // Check authentication status only if userInfo is missing
   useEffect(() => {
     if (!userInfo) {
       const fetchAuthStatus = async () => {
@@ -49,15 +53,16 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
     }
   };
 
-  // Callback for successful login → Redirect to checkout
-  const handleLoginSuccess = () => {
-    setIsLoginOpen(false);
-    router.push("/checkout");
+  const handleCouponApply = () => {
+    const formattedCode = couponCode.trim().toUpperCase();
+    if (COUPONS[formattedCode as keyof typeof COUPONS]) {
+      setDiscount(COUPONS[formattedCode]);
+      setNotification(`Coupon applied! You saved ${(COUPONS[formattedCode] * 100).toFixed(0)}%.`);
+    } else {
+      setNotification("Invalid coupon code. Try again.");
+      setDiscount(0);
+    }
   };
-
-  function handleCouponApply(event: React.MouseEvent<HTMLButtonElement>): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <div className="flex flex-col h-full z-50">
@@ -119,7 +124,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
       </ScrollArea>
 
       <div className="px-4 py-2 border-t">
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-2">
           <Input
             placeholder="Enter coupon code"
             value={couponCode}
@@ -128,6 +133,8 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
           />
           <Button onClick={handleCouponApply}>Apply</Button>
         </div>
+        {notification && <p className="text-sm text-green-600 mb-2">{notification}</p>}
+
         <div className="flex justify-between mb-4">
           <span>Subtotal</span>
           <span>₹{subtotal.toFixed(2)}</span>
@@ -147,7 +154,6 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
         </Button>
       </div>
 
-      {/* Login Modal (Only show if user is NOT authenticated) */}
       {!isAuthenticated && <LoginSignupModal open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
     </div>
   );

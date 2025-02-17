@@ -73,7 +73,8 @@ const ReviewsSection: React.FC<ReviewsProps> = ({ userId, userName }) => {
         })
       );
       
-      setUserProducts(productsWithDetails);
+      setUserProducts(productsWithDetails.sort((a, b) => b._id.localeCompare(a._id)));
+
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching products:', error);

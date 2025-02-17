@@ -6,10 +6,10 @@ if (!MONGODB_URI) {
     throw new Error("Please define mongodb uri in env file.");
 }
 
-let cached = global.mongoose;
+let cached = (global as any).mongoose;
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
+    cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
 export default async function connectDB() {
@@ -21,17 +21,18 @@ export default async function connectDB() {
         const opts = {
             bufferCommands: true,
             maxPoolSize: 10,
-        }
+        };
         cached.promise = mongoose
-        .connect(MONGODB_URI, opts)
-        .then(() => mongoose.connection);
+            .connect(MONGODB_URI, opts)
+            .then(() => mongoose.connection);
     }
 
     try {
-        cached.conn = await cached.promise
-    } catch (error) {
-        cached.promise = null
-        throw new Error("Error in connecting DB")
+        cached.conn = await cached.promise;
+    } catch (err) {
+        console.error("Database connection error:", err);
+        cached.promise = null;
+        throw new Error("Error in connecting DB");
     }
 
     return cached.conn;

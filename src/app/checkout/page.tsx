@@ -21,7 +21,7 @@ const initialState: CheckoutState = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated } = useCart();
+  const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated, setDiscount } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [step, setStep] = useState<"information" | "pickup" | "payment">("information");
@@ -29,14 +29,19 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setIsLoading(false);
-    if (!cartItems || cartItems.length === 0) {
-      router.push("/");
-      return;
+    if (!cartItems) return; 
+  
+    if (cartItems.length === 0) {
+      console.warn("🛑 Cart is empty, redirecting to home.");
+      return router.push("/");
     }
+  
     if (!isAuthenticated) {
       setIsLoginModalOpen(true);
     }
   }, [cartItems, router, isAuthenticated]);
+  
+  
 
   useEffect(() => {
     if (userInfo) {
@@ -65,50 +70,57 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentComplete = async (paymentType: PaymentType, upiImage?: string) => {
-  if (!userInfo?.userId) {
-    console.error("🚨 Missing userId in order submission");
-    return alert("User information is missing. Please log in again.");
-  }
-
-  if (paymentType === "UPI" && !upiImage) {
-    console.error("🚨 UPI payment selected, but no image uploaded.");
-    return alert("Please upload a screenshot of your UPI payment before proceeding.");
-  }
-
-  try {
-    const orderResponse = await fetch("/api/order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: userInfo.userId,
-        name: state.name,
-        phone: state.phone,
-        instructions: state.instructions,
-        upiImage,
-        products: cartItems.map((item) => ({
-          productId: item.id,
-          quantity: item.quantity,
-        })),
-        amount: subtotal * (1 - discount),
-        paymentType, // ✅ Use correct payment type
-        orderStatus: "Pending",
-      }),
-    });
-
-    if (!orderResponse.ok) {
-      const error = await orderResponse.json();
-      throw new Error(error.message || "Order creation failed");
+    if (!userInfo?.userId) {
+      console.error("🚨 Missing userId in order submission");
+      return alert("User information is missing. Please log in again.");
     }
-
-    clearCart();
-    router.push("/checkout/success");
-  } catch (error) {
-    console.error("🚨 Order creation failed:", error);
-    alert(error instanceof Error ? error.message : "Failed to create order.");
-  }
-};
-
-
+  
+    if (paymentType === "UPI" && !upiImage) {
+      console.error("🚨 UPI payment selected, but no image uploaded.");
+      return alert("Please upload a screenshot of your UPI payment before proceeding.");
+    }
+  
+    try {
+      const orderResponse = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userInfo.userId,
+          name: state.name,
+          phone: state.phone,
+          instructions: state.instructions,
+          upiImage,
+          products: cartItems.map((item) => ({
+            productId: item.id,
+            quantity: item.quantity,
+          })),
+          amount: subtotal * (1 - discount),
+          paymentType,
+          orderStatus: "Pending",
+        }),
+      });
+  
+      if (!orderResponse.ok) {
+        const error = await orderResponse.json();
+        throw new Error(error.message || "Order creation failed");
+      }
+  
+      const orderData = await orderResponse.json();
+      
+      // ✅ Clear discount after successful order
+      
+      
+      // Pass the order details to success page through URL params
+      router.push(`/checkout/success?orderId=${orderData.orderId}&amount=${subtotal * (1 - discount)}&paymentType=${paymentType}&name=${encodeURIComponent(state.name)}&phone=${encodeURIComponent(state.phone)}`);
+      setDiscount(0);
+      clearCart();
+  
+    } catch (error) {
+      console.error("🚨 Order creation failed:", error);
+      alert(error instanceof Error ? error.message : "Failed to create order.");
+    }
+  };
+  
   return (
     <>
       <Navbar />

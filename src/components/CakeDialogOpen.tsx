@@ -1,6 +1,6 @@
-'use client'
-import React, { useState } from 'react';
-import { Heart, Info, Clock, Star} from 'lucide-react';
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Heart, Info, Clock, Star } from 'lucide-react';
 import Image from 'next/image';
 import { ProductData } from '@/models/Product';
 import { IKImage } from 'imagekitio-next';
@@ -8,9 +8,16 @@ import { CartItem } from '@/types/checkout';
 import { useRouter } from 'next/navigation';
 import { useCart } from './CartProvider';
 
+interface Review {
+  _id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  approved: boolean;
+  createdAt: string;
+}
 
-
-type WeightOption = '0.5 Kg' | '1 Kg' | '1.5 Kg' | '2 Kg' | '4 Kg';
+type WeightOption = string;
 
 interface CakeOrderDialogProps {
   product: ProductData;
@@ -18,82 +25,112 @@ interface CakeOrderDialogProps {
   onAddToCart: (item: CartItem) => void;
 }
 
-
-
 const chefWords: { [key: string]: string[] } = {
   "Fudge": [
-      "Indulge in the rich, velvety smoothness of homemade fudge, where every bite melts in your mouth, releasing a burst of deep chocolate flavor, balanced with buttery sweetness and a hint of caramelized perfection."
+    "Indulge in the rich, velvety smoothness of homemade fudge, where every bite melts in your mouth, releasing a burst of deep chocolate flavor, balanced with buttery sweetness and a hint of caramelized perfection."
   ],
-  
   "Chocolate Modak": [
-      "A divine fusion of tradition and indulgence, chocolate modaks combine the richness of creamy chocolate with the essence of festive joy, creating a mouthwatering delight that melts in your mouth and leaves a lingering sweetness."
+    "A divine fusion of tradition and indulgence, chocolate modaks combine the richness of creamy chocolate with the essence of festive joy, creating a mouthwatering delight that melts in your mouth and leaves a lingering sweetness."
   ],
-  
   "Truffle Balls": [
-      "Bite into the luxurious delight of chocolate truffle balls, where silky-smooth ganache meets a crisp cocoa dusting, offering a heavenly balance of rich chocolate intensity and melt-in-your-mouth creaminess in every bite."
+    "Bite into the luxurious delight of chocolate truffle balls, where silky-smooth ganache meets a crisp cocoa dusting, offering a heavenly balance of rich chocolate intensity and melt-in-your-mouth creaminess in every bite."
   ],
-  
   "Brownie": [
-      "Experience the perfect blend of crisp, crackly edges and an irresistibly fudgy center in every brownie, packed with intense chocolate goodness, creating a rich, gooey, and utterly satisfying treat for any sweet craving."
+    "Experience the perfect blend of crisp, crackly edges and an irresistibly fudgy center in every brownie, packed with intense chocolate goodness, creating a rich, gooey, and utterly satisfying treat for any sweet craving."
   ],
-  
   "Muffins": [
-      "Enjoy the soft, fluffy texture of freshly baked muffins, bursting with delicious flavors like chocolate chips, blueberries, or cinnamon spice, offering a perfect balance of sweetness, moisture, and golden-baked perfection in every bite."
+    "Enjoy the soft, fluffy texture of freshly baked muffins, bursting with delicious flavors like chocolate chips, blueberries, or cinnamon spice, offering a perfect balance of sweetness, moisture, and golden-baked perfection in every bite."
   ],
-  
   "Cookies": [
-      "Savor the delightful crunch of golden-baked cookies with a chewy, melt-in-your-mouth center, generously packed with chocolate chips, nuts, or caramel, delivering the ultimate combination of crispiness and softness in every bite."
+    "Savor the delightful crunch of golden-baked cookies with a chewy, melt-in-your-mouth center, generously packed with chocolate chips, nuts, or caramel, delivering the ultimate combination of crispiness and softness in every bite."
   ],
-  
   "Cakes": [
-      "Celebrate every moment with moist, spongy cakes, layered with luscious buttercream, silky ganache, or fresh fruits, creating a divine fusion of textures and flavors that make every slice a piece of edible art."
+    "Celebrate every moment with moist, spongy cakes, layered with luscious buttercream, silky ganache, or fresh fruits, creating a divine fusion of textures and flavors that make every slice a piece of edible art."
   ],
-  
   "Ice Cream": [
-      "Cool down with creamy, dreamy ice cream, crafted with the finest ingredients, offering a smooth, velvety texture and a refreshing burst of flavors that melt effortlessly, leaving a lingering sweetness on your taste buds."
+    "Cool down with creamy, dreamy ice cream, crafted with the finest ingredients, offering a smooth, velvety texture and a refreshing burst of flavors that melt effortlessly, leaving a lingering sweetness on your taste buds."
   ],
-  
   "Donuts": [
-      "Sink your teeth into a soft, fluffy donut, coated in glossy chocolate, sprinkled with vibrant toppings, or filled with luscious cream, delivering the perfect balance of sweetness, airiness, and indulgence in every bite."
+    "Sink your teeth into a soft, fluffy donut, coated in glossy chocolate, sprinkled with vibrant toppings, or filled with luscious cream, delivering the perfect balance of sweetness, airiness, and indulgence in every bite."
   ],
-  
   "Swiss Rolls": [
-      "Relish the perfect swirl of delicate sponge cake and rich, creamy filling in Swiss rolls, offering a light yet indulgent treat that combines soft textures, sweet flavors, and a delightful melt-in-mouth experience."
+    "Relish the perfect swirl of delicate sponge cake and rich, creamy filling in Swiss rolls, offering a light yet indulgent treat that combines soft textures, sweet flavors, and a delightful melt-in-mouth experience."
   ]
 };
 
 const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) => {
-
   const router = useRouter();
-  const { addToCart } = useCart();  
-  const [selectedWeight, setSelectedWeight] = useState<WeightOption>('0.5 Kg');
+  const { addToCart } = useCart();
+  const [weightOptions, setWeightOptions] = useState<WeightOption[]>([]);
+  const [selectedWeight, setSelectedWeight] = useState<WeightOption>('');
   const [message, setMessage] = useState('');
   const [isWishlistActive, setIsWishlistActive] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const shortText = product.description.slice(0, 175); 
-  const isPieceBased = !selectedWeight.includes("g") && !selectedWeight.includes("kg");
+  const [currentPrice, setCurrentPrice] = useState<number>(product.price);
+  const [discountedPrice, setDiscountedPrice] = useState<number>(product.price);
+  const shortText = product.description.slice(0, 100);
 
-  const weights: WeightOption[] = ['0.5 Kg', '1 Kg', '1.5 Kg', '2 Kg', '4 Kg'];
-  
-  const originalPrice = product.price;
-  const discountedPrice = product.discount 
-    ? product.price - (product.price * (product.discount / 100))
-    : product.price;
+  // Define weight options and prices based on category
+  useEffect(() => {
+    let options: string[] = [];
+    
+    if (product.category === "Cakes" || product.category === "Chocolate Modak") {
+      options = ["500g", "1kg", "1.5kg", "2kg", "3kg"];
+    } else if (product.category === "Cookies" || product.category === "Muffins") {
+      options = ["100g", "250g", "500g", "1kg"];
+    } else {
+      options = ["1 Pc", "2 Pc", "5 Pc", "8 Pc", "10 Pc"];
+    }
+    
+    setWeightOptions(options);
+    setSelectedWeight(options[0]); // Set first option as default
+  }, [product.category]);
 
-    const handleAddToCart = () => {
-      const cartItem: CartItem = {
-        id: product._id,
-        name: product.name,
-        price: discountedPrice,
-        quantity: isPieceBased ? parseInt(selectedWeight) : 1, 
-        image: product.image,
-        variant: selectedWeight,
-        message: message,
-        title: ''
-      };
-      addToCart(cartItem);  // <-- Add to cart using the context
-      onClose();  // Close the dialog after adding to cart
+  // Calculate price based on selected weight
+  useEffect(() => {
+    if (!selectedWeight) return;
+    
+    let priceMultiplier = 1;
+    const isPieceBased = selectedWeight.includes('Pc');
+    
+    if (isPieceBased) {
+      const pieceCount = parseInt(selectedWeight.split(' ')[0]);
+      priceMultiplier = pieceCount;
+    } else {
+      if (selectedWeight === '100g') priceMultiplier = 0.2;
+      else if (selectedWeight === '250g') priceMultiplier = 0.5;
+      else if (selectedWeight === '500g') priceMultiplier = 1;
+      else if (selectedWeight === '1kg') priceMultiplier = 2;
+      else if (selectedWeight === '1.5kg') priceMultiplier = 3;
+      else if (selectedWeight === '2kg') priceMultiplier = 4;
+      else if (selectedWeight === '3kg') priceMultiplier = 6;
+    }
+    
+    const newPrice = product.price * priceMultiplier;
+    setCurrentPrice(newPrice);
+    
+    // Calculate discounted price
+    const newDiscountedPrice = product.discount 
+      ? newPrice - (newPrice * (product.discount / 100))
+      : newPrice;
+    setDiscountedPrice(newDiscountedPrice);
+  }, [selectedWeight, product.price, product.discount]);
+
+  const handleAddToCart = () => {
+    const isPieceBased = selectedWeight.includes('Pc');
+    const cartItem: CartItem = {
+      id: product._id,
+      name: product.name,
+      price: discountedPrice,
+      quantity: 1,
+      image: product.image,
+      variant: selectedWeight,
+      message: message,
+      title: ''
     };
+    addToCart(cartItem);
+    onClose();
+  };
 
   const handleBuyNow = () => {
     handleAddToCart();
@@ -156,7 +193,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
               {/* Price section */}
               <div className="flex items-center gap-2">
                 {product.discount && (
-                  <span className="text-gray-400 line-through">₹{originalPrice}</span>
+                  <span className="text-gray-400 line-through">₹{currentPrice}</span>
                 )}
                 <span className="text-2xl font-bold text-gray-900">₹{discountedPrice}</span>
                 {product.discount && (
@@ -168,7 +205,9 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
               {/* Weight selection */}
               <div>
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-medium text-gray-800">Select Weight</h3>
+                  <h3 className="font-medium text-gray-800">
+                    {selectedWeight.includes('Pc') ? 'Select Quantity' : 'Select Weight'}
+                  </h3>
                   <button className="flex items-center gap-1 text-gray-500 text-sm">
                     <Info className="w-4 h-4" />
                     Serving Info
@@ -176,41 +215,20 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
                 </div>
 
                 <div className="grid grid-cols-5 gap-2">
-  {(() => {
-    let weightOptions: string[] = [];
-    let isPieceBased = false;
-
-    if (product.category === "Cakes" || product.category === "Chocolate Modak") {
-      weightOptions = ["500g", "1kg", "1.5kg", "2kg", "3kg"];
-    } else if (product.category === "Cookies" || product.category === "Muffins") {
-      weightOptions = ["100g", "250g", "500g", "1kg"];
-    } else {
-      weightOptions = ["1 Pc", "2 Pc", "5 Pc", "8 Pc", "10 Pc"];
-      isPieceBased = true;
-    }
-
-    return weightOptions.map((option) => (
-      <button
-        key={option}
-        onClick={() => {
-          if (isPieceBased) {
-            setSelectedWeight(option as WeightOption);
-          } else {
-            setSelectedWeight(option as WeightOption);
-          }
-        }}
-        className={`p-2 rounded border text-sm transition-colors ${
-          selectedWeight === option
-            ? "border-pink-500 text-pink-500 bg-pink-50"
-            : "border-gray-200 text-gray-600 hover:border-pink-200"
-        }`}
-      >
-        {option}
-      </button>
-    ));
-  })()}
-</div>
-
+                  {weightOptions.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => setSelectedWeight(option)}
+                      className={`p-2 rounded border text-sm transition-colors ${
+                        selectedWeight === option
+                          ? "border-pink-500 text-pink-500 bg-pink-50"
+                          : "border-gray-200 text-gray-600 hover:border-pink-200"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Message input */}
@@ -231,7 +249,6 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
                   />
                 </div>
               )}
-
 
               {/* Description */}
               <div>
@@ -336,8 +353,6 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
                   </svg>
                 </button>
               </div>
-
-              
             </div>
 
             {/* Fixed buttons at bottom */}

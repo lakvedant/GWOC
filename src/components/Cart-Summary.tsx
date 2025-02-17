@@ -53,10 +53,6 @@ export function CartSummary({ items, subtotal, discount = 0, shipping = 0 }: Car
             <span>-₹{discountAmount.toFixed(2)}</span>
           </div>
         )}
-        <div className="flex justify-between">
-          <span>Shipping</span>
-          <span>₹{shipping.toFixed(2)}</span>
-        </div>
         <div className="flex justify-between font-medium text-base">
           <span>Total</span>
           <span className="flex items-center">

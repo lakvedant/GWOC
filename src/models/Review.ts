@@ -1,5 +1,5 @@
 // models/Review.ts
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IReview extends Document {
   userName: string;
