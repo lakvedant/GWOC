@@ -6,10 +6,10 @@ if (!MONGODB_URI) {
     throw new Error("Please define mongodb uri in env file.");
 }
 
-let cached = (global as any).mongoose;
+let cached = global.mongoose;
 
 if (!cached) {
-    cached = (global as any).mongoose = { conn: null, promise: null };
+    cached = global.mongoose = { conn: null, promise: null };
 }
 
 export default async function connectDB() {

@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const CupcakeShowcase = () => {
     const [rotation, setRotation] = useState(0);
@@ -58,7 +59,8 @@ const CupcakeShowcase = () => {
                         animate={{ rotateY: rotation }}
                         transition={{ duration: 1 }}
                     >
-                        <img
+                        <Image
+                            fill
                             src="/cupcake.png"
                             alt="Chocolate Cupcake"
                             className="w-max h-max object-contain"

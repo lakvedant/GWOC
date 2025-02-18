@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IOrder extends Document {
-  __v: any;
-  updatedAt: any;
+  __v: number;
+  updatedAt: Date;
   _id: mongoose.Types.ObjectId;
   orderID: number;
   userId: Schema.Types.ObjectId;
@@ -11,7 +11,7 @@ export interface IOrder extends Document {
   instructions: string;
   upiImage?: string;
   products: {
-    _id: any; productId: mongoose.Types.ObjectId; quantity: number 
+    _id: mongoose.Types.ObjectId; productId: mongoose.Types.ObjectId; quantity: number 
 }[];
   amount: number;
   paymentType: "COD" | "UPI";

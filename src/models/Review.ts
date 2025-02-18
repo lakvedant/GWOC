@@ -6,9 +6,10 @@ export interface IReview extends Document {
   userid: string;
   rating: number;
   comment: string;
-  approved: boolean;
+  status: "Approved" | "Pending" | "Rejected";
   productId: Schema.Types.ObjectId;
   productName: string;
+  createdAt: Date;
 }
 
 const ReviewSchema = new Schema<IReview>(
@@ -17,7 +18,12 @@ const ReviewSchema = new Schema<IReview>(
     userid: { type: String, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
     comment: { type: String, required: true },
-    approved: { type: Boolean, default: false },
+    status: { 
+      type: String, 
+      enum: ["Approved", "Pending", "Rejected", "Picked", "Declined"], 
+      required: true,
+      default: "Pending"
+    },
     productId: {
       type: Schema.Types.ObjectId,
       ref: 'Product',
