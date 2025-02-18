@@ -27,8 +27,8 @@ export default function Footer() {
             <ul className="space-y-3 list-none">
               {["Cake Flavours", "Brownie", "Fudge", "Many More...."].map((item) => (
                 <ul key={item} className="list-none">
-                  <Link 
-                    href="#" 
+                  <Link
+                    href="#"
                     className="text-gray-600 hover:text-pink-600 transition-colors duration-300 flex items-center space-x-2 list-none"
                   >
                     <span className="h-1 w-1 bg-pink-400 rounded-full"></span>
@@ -42,11 +42,11 @@ export default function Footer() {
           {/* Contact Section */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-pink-600">Contact Us</h3>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
+            <div className="space-y-3 -ml-7">
+              <div className="flex items-start space-x-3 ">
                 <FaMapMarkerAlt className="text-pink-500 mt-1 flex-shrink-0" />
                 <p className="text-gray-600">
-                  Kuber Plaza, 3rd Floor, Block-C, Acharya Niketan, Near Bansal Sweets, 
+                  Kuber Plaza, 3rd Floor, Block-C, Acharya Niketan, Near Bansal Sweets,
                   Mayur Vihar Phase-1, Delhi, Pin Code - 110091
                 </p>
               </div>
@@ -63,7 +63,7 @@ export default function Footer() {
 
           {/* Stay Connected - QR Code Only */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-pink-600 items-end">Stay Connected</h3>
+            <h3 className="text-xl font-semibold justify-center text-center text-pink-600 items-end">Stay Connected</h3>
             <div className="transform hover:scale-105 transition-transform duration-300">
               <div className="flex flex-col items-center">
                 <div className="relative">
@@ -119,7 +119,7 @@ export default function Footer() {
               </a>
             ))}
           </div>
-          
+
           {/* Copyright */}
           <p className="text-sm text-gray-500">
             © {new Date().getFullYear()} Bindi&apos;s Cupcakery. All rights reserved.

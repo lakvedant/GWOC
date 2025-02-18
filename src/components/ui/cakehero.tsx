@@ -64,7 +64,7 @@ const CreativeCakeHero = () => {
                         {/* Main Image */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                             <img
-                                src="/api/placeholder/320/320"
+                                src="brownie.jpg"
                                 alt="Featured Cake"
                                 className="w-full h-full object-cover"
                             />

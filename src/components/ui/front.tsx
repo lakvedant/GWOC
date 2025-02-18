@@ -2,37 +2,43 @@
 import React from 'react';
 import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
+import { Roboto } from 'next/font/google';
+
+const roboto = Roboto({
+    weight: ['400', '700'],
+    subsets: ['latin'],
+});
 
 const HeroSection = () => {
     const controls = useAnimation();
     const features = [
         {
             id: 1,
-            title: "DAIRY-FREE",
-            description: "Enjoy our bakes without milk or dairy derivatives, perfect for those seeking lactose-free indulgence.",
-            position: "top-56 left-72",
-            flexDirection: "flex-row-reverse"
-        },
-        {
-            id: 2,
-            title: "WHEAT FLOUR (GLUTEN)",
-            description: "Our sponge cakes and muffins are made with high-quality wheat flour, giving each bite a soft texture and rich taste.",
-            position: "bottom-[380px] left-[250px]",
-            flexDirection: "flex-row-reverse"
+            title: "Purely Eggless, Perfectly Delicious",
+            description: "Enjoy homemade, preservative-free cupcakes, brownies, cakes, and ice creams—all 100% vegetarian!",
+            position: "top-56 right-[200px]",
+            flexDirection: "flex-row"
         },
         {
             id: 3,
-            title: "HIGH-PROTEIN BLEND",
-            description: "Our doughnuts are enriched with a high-protein blend, helping you stay energized and full longer.",
-            position: "top-[320px] right-[260px]",
+            title: "Order & Pickup Convenience",
+            description: "Easy online ordering with hassle-free pickup at Parle Point, Surat.",
+            position: "bottom-[400px] right-[200px]",
             flexDirection: "flex-row"
         },
         {
+            id: 2,
+            title: "Natural & Preservative-Free",
+            description: "Freshly made with high-quality ingredients, free from artificial additives.",
+            position: "top-[300px] right-[800px]",
+            flexDirection: "flex-row-reverse"
+        },
+        {
             id: 4,
-            title: "SUGAR-FREE SWEETENERS",
-            description: "Enjoy the perfect sweetness with zero added sugars, making it ideal for a balanced diet.",
-            position: "bottom-[330px] right-[300px]",
-            flexDirection: "flex-row"
+            title: "Customizable Treats",
+            description: "Personalize cakes and treats to match your taste and style.",
+            position: "bottom-[330px] right-[800px]",
+            flexDirection: "flex-row-reverse"
         }
     ];
 
@@ -176,13 +182,13 @@ const HeroSection = () => {
                             initial={{ pathLength: 0, opacity: 0 }}
                             animate={{ pathLength: 1, opacity: 1 }}
                             transition={{ duration: 1, delay: 1.5 + index * 0.2 }}
-                            className="mx-2 w-16 h-6"
-                            viewBox="0 0 100 20"
+                            className="mx-2 w-32 h-6"
+                            viewBox="0 0 200 20"
                         >
                             <motion.path
-                                d="M2 10 Q 50 -10, 98 10"
+                                d="M2 10 Q 100 -20, 400 20"
                                 stroke="#F472B6"
-                                strokeWidth="2"
+                                strokeWidth="4"
                                 strokeDasharray="5,5"
                                 fill="transparent"
                                 animate={{
@@ -196,22 +202,38 @@ const HeroSection = () => {
                             />
                         </motion.svg>
                         <motion.div
-                            whileHover={{
-                                scale: 1.05,
-                                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                                borderRadius: "10px",
-                                padding: "10px"
-                            }}
-                            className="max-w-xs transition-all duration-300"
+                            initial="rest"
+                            whileHover="hover"
+                            className="max-w-xs transition-all duration-300 bg-white/80 p-4 rounded-lg"
                         >
                             <motion.h3
-                                className="font-bold text-pink-500 mb-1"
-                                style={{ fontFamily: 'Comic Sans MS, cursive' }}
+                                className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}
                                 whileHover={{ scale: 1.1 }}
                             >
                                 {feature.title}
                             </motion.h3>
-                            <p className="text-sm text-[#6a1b9a]">{feature.description}</p>
+                            <motion.p
+                                className="text-sm text-[#6a1b9a]"
+                                initial={{ opacity: 0, height: 0 }}
+                                variants={{
+                                    hover: {
+                                        opacity: 1,
+                                        height: "auto",
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    },
+                                    rest: {
+                                        opacity: 0,
+                                        height: 0,
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    }
+                                }}
+                            >
+                                {feature.description}
+                            </motion.p>
                         </motion.div>
                     </motion.div>
                 ))}
@@ -224,6 +246,7 @@ const HeroSection = () => {
                         key={feature.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+                        whileHover="hover"
                         transition={{
                             duration: 0.5,
                             delay: 0.2 * index
@@ -234,10 +257,31 @@ const HeroSection = () => {
                             {feature.id}
                         </div>
                         <div className="flex-1">
-                            <h3 className="font-bold text-pink-500 mb-1" style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+                            <h3 className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}>
                                 {feature.title}
                             </h3>
-                            <p className="text-sm text-[#6a1b9a]">{feature.description}</p>
+                            <motion.p
+                                className="text-sm text-[#6a1b9a]"
+                                initial={{ opacity: 0, height: 0 }}
+                                variants={{
+                                    hover: {
+                                        opacity: 1,
+                                        height: "auto",
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    },
+                                    rest: {
+                                        opacity: 0,
+                                        height: 0,
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    }
+                                }}
+                            >
+                                {feature.description}
+                            </motion.p>
                         </div>
                     </motion.div>
                 ))}

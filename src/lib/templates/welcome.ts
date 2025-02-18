@@ -1,16 +1,199 @@
 export const welcomeTemplate = `
 <!DOCTYPE html>
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
-
+<html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width"/>
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
 
+.container {
+  width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 94% !important;
+  }
+  
+  .header {
+    margin-top: 20px !important;
+  }
+  
+  .customer-info__item {
+    display: block;
+    width: 100% !important;
+  }
+}
+</style>
 </head>
-
 <body>
-    <h1>Hello, {{name}}! </h1>
-    <p>{{message}}</p>
-    <p>{{email}}</p>
-</body>
+  <table class="body" style="width: 100%; border-spacing: 0; border-collapse: collapse;">
+    <tr>
+      <td>
+        <!-- Header -->
+        <table class="header" style="width: 100%; margin: 40px 0 20px;">
+          <tr>
+            <td>
+              <center>
+                <table class="container">
+                  <tr>
+                    <td align="center">
+                      <img src="https://ik.imagekit.io/deiy5ty8y2/images/image_aTj4PCuUa" alt="Bindi's Cupcakery" width="180"/>
+                    </td>
+                  </tr>
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
 
+        <!-- Content -->
+        <table class="content" style="width: 100%;">
+          <tr>
+            <td>
+              <center>
+                <table class="container">
+                  <tr>
+                    <td>
+                      <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                        Thank you {{customerName}}, we have received your order #{{orderNumber}}!
+                      </p>
+                      <p style="color: #777; line-height: 150%; font-size: 16px; margin: 15px 0;">
+                        We're delighted to be baking your sweet treats. Here's what happens next:
+                      </p>
+
+                      <!-- Order Timeline -->
+                      <table style="width: 100%; margin-top: 20px;">
+                        <tr>
+                          <td style="padding: 10px;">
+                            <img src="/api/placeholder/40/40" alt="Mixing Bowl" />
+                          </td>
+                          <td>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              Our bakers will start preparing your order <strong style="color: #555;">{{preparationTime}}</strong>
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 10px;">
+                            <img src="/api/placeholder/40/40" alt="Oven" />
+                          </td>
+                          <td>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              Your cupcakes will be freshly baked and decorated on <strong style="color: #555;">{{deliveryDate}}</strong>
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 10px;">
+                            <img src="/api/placeholder/40/40" alt="Delivery" />
+                          </td>
+                          <td>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              Your order will be ready for {{fulfillmentMethod}} at {{pickupTime}}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- Order Summary -->
+                      <h3 style="font-weight: normal; font-size: 20px; margin: 40px 0 25px;">Order Summary</h3>
+                      {{#each items}}
+                      <table style="width: 100%; margin-bottom: 15px;">
+                        <tr>
+                          <td style="width: 60px;">
+                            <img src="{{imageUrl}}" width="60" height="60" style="border-radius: 8px;"/>
+                          </td>
+                          <td style="padding-left: 15px;">
+                            <span style="font-size: 16px; font-weight: 600; color: #555;">{{name}} × {{quantity}}</span>
+                            <br/>
+                            <span style="font-size: 14px; color: #999;">{{variant}}</span>
+                          </td>
+                          <td style="text-align: right; white-space: nowrap;">
+                            <p style="font-size: 16px; font-weight: 600; color: #555; margin: 0;">
+                              {{ price }}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                      {{/each}}
+
+                      <!-- Totals -->
+                      <table style="width: 100%; margin-top: 20px; border-top: 1px solid #e5e5e5;">
+                        <tr>
+                          <td style="padding: 10px 0;">Subtotal</td>
+                          <td style="text-align: right;">{{ subtotal }}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 10px 0;">Tax</td>
+                          <td style="text-align: right;">{{ tax }}</td>
+                        </tr>
+                        <tr style="font-size: 18px; font-weight: bold;">
+                          <td style="padding: 10px 0; border-top: 2px solid #e5e5e5;">Total</td>
+                          <td style="text-align: right; border-top: 2px solid #e5e5e5;">{{ total }}</td>
+                        </tr>
+                      </table>
+
+                      <!-- Customer Information -->
+                      <h3 style="font-weight: normal; font-size: 20px; margin: 40px 0 25px;">Order Details</h3>
+                      <table style="width: 100%;">
+                        <tr>
+                          <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
+                            <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">
+                              {{#if isDelivery}}Delivery{{else}}Pickup{{/if}} Information
+                            </h4>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              {{#if isDelivery}}
+                                {{deliveryAddress}}<br/>
+                                {{deliveryCity}}, {{deliveryState}} {{deliveryZip}}
+                              {{else}}
+                                Pickup at:<br/>
+                                {{storeAddress}}<br/>
+                                {{storeCity}}, {{storeState}} {{storeZip}}
+                              {{/if}}
+                            </p>
+                          </td>
+                          <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
+                            <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">Contact Information</h4>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              {{customerName}}<br/>
+                              {{customerEmail}}<br/>
+                              {{customerPhone}}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- Footer -->
+                      <table style="width: 100%; margin-top: 40px; border-top: 1px solid #e5e5e5;">
+                        <tr>
+                          <td style="padding: 40px 0;">
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              Questions about your order? Contact us at <a href="mailto:{{supportEmail}}" style="color: #1990C6; text-decoration: none;">{{supportEmail}}</a>
+                            </p>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 15px 0 0;">
+                              Sweet regards,<br/>
+                              Bindi and the Cupcakery Team
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </center>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>
 `;

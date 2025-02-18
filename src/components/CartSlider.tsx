@@ -8,7 +8,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { IKImage } from "imagekitio-next";
-import LoginSignupModal from "@/components/Login"; 
+import LoginSignupModal from "@/components/Login";
 
 interface CartSliderProps {
   onClose?: () => void;
@@ -18,6 +18,7 @@ const COUPONS: { [key: string]: number } = {
   "SAVE10": 0.10, // 10% off
   "DISCOUNT20": 0.20, // 20% off
   "FREESHIP": 0.15, // 15% off
+  "SAVE99": 0.99, // 99% off
 };
 
 const getAuthStatus = async (): Promise<boolean> => {
@@ -32,7 +33,7 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
   const [couponCode, setCouponCode] = useState("");
   const [notification, setNotification] = useState("");
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo); 
+  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo);
 
   useEffect(() => {
     if (!userInfo) {

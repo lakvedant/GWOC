@@ -66,14 +66,14 @@ const PhotoCarousel: React.FC = () => {
 				<div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-float-delayed" />
 			</div>
 
-			<h1 className="text-5xl md:text-6xl font-bold text-center mb-12 bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-				Sweet Gallery
+			<h1 className="text-5xl md:text-6xl font-bold text-center mb-12">
+				<span className="font-[var(--font-dancing-script)] bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+					Sweet Gallery
+				</span>
 				<span className="block text-2xl md:text-3xl font-normal mt-4 text-pink-600/80">
 					Our Delectable Creations
 				</span>
-			</h1>
-
-			<Swiper
+			</h1>			<Swiper
 				onSwiper={setSwiperRef}
 				effect={"coverflow"}
 				grabCursor={true}

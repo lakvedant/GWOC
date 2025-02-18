@@ -1,11 +1,34 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
-
-
+import { Cormorant_Garamond, Italiana, Montserrat } from "next/font/google";
 import ImagekitProviders from "@/components/Admin/Imagekit-Providers";
+import Navbar from "@/components/Navbar";
 
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant-garamond",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const italiana = Italiana({
+  variable: "--font-italiana",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
+  subsets: ["latin"],
+  weight: ["400", "700"], // Adjust weight if needed
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,13 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} ${italiana.variable} ${montserrat.variable} ${dancingScript.variable} antialiased`}
       >
-        
         <ImagekitProviders>
-        <CartProvider>
-        {children}
-        </CartProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
         </ImagekitProviders>
       </body>
     </html>
