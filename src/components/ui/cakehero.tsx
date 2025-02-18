@@ -4,7 +4,17 @@ import { ChevronRight, Star, Clock, Award } from 'lucide-react';
 
 const CreativeCakeHero = () => {
     return (
-        <div className="relative min-h-screen bg-amber-50 overflow-hidden">
+        <div className="relative min-h-screen overflow-hidden">
+            {/* Background Image with Overlay */}
+            <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                    backgroundImage: `url('./background1.jpg')`,
+                }}
+            />
+            {/* Semi-transparent overlay */}
+            <div className="absolute inset-0 bg-amber-50 bg-opacity-80" />
+
             {/* Decorative Background Elements */}
             <div className="absolute inset-0">
                 <div className="absolute top-20 left-10 w-64 h-64 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
@@ -64,7 +74,7 @@ const CreativeCakeHero = () => {
                         {/* Main Image */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                             <img
-                                src="brownie.jpg"
+                                src="/test"
                                 alt="Featured Cake"
                                 className="w-full h-full object-cover"
                             />
@@ -73,7 +83,7 @@ const CreativeCakeHero = () => {
                         {/* Floating Small Images */}
                         <div className="absolute top-20 left-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform -rotate-12 hover:rotate-0 transition-transform duration-300">
                             <img
-                                src="/api/placeholder/160/160"
+                                src="/a.png"
                                 alt="Cake Detail 1"
                                 className="w-full h-full object-cover"
                             />
@@ -81,7 +91,7 @@ const CreativeCakeHero = () => {
 
                         <div className="absolute bottom-20 right-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
                             <img
-                                src="/api/placeholder/160/160"
+                                src="/a.png"
                                 alt="Cake Detail 2"
                                 className="w-full h-full object-cover"
                             />

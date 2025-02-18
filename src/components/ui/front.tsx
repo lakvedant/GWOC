@@ -204,7 +204,7 @@ const HeroSection = () => {
                         <motion.div
                             initial="rest"
                             whileHover="hover"
-                            className="max-w-xs transition-all duration-300 bg-white/80 p-4 rounded-lg"
+                            className="max-w-xs transition-all duration-300 hover:bg-white/80 p-4 rounded-lg"
                         >
                             <motion.h3
                                 className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}
@@ -257,7 +257,7 @@ const HeroSection = () => {
                             {feature.id}
                         </div>
                         <div className="flex-1">
-                            <h3 className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}>
+                            <h3 className={`font-bold text-pink-500 mb-1 text-2xl ${roboto.className}`}>
                                 {feature.title}
                             </h3>
                             <motion.p

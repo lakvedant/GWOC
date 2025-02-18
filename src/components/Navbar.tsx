@@ -137,7 +137,7 @@ export const Navbar = () => {
           exit={{ scale: 0 }}
           className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
         >
-          <motion.span 
+          <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="text-white text-xs font-bold"
@@ -153,27 +153,18 @@ export const Navbar = () => {
   const navigationItems = ["Home", "About", "Products", "Contact"];
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${
-          scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
         }`}
-      >
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
-              <Image 
-                src="/logo.png" 
-                alt="logo" 
-                width={150} 
-                height={150} 
-                className="h-12 w-auto" 
-                priority 
-              />
-            </Link>
+    >
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <Image src="/logo.png" alt="logo" width={150} height={150} className="h-12 w-auto" priority />
+          </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center flex-1 justify-center space-x-1">
@@ -238,6 +229,18 @@ export const Navbar = () => {
               {/* User Profile Dropdown */}
               <UserDropdown />
 
+            {/* Cart Button */}
+            <Button
+              variant="ghost"
+              size="lg"
+              className="relative flex items-center space-x-2"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              <span className="text-base font-medium">Cart</span>
+              <CartBadge count={cartItems.length} />
+            </Button>
+          </div>
               {/* Cart Button */}
               <Button 
                 variant="ghost" 
@@ -312,6 +315,14 @@ export const Navbar = () => {
           <CartSlider onClose={() => setIsCartOpen(false)} />
         </div>
 
+      {/* Overlay */}
+      {isCartOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsCartOpen(false)}
+        />
+      )}
+    </motion.nav>
         {/* Cart Overlay */}
         {isCartOpen && (
           <div 
