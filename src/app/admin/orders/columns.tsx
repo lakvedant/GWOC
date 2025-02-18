@@ -1,10 +1,25 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Check } from "lucide-react";
 import { Actions } from "./actions";
 import { IOrder } from "@/models/Order";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+
+const orderStatuses = [
+  { value: "Pending", label: "Pending" },
+  { value: "Accepted", label: "Accepted" },
+  { value: "Ready", label: "Ready" },
+  { value: "Picked", label: "Picked" },
+  { value: "Declined", label: "Declined" },
+];
 
 const getStatusColor = (status: string) => {
   const colors = {
@@ -21,6 +36,56 @@ const getPaymentTypeColor = (type: string) => {
   return type === "COD" ? "bg-orange-200 text-orange-800" : "bg-green-200 text-green-800";
 };
 
+const StatusCell = ({ row }: { row: any }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleStatusUpdate = async (newStatus: string) => {
+    try {
+      setLoading(true);
+      await fetch(`/api/orders/${row.original._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderStatus: newStatus }),
+      });
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          className={`w-full justify-start text-left font-normal ${getStatusColor(row.original.orderStatus)}`}
+          disabled={loading}
+        >
+          {row.original.orderStatus}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[160px]">
+        {orderStatuses.map((status) => (
+          <DropdownMenuItem
+            key={status.value}
+            onClick={() => handleStatusUpdate(status.value)}
+          >
+            <Check 
+              className={`size-4 mr-2 ${
+                status.value === row.original.orderStatus ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            {status.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 export const columns: ColumnDef<IOrder>[] = [
   {
     accessorKey: "orderID",
@@ -29,8 +94,8 @@ export const columns: ColumnDef<IOrder>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Order ID
-        <ArrowUpDown className="size-4" />
+        OrderID
+        <ArrowUpDown className="size-4 ml-2" />
       </Button>
     ),
     cell: ({ row }) => <span className="font-medium">#{row.original.orderID}</span>,
@@ -42,8 +107,8 @@ export const columns: ColumnDef<IOrder>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Customer Name
-        <ArrowUpDown className="size-4" />
+        Name
+        <ArrowUpDown className="size-4 ml-2" />
       </Button>
     ),
   },
@@ -69,7 +134,7 @@ export const columns: ColumnDef<IOrder>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Amount (₹)
-        <ArrowUpDown className="size-4" />
+        <ArrowUpDown className="size-4 ml-2" />
       </Button>
     ),
     cell: ({ row }) => <span>₹{row.original.amount?.toFixed(2)}</span>,
@@ -93,16 +158,10 @@ export const columns: ColumnDef<IOrder>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Status
-        <ArrowUpDown className="size-4" />
+        <ArrowUpDown className="size-4 ml-2" />
       </Button>
     ),
-    cell: ({ row }) => (
-      <span
-        className={`px-2 py-1 text-sm rounded ${getStatusColor(row.original.orderStatus)}`}
-      >
-        {row.original.orderStatus}
-      </span>
-    ),
+    cell: StatusCell
   },
   {
     accessorKey: "createdAt",
@@ -112,7 +171,7 @@ export const columns: ColumnDef<IOrder>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Date
-        <ArrowUpDown className="size-4" />
+        <ArrowUpDown className="w-4 h-4 ml-2" />
       </Button>
     ),
     cell: ({ row }) => (
@@ -121,9 +180,9 @@ export const columns: ColumnDef<IOrder>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
+    header: "Delete",
     cell: ({ row }) => (
-      <Actions id={row.original._id?.toString() || ""} onEdit={(id) => console.log("Edit order:", id)} />
+      <Actions id={row.original._id?.toString() || ""} />
     ),
   },
 ];

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import connectDB from "@/lib/db";
 import Order from "@/models/Order";
 import { User2 } from "lucide-react";
+import User from "@/models/User";
 
 interface OrderData {
   id: string;
@@ -25,6 +26,7 @@ async function getData(): Promise<OrderData[]> {
     .populate({
       path: "userId",
       select: "name phone",
+      model: User,
     })
     .sort({
       createdAt: -1,
