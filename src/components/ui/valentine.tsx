@@ -47,7 +47,7 @@ const ValentineCountdown = () => {
     useEffect(() => {
         const timer = setInterval(nextSlide, 5000);
         return () => clearInterval(timer);
-    }, []);
+    });
 
     return (
         <div className="relative min-h-screen overflow-hidden">

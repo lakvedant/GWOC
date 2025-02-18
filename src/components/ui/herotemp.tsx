@@ -1,5 +1,6 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import Image from 'next/image';
 
 const CupcakeBanner = () => {
     return (
@@ -45,7 +46,8 @@ const CupcakeBanner = () => {
             {/* Cupcake Images */}
             <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4">
                 {[1, 2, 3].map((index) => (
-                    <img
+                    <Image
+                        fill
                         key={index}
                         src="/api/placeholder/200/200"
                         alt={`Strawberry cupcake ${index}`}

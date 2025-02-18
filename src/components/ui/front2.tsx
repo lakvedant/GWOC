@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, Star, Clock, Cake, Check, Heart, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 const CakeWheelHero = () => {
     const [rotation, setRotation] = useState(0);
@@ -65,7 +66,8 @@ const CakeWheelHero = () => {
                         className="relative order-2 lg:order-1 w-full h-full flex items-center justify-center"
                     >
                         <div className="relative w-full aspect-square max-w-2xl mx-auto" style={{ transform: `rotate(${rotation}deg)` }}>
-                            <img
+                            <Image
+                                fill
                                 src="/cake2.png"
                                 alt="Assorted Cake Slices"
                                 className="w-full h-full object-contain drop-shadow-2xl hover:drop-shadow-3xl transition-all duration-300 scale-125"

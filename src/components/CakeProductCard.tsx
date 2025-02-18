@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import CakeOrderDialog from './CakeDialogOpen';
 import { ProductData } from '@/models/Product';
 import { CartItem } from '@/types/checkout';
-import { useCart } from '@/hooks/useCart'; // We'll create this hook
+import { useCart } from '@/hooks/useCart';
 
 interface CakeCardProps {
   product: ProductData;
@@ -15,7 +15,7 @@ interface CakeCardProps {
 const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const { addToCart } = useCart(); // Custom hook for cart operations
+  const { addToCart } = useCart();
 
   const discountedPrice = product.discount 
     ? product.price - (product.price * (product.discount / 100))
@@ -28,10 +28,25 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
     setTimeout(() => setShowNotification(false), 3000);
   };
 
+  const handleCardClick = () => {
+    if (product.available) {
+      setIsDialogOpen(true);
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the card click event from firing
+    if (product.available) {
+      setIsDialogOpen(true);
+    }
+  };
+
   return (
     <>
-
-      <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[300px] border border-gray-100 relative group">
+      <div 
+        onClick={handleCardClick}
+        className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[300px] border border-gray-100 relative group cursor-pointer"
+      >
         <div className="absolute top-3 right-3 z-10">
           <Image src="/veg.png" width={20} height={20} alt="veg" className="opacity-80" />
         </div>
@@ -59,7 +74,7 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
             </div>
             <Button
               className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-1.5 rounded-full text-sm font-medium"
-              onClick={() => setIsDialogOpen(true)}
+              onClick={handleButtonClick}
               disabled={!product.available}
             >
               {product.available ? 'Add to Cart' : 'Out of Stock'}

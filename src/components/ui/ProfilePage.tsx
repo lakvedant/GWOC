@@ -13,6 +13,7 @@ import {
     X
 } from 'lucide-react';
 import ReviewsSection from '../ReviewSection';
+import Image from 'next/image';
 
 interface Product {
     id: string;
@@ -123,7 +124,7 @@ const ProfilePage = () => {
 
                 // Fetch product information for all products in orders
                 const productIds = new Set(data.flatMap(order => 
-                    order.products.map((product: { productId: String; }) => product.productId)
+                    order.products.map((product: { productId: string; }) => product.productId)
                 ));
 
                 const productPromises = Array.from(productIds).map(fetchProductInfo);
@@ -177,7 +178,8 @@ const ProfilePage = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    <img
+                                    <Image
+                                        fill
                                         src={'userlogo.svg'}
                                         alt="Profile"
                                         className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-pink-100"

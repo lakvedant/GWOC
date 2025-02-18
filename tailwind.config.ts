@@ -62,5 +62,11 @@ export default {
 			},
 		},
 	},
+	variants: {
+		extend: {
+			textColor: ['hover'],
+			backgroundColor: ['hover'],
+		},
+	},
 	plugins: [],
 } satisfies Config;

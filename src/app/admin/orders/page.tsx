@@ -45,25 +45,25 @@ const OrdersPage = () => {
     fetchOrders();
   }, []);
 
-  const handleDelete = async (rows: Row<IOrder>[]) => {
-    const orderIds = rows.map((row) => row.original._id);
+  // const handleDelete = async (rows: Row<IOrder>[]) => {
+  //   const orderIds = rows.map((row) => row.original._id);
 
-    if (!confirm(`Are you sure you want to delete ${orderIds.length} order(s)?`)) return;
+  //   if (!confirm(`Are you sure you want to delete ${orderIds.length} order(s)?`)) return;
 
-    try {
-      await Promise.all(
-        orderIds.map(async (id) => {
-          const response = await fetch(`/api/orders/${id}`, { method: "DELETE" });
-          if (!response.ok) {
-            throw new Error(`Failed to delete order with ID: ${id}`);
-          }
-        })
-      );
-      setOrders((prevOrders) => prevOrders.filter((order) => !orderIds.includes(order._id)));
-    } catch (error) {
-      console.error("Error deleting orders:", error);
-    }
-  };
+  //   try {
+  //     await Promise.all(
+  //       orderIds.map(async (id) => {
+  //         const response = await fetch(`/api/orders/${id}`, { method: "DELETE" });
+  //         if (!response.ok) {
+  //           throw new Error(`Failed to delete order with ID: ${id}`);
+  //         }
+  //       })
+  //     );
+  //     setOrders((prevOrders) => prevOrders.filter((order) => !orderIds.includes(order._id)));
+  //   } catch (error) {
+  //     console.error("Error deleting orders:", error);
+  //   }
+  // };
 
   const handleAddNew = () => {
     setIsAddNewOpen(true);
@@ -108,7 +108,7 @@ const OrdersPage = () => {
                     columns={columns} 
                     data={orders} 
                     filterKey="name" 
-                    onDelete={handleDelete}
+                    onDelete={() => {}}
                   />
                 )}
               </CardContent>
