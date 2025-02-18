@@ -25,7 +25,7 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
   
   const upiId = "lakvedant-1@okhdfcbank";
-  const payeeName = "Merchant";
+  const payeeName = "Bindi Cupcakery";
   const transactionNote = "Payment for Order";
 
   useEffect(() => {
