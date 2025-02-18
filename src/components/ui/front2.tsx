@@ -37,15 +37,27 @@ const CakeWheelHero = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-rose-50 to-pink-50 relative overflow-hidden">
-            <motion.div style={{ y }} className="absolute inset-0">
+        <div className="min-h-screen relative overflow-hidden">
+            {/* Background Image Layer */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/background2.jpg"
+                    alt="Background pattern"
+                    className="w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0  opacity-80"></div>
+            </div>
+
+            {/* Animated Gradient Orbs */}
+            <motion.div style={{ y }} className="absolute inset-0 z-10">
                 <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-pink-100 rounded-full mix-blend-multiply filter blur-[150px] opacity-30 animate-float"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-rose-100 rounded-full mix-blend-multiply filter blur-[150px] opacity-30 animate-float-delayed"></div>
             </motion.div>
 
-            <div className="container mx-auto px-4 py-6 md:py-12">
+            {/* Main Content */}
+            <div className="container mx-auto px-4 py-6 md:py-12 relative z-20">
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[90vh]">
-                    {/* Cake Image Section - Updated size */}
+                    {/* Cake Image Section */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -60,16 +72,18 @@ const CakeWheelHero = () => {
                             />
                         </div>
 
-                        <Badge className="absolute top-4 left-4 lg:top-8 lg:left-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-xl transition-shadow text-sm lg:text-base">
+                        <Badge className="absolute top-4 left-4 lg:top-8 lg:left-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-pink-200 transition-all duration-300 text-sm lg:text-base hover:bg-white/90 hover:text-pink-600 hover:scale-110">
                             <Star className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 animate-spin-slow" />
                             Premium Selection
                         </Badge>
 
-                        <Badge className="absolute bottom-4 right-4 lg:bottom-8 lg:right-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-xl transition-shadow text-sm lg:text-base">
+                        <Badge className="absolute bottom-4 right-4 lg:bottom-8 lg:right-8 bg-white/90 backdrop-blur-sm text-pink-600 px-3 py-1 lg:px-4 lg:py-2 shadow-lg hover:shadow-pink-200 transition-all duration-300 text-sm lg:text-base hover:bg-white/90 hover:text-pink-600 hover:scale-110">
                             <Clock className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 animate-spin-slow" />
                             Fresh Daily
                         </Badge>
+
                     </motion.div>
+
 
                     {/* Content Section */}
                     <motion.div
@@ -136,13 +150,14 @@ const CakeWheelHero = () => {
                                 className="flex flex-wrap items-center gap-4 lg:gap-6"
                             >
                                 <button className="px-6 lg:px-8 py-3 lg:py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-300/40 hover:-translate-y-1 flex items-center gap-2 text-sm lg:text-base">
+
                                     <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
                                     Order Now
                                 </button>
                                 <div className="flex flex-col">
                                     <div className="text-xl lg:text-2xl font-bold text-pink-600 flex items-center gap-2">
-                                        $49.99
-                                        <span className="text-xs lg:text-sm font-normal text-gray-500 line-through">$64.99</span>
+                                        ₹1400
+                                        <span className="text-xs lg:text-sm font-normal text-gray-500 line-through">₹2000</span>
                                     </div>
                                     <div className="text-xs lg:text-sm text-gray-600">Whole Cake (1.5kg)</div>
                                 </div>

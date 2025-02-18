@@ -11,7 +11,7 @@ import { CartSlider } from "@/components/CartSlider";
 import UserDropdown from "@/components/UserProfile";
 
 export const Navbar = () => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCartOpen, setIsCarpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -33,7 +33,7 @@ export const Navbar = () => {
           exit={{ scale: 0 }}
           className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
         >
-          <motion.span 
+          <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="text-white text-xs font-bold"
@@ -49,9 +49,8 @@ export const Navbar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${
-        scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
-      }`}
+      className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
+        }`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-20">
@@ -90,10 +89,10 @@ export const Navbar = () => {
             <UserDropdown />
 
             {/* Cart Button */}
-            <Button 
-              variant="ghost" 
-              size="lg" 
-              className="relative flex items-center space-x-2" 
+            <Button
+              variant="ghost"
+              size="lg"
+              className="relative flex items-center space-x-2"
               onClick={() => setIsCartOpen(true)}
             >
               <ShoppingCart className="h-6 w-6" />
@@ -117,17 +116,16 @@ export const Navbar = () => {
       </div>
 
       {/* Cart Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-        isCartOpen ? "translate-x-0" : "translate-x-full"
-      }`}>
+      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${isCartOpen ? "translate-x-0" : "translate-x-full"
+        }`}>
         <CartSlider onClose={() => setIsCartOpen(false)} />
       </div>
 
       {/* Overlay */}
       {isCartOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40" 
-          onClick={() => setIsCartOpen(false)} 
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsCartOpen(false)}
         />
       )}
     </motion.nav>
