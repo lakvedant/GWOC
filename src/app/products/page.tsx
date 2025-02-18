@@ -28,7 +28,7 @@ const Page = () => {
     <>
       <Navbar />
       <motion.div
-        className="min-h-screen flex flex-col pt-20 bg-white"
+        className="min-h-screen flex flex-col pt-20 bg-gradient-to-b from-pink-50 to-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
@@ -42,7 +42,7 @@ const Page = () => {
           {!selectedCategory ? (
             <motion.div
               key="categoryGrid"
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 p-4 sm:p-6 place-items-center"
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-4 sm:p-6 place-items-center bg-[url('/path/to/subtle-pattern.png')] bg-opacity-5"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -51,13 +51,13 @@ const Page = () => {
               {categories.map((category) => (
                 <motion.button
                   key={category.name}
-                  className="relative group w-full max-w-[270px] sm:max-w-[290px] md:max-w-[300px] lg:max-w-[330px] flex flex-col items-center"
+                  className="relative group w-full max-w-[270px] sm:max-w-[290px] md:max-w-[300px] lg:max-w-[300px] flex flex-col items-center"
                   onClick={() => setSelectedCategory(category.name)}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <motion.div
-                    className="w-full aspect-square rounded-xl overflow-hidden shadow-lg bg-white border border-rose-200 group-hover:shadow-2xl transition"
+                    className="w-full aspect-square rounded-xl overflow-hidden shadow-lg bg-white border border-pink-100 group-hover:shadow-pink-200 transition duration-300"
                     whileHover={{ rotateY: 10 }}
                   >
                     <Image
@@ -69,7 +69,7 @@ const Page = () => {
                       priority
                     />
                   </motion.div>
-                  <span className="mt-5 text-xl sm:text-base md:text-2xl font-bold text-rose-700 group-hover:text-rose-900 transition uppercase text-center font-sans">
+                  <span className="mt-5 text-xl sm:text-base md:text-2xl font-bold text-pink-700 group-hover:text-pink-900 transition uppercase text-center font-sans">
                     {category.name}
                   </span>
                 </motion.button>
@@ -83,7 +83,7 @@ const Page = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-auto min-w-[250px] h-full bg-gray-100">
+              <div className="w-auto min-w-[250px] h-full bg-pink-50">
                 <BakerySidebar
                   activeCategory={selectedCategory}
                   onCategoryChange={setSelectedCategory}

@@ -106,14 +106,18 @@ export default function CheckoutPage() {
       }
   
       const orderData = await orderResponse.json();
-      
-      // ✅ Clear discount after successful order
-      
-      
-      // Pass the order details to success page through URL params
-      router.push(`/checkout/success?orderId=${orderData.orderId}&amount=${subtotal * (1 - discount)}&paymentType=${paymentType}&name=${encodeURIComponent(state.name)}&phone=${encodeURIComponent(state.phone)}`);
-      setDiscount(0);
-      clearCart();
+  
+      // Construct the success URL
+      const successUrl = `/checkout/success?orderId=${orderData.orderId}&amount=${subtotal * (1 - discount)}&paymentType=${paymentType}&name=${encodeURIComponent(state.name)}&phone=${encodeURIComponent(state.phone)}`;
+  
+      // First, redirect to success page
+      await router.push(successUrl);
+  
+      // Only after successful redirect, clear the cart and discount
+      setTimeout(() => {
+        setDiscount(0);
+        clearCart();
+      }, 100);
   
     } catch (error) {
       console.error("🚨 Order creation failed:", error);

@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Add async redirects to ensure proper routing
+  async redirects() {
+    return [];
+  },
+  // Make sure there are no unintended rewrites
+  async rewrites() {
+    return [];
+  },
 };
 
 export default nextConfig;
