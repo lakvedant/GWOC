@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import Image from "next/image";
-import { motion, useAnimation } from "framer-motion";
+import { motion} from "framer-motion";
 import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({
@@ -10,7 +10,6 @@ const roboto = Roboto({
 });
 
 const HeroSection = () => {
-    const controls = useAnimation();
     const features = [
         {
             id: 1,
