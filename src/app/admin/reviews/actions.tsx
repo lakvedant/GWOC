@@ -27,8 +27,7 @@ export const Actions = ({ id, status }: Props) => {
     "You are about to delete this product. This action cannot be undone."
   );
 
-  const [loading, setLoading] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState<string>(status);
+  const [loading, setLoading] = useState(false);  
 
   const handleDeleteClick = async () => {
     const ok = await confirm();
@@ -63,8 +62,6 @@ export const Actions = ({ id, status }: Props) => {
         },
         body: JSON.stringify({ status: newStatus }),
       });
-      setCurrentStatus(newStatus);
-      router.refresh();
     } catch (error) {
       console.error("Error updating review status:", error);
     } finally {

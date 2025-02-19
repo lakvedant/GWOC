@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, ShoppingCart } from 'lucide-react';
+import Image from 'next/image';
 
 interface ProductCardProps {
   title: string;
@@ -26,7 +27,8 @@ const ProductCard = ({
     <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden">
-        <img
+        <Image
+          fill
           src={image}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

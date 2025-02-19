@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { ChevronRight, Star, Clock, Award } from 'lucide-react';
+import Image from 'next/image';
 
 const CreativeCakeHero = () => {
     return (
@@ -73,7 +73,8 @@ const CreativeCakeHero = () => {
                     <div className="relative h-[600px] z-10">
                         {/* Main Image */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                            <img
+                            <Image
+                                fill
                                 src="/test"
                                 alt="Featured Cake"
                                 className="w-full h-full object-cover"
@@ -82,7 +83,8 @@ const CreativeCakeHero = () => {
 
                         {/* Floating Small Images */}
                         <div className="absolute top-20 left-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform -rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <img
+                            <Image
+                                fill
                                 src="/a.png"
                                 alt="Cake Detail 1"
                                 className="w-full h-full object-cover"
@@ -90,7 +92,8 @@ const CreativeCakeHero = () => {
                         </div>
 
                         <div className="absolute bottom-20 right-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <img
+                            <Image
+                                fill
                                 src="/a.png"
                                 alt="Cake Detail 2"
                                 className="w-full h-full object-cover"

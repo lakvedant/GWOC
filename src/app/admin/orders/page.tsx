@@ -7,7 +7,6 @@ import { DataTable } from "@/components/Admin/data-table";
 import { PageWrapper } from "@/components/Admin/page-wrapper";
 import { columns } from "./columns";
 import { IOrder } from "@/models/Order";
-import { Row } from "@tanstack/react-table";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import AddNewOrder from "@/components/Admin/AddNewOrder";
 import {

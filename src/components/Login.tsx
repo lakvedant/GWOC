@@ -154,6 +154,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
         setError(response.message || "Failed to send OTP. Please try again.");
       }
     } catch (error) {
+      console.error("OTP Send Error:", error);
       setError("Failed to send OTP. Please try again.");
     } finally {
       setLoading(false);

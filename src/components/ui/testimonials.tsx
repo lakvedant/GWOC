@@ -1,16 +1,16 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react';
+import Image from 'next/image';
 
 const TestimonialsPage = () => {
-    // Sample testimonial data with a bakery theme
     const testimonials = [
         {
             id: 1,
             name: "Emma Johnson",
             location: "Local Customer",
             image: "/api/placeholder/80/80",
-            content: "The sourdough bread from this bakery is simply divine! I've tried countless others in the city, but none compare to the perfect crust and tender crumb I find here. It's become a weekend tradition to stop by for our family dinner bread.",
+            content: "The sourdough bread from this bakery is simply divine! I&apos;ve tried countless others in the city, but none compare to the perfect crust and tender crumb I find here. It&apos;s become a weekend tradition to stop by for our family dinner bread.",
             favorite: "Artisan Sourdough"
         },
         {
@@ -18,7 +18,7 @@ const TestimonialsPage = () => {
             name: "Michael Chen",
             location: "Food Blogger",
             image: "/api/placeholder/80/80",
-            content: "As someone who reviews bakeries professionally, I can honestly say these croissants are the closest I've found to what I enjoyed in Paris. The butter lamination is perfect - so flaky and delicious!",
+            content: "As someone who reviews bakeries professionally, I can honestly say these croissants are the closest I&apos;ve found to what I enjoyed in Paris. The butter lamination is perfect - so flaky and delicious!",
             favorite: "Almond Croissants"
         },
         {
@@ -26,7 +26,7 @@ const TestimonialsPage = () => {
             name: "Sarah Williams",
             location: "Wedding Planner",
             image: "/api/placeholder/80/80",
-            content: "I've recommended this bakery to all my wedding clients, and they never disappoint. Their custom cakes are not only gorgeous but taste amazing. My brides are always thrilled!",
+            content: "I&apos;ve recommended this bakery to all my wedding clients, and they never disappoint. Their custom cakes are not only gorgeous but taste amazing. My brides are always thrilled!",
             favorite: "Wedding Cakes"
         },
         {
@@ -50,7 +50,7 @@ const TestimonialsPage = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
 
-    const navigate = (direction: 'next' | 'prev') => {
+    const navigate = useCallback((direction: 'next' | 'prev') => {
         if (isAnimating) return;
 
         setIsAnimating(true);
@@ -61,7 +61,7 @@ const TestimonialsPage = () => {
         }
 
         setTimeout(() => setIsAnimating(false), 500);
-    };
+    }, [isAnimating, testimonials.length]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -69,43 +69,40 @@ const TestimonialsPage = () => {
         }, 8000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="min-h-screen bg-pink-50 py-16 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-7xl mx-auto">
-                {/* Header Section */}
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-extrabold text-pink-900 mb-4">What Our Customers Say</h2>
                     <div className="h-1 w-24 bg-pink-500 mx-auto rounded-full"></div>
                     <p className="mt-6 text-lg text-pink-800 max-w-2xl mx-auto">
-                        We take pride in creating delicious memories for our community. Here's what some of our wonderful customers have shared about their experiences.
+                        We take pride in creating delicious memories for our community. Here&apos;s what some of our wonderful customers have shared about their experiences.
                     </p>
                 </div>
 
-                {/* Main Testimonial Section */}
                 <div className="relative overflow-hidden bg-white rounded-3xl shadow-xl max-w-5xl mx-auto py-10 px-6 md:px-12 mb-16">
-                    {/* Decorative Elements */}
                     <div className="absolute top-0 left-0 w-32 h-32 bg-pink-500 rounded-full -translate-x-16 -translate-y-16 opacity-70"></div>
                     <div className="absolute bottom-0 right-0 w-40 h-40 bg-pink-500 rounded-full translate-x-20 translate-y-20 opacity-70"></div>
 
                     <div className={`transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
                         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                            {/* Customer Image */}
                             <div className="w-28 h-28 md:w-32 md:h-32 flex-shrink-0">
                                 <div className="relative w-full h-full">
                                     <div className="absolute w-full h-full bg-pink-200 rounded-full top-2 left-2"></div>
                                     <div className="absolute inset-0 w-full h-full bg-white rounded-full overflow-hidden border-4 border-pink-500">
-                                        <img
+                                        <Image
                                             src={testimonials[activeIndex].image}
                                             alt={testimonials[activeIndex].name}
-                                            className="w-full h-full object-cover"
+                                            className="object-cover"
+                                            fill
+                                            sizes="(max-width: 768px) 112px, 128px"
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Testimonial Content */}
                             <div className="flex-1">
                                 <div className="relative">
                                     <Quote className="text-rose-200 w-10 h-10 absolute -top-3 -left-3" />
@@ -125,7 +122,6 @@ const TestimonialsPage = () => {
                         </div>
                     </div>
 
-                    {/* Navigation Buttons */}
                     <div className="absolute bottom-4 right-4 md:bottom-10 md:right-10 flex space-x-3">
                         <button
                             onClick={() => navigate('prev')}
@@ -144,7 +140,6 @@ const TestimonialsPage = () => {
                     </div>
                 </div>
 
-                {/* Testimonial Indicators */}
                 <div className="flex justify-center gap-2 mb-12">
                     {testimonials.map((_, index) => (
                         <button
@@ -156,14 +151,12 @@ const TestimonialsPage = () => {
                                     setTimeout(() => setIsAnimating(false), 500);
                                 }
                             }}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-pink-600 w-6' : 'bg-pink-300'
-                                }`}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-pink-600 w-6' : 'bg-pink-300'}`}
                             aria-label={`Go to testimonial ${index + 1}`}
                         />
                     ))}
                 </div>
 
-                {/* Additional Social Proof */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     <div className="bg-white rounded-2xl p-6 shadow-md border border-pink-100 flex flex-col items-center text-center">
                         <div className="bg-pink-100 rounded-full p-4 mb-4">
@@ -172,7 +165,7 @@ const TestimonialsPage = () => {
                             </svg>
                         </div>
                         <h3 className="text-pink-900 font-bold text-xl mb-2">Local Favorite</h3>
-                        <p className="text-pink-700">Voted "Best Bakery" in the city for 5 consecutive years</p>
+                        <p className="text-pink-700">Voted &ldquo;Best Bakery&rdquo; in the city for 5 consecutive years</p>
                     </div>
 
                     <div className="bg-white rounded-2xl p-6 shadow-md border border-pink-100 flex flex-col items-center text-center">
@@ -196,7 +189,6 @@ const TestimonialsPage = () => {
                     </div>
                 </div>
 
-                {/* Call to Action */}
                 <div className="text-center mt-16">
                     <h3 className="text-2xl font-bold text-pink-900 mb-4">Ready to experience our delicious treats?</h3>
                     <button className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-8 rounded-full transition-colors shadow-md">
