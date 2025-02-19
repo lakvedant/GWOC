@@ -1,7 +1,7 @@
 // types/checkout.ts
 
 export interface CartItem {
-  weight: any;
+  weight: string;
   id: string;
   name: string;
   price: number;
