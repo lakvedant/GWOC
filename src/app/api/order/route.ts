@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     // Generate next order ID
     const latestOrder = await Order.findOne().sort({ orderID: -1 }).lean();
-    const nextOrderID = (latestOrder?.orderID || 200) + 1;
+    const nextOrderID = (Array.isArray(latestOrder) ? 200 : (latestOrder?.orderID || 200)) + 1;
 
     // Create the order
     const order = await Order.create({
@@ -135,22 +135,11 @@ export async function POST(req: Request) {
       { new: true }
     );
 
-    // Return simplified order details that match the frontend expectations
     return NextResponse.json({ 
-      success: true,
-      orderID: order.orderID,  // Include orderID in the response
-      orderId: order.orderID,  // Also include orderId for backward compatibility
-      order: {
-        _id: order._id,
-        orderID: order.orderID,
-        name: order.name,
-        phone: order.phone,
-        amount: order.amount,
-        paymentType: order.paymentType,
-        orderStatus: order.orderStatus,
-      },
-      message: "Order created successfully"
-    }, { status: 201 });
+      success: true, 
+      order,
+      message: "Order created & linked to user"
+    }, { status: 202 });
 
   } catch (error) {
     console.error("Order creation error:", error);
@@ -196,7 +185,7 @@ export async function GET(req: Request) {
         instructions: order.instructions || "",
         upiImage: order.upiImage || "",
         products: order.products.map(product => ({
-          productId: product.productId,
+          productId: product.productId._id,
           quantity: product.quantity,
           _id: product._id
         })),
