@@ -13,7 +13,7 @@ const AboutUsBanner = () => {
                         <div className="aspect-w-16 aspect-h-9">
                             <Image
                                 fill
-                                src="bindi.jpg"
+                                src="/bindi.jpg"
                                 alt="Our bakery team working together"
                                 className="w-full h-full object-cover"
                             />

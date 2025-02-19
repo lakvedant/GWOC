@@ -89,7 +89,7 @@ const ValentineCountdown = () => {
                                 <div className="relative">
                                     <Image
                                         fill
-                                        src="valentine.jpg"
+                                        src="/valentine.jpg"
                                         alt={day.title}
                                         className="rounded-lg shadow-2xl animate-float"
                                     />
