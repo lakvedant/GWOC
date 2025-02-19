@@ -4,19 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Product from "@/models/Product";
 
-// Define the params type for better type safety
-type RouteParams = {
+// For Next.js route handlers, we need to use this specific params type
+type Props = {
     params: {
         id: string;
-    };
-};
+    }
+}
 
 export async function GET(
-    req: NextRequest,
-    { params }: RouteParams
+    request: NextRequest,
+    props: Props
 ) {
     try {
-        const orderId = params.id;
+        const orderId = props.params.id;
 
         // Connect to DB
         await connectDB();
@@ -63,14 +63,14 @@ export async function GET(
 }
 
 export async function PATCH(
-    req: NextRequest,
-    { params }: RouteParams
+    request: NextRequest,
+    props: Props
 ) {
     try {
         await connectDB();
 
-        const orderId = params.id;
-        const body = await req.json();
+        const orderId = props.params.id;
+        const body = await request.json();
 
         // Verify ID format
         if (!mongoose.Types.ObjectId.isValid(orderId)) {
@@ -112,13 +112,13 @@ export async function PATCH(
 }
 
 export async function DELETE(
-    req: NextRequest,
-    { params }: RouteParams
+    request: NextRequest,
+    props: Props
 ) {
     try {
         await connectDB();
 
-        const orderId = params.id;
+        const orderId = props.params.id;
 
         // Verify ID format
         if (!mongoose.Types.ObjectId.isValid(orderId)) {
