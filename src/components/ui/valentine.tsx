@@ -12,28 +12,28 @@ const ValentineCountdown = () => {
             title: "Rose Day",
             description: "Begin your love story with the timeless gesture of roses. Choose from our curated collection of fresh blooms to express your feelings in the most romantic way.",
             bgColor: "from-pink-100 to-rose-200",
-            image: "/api/placeholder/600/400"
+            image: "/valentine.jpg"
         },
         {
             date: "10 Feb",
             title: "Teddy Day",
             description: "Make your love feel extra special with our adorable collection of plush teddy bears. Each comes with a personalized message to make this moment unforgettable.",
             bgColor: "from-red-100 to-pink-200",
-            image: "/api/placeholder/600/400"
+            image: "/valentine.jpg"
         },
         {
             date: "12 Feb",
             title: "Promise Day",
             description: "Seal your promises with our exquisite collection of promise rings and bracelets. Create lasting memories with thoughtfully crafted jewelry pieces.",
             bgColor: "from-purple-100 to-pink-200",
-            image: "/api/placeholder/600/400"
+            image: "/valentine.jpg"
         },
         {
             date: "14 Feb",
             title: "Valentine's Day",
             description: "Celebrate the grand finale of love with our premium Valentine's packages. From romantic dinners to luxury gift hampers, make this day truly special.",
             bgColor: "from-red-200 to-rose-300",
-            image: "/api/placeholder/600/400"
+            image: "/valentine.jpg"
         }
     ];
 
@@ -88,10 +88,11 @@ const ValentineCountdown = () => {
 
                                 <div className="relative">
                                     <Image
-                                        fill
+                                        width={800}
+                                        height={300}
                                         src="/valentine.jpg"
                                         alt={day.title}
-                                        className="rounded-lg shadow-2xl animate-float"
+                                        className="rounded-lg shadow-2xl animate-float hidden sm:block"
                                     />
 
                                 </div>
@@ -104,13 +105,13 @@ const ValentineCountdown = () => {
             {/* Navigation Buttons */}
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg hover:scale-110 z-10"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg hover:scale-110 z-10 hidden sm:block"
             >
                 <ChevronLeft className="w-6 h-6 text-red-500" />
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg hover:scale-110 z-10"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 shadow-lg hover:scale-110 z-10 hidden sm:block"
             >
                 <ChevronRight className="w-6 h-6 text-red-500" />
             </button>

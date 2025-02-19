@@ -1,6 +1,12 @@
 import React from 'react';
 import { ChevronRight, Star, Clock, Award } from 'lucide-react';
 import Image from 'next/image';
+import { Sigmar } from 'next/font/google';
+
+const sigmar = Sigmar({
+    weight: ['400'],
+    subsets: ['latin'],
+});
 
 const CreativeCakeHero = () => {
     return (
@@ -32,8 +38,13 @@ const CreativeCakeHero = () => {
                         </div>
 
                         <h1 className="text-5xl lg:text-7xl font-bold">
-                            <span className="block text-gray-800">Artisan</span>
-                            <span className="block mt-2 text-pink-600">Fresh Donuts</span>
+                            <span className="block text-gray-800">
+                                <div className={sigmar.className}>
+                                    Artisan
+                                </div>
+                            </span>
+                            <span className="block mt-2 text-pink-600"><div className={sigmar.className}>
+                                Fresh Donuts</div></span>
                         </h1>
 
                         <p className="text-lg text-gray-600 max-w-md">
@@ -72,7 +83,7 @@ const CreativeCakeHero = () => {
                     {/* Image Layout - Right Side */}
                     <div className="relative h-[600px] z-10">
                         {/* Main Image */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full overflow-hidden border-8 border-white shadow-2xl">
                             <Image
                                 src="/dount3.jpeg"
                                 alt="Featured Cake"
@@ -81,24 +92,13 @@ const CreativeCakeHero = () => {
                             />
                         </div>
 
-                        {/* Floating Small Images */}
-                        <div className="absolute top-20 left-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform -rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <Image
-                                src="/a.png"
-                                alt="Cake Detail 1"
-                                className="w-full h-full object-cover"
-                                fill
-                            />
-                        </div>
-
-
                         {/* Floating Elements */}
-                        <div className="absolute top-40 right-20 bg-white p-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
-                            <div className="text-sm font-medium text-gray-800">Daily Special</div>
-                            <div className="text-pink-600">20% OFF</div>
+                        <div className="absolute top-[40px] right-[25px] bg-white p-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
+                            <div className="text-md font-medium text-gray-800">Daily Special</div>
+                            <div className="text-pink-600 text-lg">20% OFF</div>
                         </div>
 
-                        <div className="absolute bottom-40 left-20 bg-white p-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
+                        <div className="absolute bottom-[50px] left-[10px] bg-white p-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
                             <div className="flex items-center space-x-1">
                                 <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />
                                 <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />
@@ -106,7 +106,7 @@ const CreativeCakeHero = () => {
                                 <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />
                                 <Star className="w-4 h-4 text-yellow-500" fill="currentColor" />
                             </div>
-                            <div className="text-sm text-gray-600">500+ Reviews</div>
+                            <div className="text-lg text-gray-600">500+ Reviews</div>
                         </div>
                     </div>
                 </div>

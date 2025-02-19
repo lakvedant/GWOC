@@ -2,6 +2,12 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram, FaFacebook, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { Sigmar } from 'next/font/google';
+
+const sigmar = Sigmar({
+  weight: ['400'],
+  subsets: ['latin'],
+});
 
 export default function Footer() {
   return (
@@ -11,7 +17,9 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="space-y-4">
             <h2 className="text-3xl font-bold text-pink-600 hover:text-pink-700 transition-colors">
-              Bindi&apos;s Cupcakery
+              <div className={sigmar.className}>
+                Bindi&apos;s Cupcakery
+              </div>
             </h2>
             <p className="text-lg italic text-pink-500">Experience Bliss in Every Bite!</p>
             <p className="text-gray-600 leading-relaxed">

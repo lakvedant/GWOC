@@ -12,8 +12,10 @@ const AboutUsBanner = () => {
                         <div className="absolute inset-0 bg-pink-900/10 z-10 pointer-events-none"></div>
                         <div className="aspect-w-16 aspect-h-9">
                             <Image
-                                fill
+                                width={1200}
+                                height={200}
                                 src="/bindi.jpg"
+
                                 alt="Our bakery team working together"
                                 className="w-full h-full object-cover"
                             />
