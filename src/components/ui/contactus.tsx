@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, Cake } from 'lucide-react';
 import Image from 'next/image';
+import send from '@/hooks/sendMail';
 import Footer from '../Footer';
 
 const BakeryContactPage = () => {
@@ -28,7 +29,7 @@ const BakeryContactPage = () => {
         // Here you would typically send the form data to a server
         console.log('Form submitted:', formData);
         setSubmitted(true);
-
+        send(formData);
         // Reset form after showing success message
         setTimeout(() => {
             setFormData({
@@ -165,7 +166,7 @@ const BakeryContactPage = () => {
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors"
+                                            className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors p-2"
                                             required
                                         />
                                     </div>
@@ -178,7 +179,7 @@ const BakeryContactPage = () => {
                                             name="email"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors"
+                                            className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors p-2"
                                             required
                                         />
                                     </div>
@@ -192,7 +193,7 @@ const BakeryContactPage = () => {
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors"
+                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors p-2"
                                     />
                                 </div>
 
@@ -203,7 +204,7 @@ const BakeryContactPage = () => {
                                         name="subject"
                                         value={formData.subject}
                                         onChange={handleChange}
-                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors"
+                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors p-2"
                                         required
                                     >
                                         <option value="">Select a subject</option>
@@ -224,7 +225,7 @@ const BakeryContactPage = () => {
                                         rows={5}
                                         value={formData.message}
                                         onChange={handleChange}
-                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors"
+                                        className="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200 transition-colors p-2"
                                         required
                                     ></textarea>
                                 </div>
