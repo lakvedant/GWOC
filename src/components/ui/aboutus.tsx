@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChefHat, Clock, Heart, Star, Award, Instagram, Facebook, Twitter } from 'lucide-react';
+import Image from 'next/image';
 
 const AboutUs = () => {
     return (
@@ -10,7 +11,8 @@ const AboutUs = () => {
             {/* Hero Section */}
             <section className="relative h-[70vh] overflow-hidden">
                 <div className="absolute inset-0">
-                    <img
+                    <Image
+                        fill
                         src="/api/placeholder/1920/1080"
                         alt="Cupcake Background"
                         className="object-cover w-full h-full brightness-50"
@@ -68,7 +70,8 @@ const AboutUs = () => {
                             transition={{ duration: 0.8 }}
                             className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl"
                         >
-                            <img
+                            <Image
+                                fill
                                 src="/api/placeholder/800/600"
                                 alt="Bindi baking"
                                 className="object-cover w-full h-full"

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import Review from "@/models/Review"; // Adjust the path based on your project structure
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const reviews = await Review.find(); // Fetch all reviews
 
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("❌ Error fetching reviews:", error);
     return NextResponse.json(
-      { success: false, message: "Internal server error", error: (error as any).message },
+      { success: false, message: "Internal server error", error },
       { status: 500 }
     );
   }

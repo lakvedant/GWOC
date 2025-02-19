@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, Cake, Cookie } from 'lucide-react';
+import Image from 'next/image';
 
 const BakeryContactPage = () => {
     const [formData, setFormData] = useState({
@@ -53,8 +54,8 @@ const BakeryContactPage = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <h1 className="text-4xl md:text-5xl font-bold text-pink-800 text-center mb-3">Get in Touch</h1>
                     <p className="text-lg text-pink-600 text-center max-w-2xl mx-auto">
-                        We'd love to hear from you! Whether you're looking to place an order, inquire about our products,
-                        or just say hello, we're here to help.
+                        We&apos;d love to hear from you! Whether you&apos;re looking to place an order, inquire about our products,
+                        or just say hello, we&apos;re here to help.
                     </p>
                 </div>
             </div>
@@ -77,7 +78,7 @@ const BakeryContactPage = () => {
                                     <div>
                                         <h3 className="font-medium text-pink-800">Visit Our Bakery</h3>
                                         <p className="text-gray-600 mt-1">123 Sweet Street, Flour District</p>
-                                        <p className="text-gray-600">Baker's Town, BT 12345</p>
+                                        <p className="text-gray-600">Baker&apos;s Town, BT 12345</p>
                                     </div>
                                 </div>
 
@@ -151,7 +152,7 @@ const BakeryContactPage = () => {
                                     </svg>
                                 </div>
                                 <h3 className="text-xl font-medium text-green-800 mb-2">Message Sent!</h3>
-                                <p className="text-green-700">Thank you for reaching out. We'll get back to you shortly!</p>
+                                <p className="text-green-700">Thank you for reaching out. We&apos;ll get back to you shortly!</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-6">
@@ -253,7 +254,7 @@ const BakeryContactPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="bg-pink-50 p-6 rounded-lg">
                             <h3 className="font-medium text-pink-800 mb-2">Do you offer delivery?</h3>
-                            <p className="text-gray-600">Sorry, We currently don't provide delivery service. Only pick-up from store is available</p>
+                            <p className="text-gray-600">Sorry, We currently don&apos;t provide delivery service. Only pick-up from store is available</p>
                         </div>
 
                         <div className="bg-pink-50 p-6 rounded-lg">
@@ -281,7 +282,8 @@ const BakeryContactPage = () => {
 
                     <div className="rounded-xl overflow-hidden shadow-lg relative">
                         <div className="aspect-w-16 aspect-h-9">
-                            <img
+                            <Image
+                                fill
                                 src="/api/placeholder/1200/500"
                                 alt="Map location of Sweet Bakery"
                                 className="w-full h-full object-cover"
@@ -320,7 +322,7 @@ const BakeryContactPage = () => {
                         <Cookie className="w-12 h-12 text-pink-600 mx-auto mb-4" />
                         <h2 className="text-3xl font-bold text-pink-800 mb-3">Ready to Taste Something Sweet?</h2>
                         <p className="text-pink-600 mb-6">
-                            We can't wait to serve you! Stop by our bakery, place an order online, or contact us with any questions.
+                            We can&apos;t wait to serve you! Stop by our bakery, place an order online, or contact us with any questions.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a

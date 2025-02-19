@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { CartItem } from "@/types/checkout";
 import { IKImage } from "imagekitio-next";
 

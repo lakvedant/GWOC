@@ -59,13 +59,12 @@ export async function POST(request: Request) {
       review: reviewWithProduct,
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating review:", error);
     return NextResponse.json(
       {
         success: false,
         message: "Failed to create review",
-        error: error.message,
       },
       { status: 500 }
     );
@@ -106,10 +105,10 @@ export async function GET(request: Request) {
       success: true,
       reviews: reviewsWithProducts,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching reviews:", error);
     return NextResponse.json(
-      { success: false, message: "Internal server error", error: error.message },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }

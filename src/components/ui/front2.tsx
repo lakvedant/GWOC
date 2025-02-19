@@ -1,20 +1,17 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { ChevronDown, Star, Clock, Cake, Check, Heart, ShoppingCart } from "lucide-react";
+import { Star, Clock, Cake, Check, Heart, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 const CakeWheelHero = () => {
     const [rotation, setRotation] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [0, 300], [0, -100]);
 
     useEffect(() => {
-        setIsVisible(true);
-
-        const handleScroll = (event: { deltaY: any; }) => {
+        const handleScroll = (event: WheelEvent) => {
             const scrollAmount = event.deltaY;
             setRotation(prev => prev - (scrollAmount * 0.2));
         };
@@ -41,12 +38,15 @@ const CakeWheelHero = () => {
         <div className="min-h-screen relative overflow-hidden">
             {/* Background Image Layer */}
             <div className="absolute inset-0 z-0">
-                <img
+                <Image
                     src="/background2.jpg"
                     alt="Background pattern"
-                    className="w-full h-full object-cover opacity-80"
+                    className="object-cover opacity-80"
+                    fill
+                    priority
+                    sizes="100vw"
                 />
-                <div className="absolute inset-0  opacity-80"></div>
+                <div className="absolute inset-0 opacity-80"></div>
             </div>
 
             {/* Animated Gradient Orbs */}
@@ -71,6 +71,8 @@ const CakeWheelHero = () => {
                                 src="/cake2.png"
                                 alt="Assorted Cake Slices"
                                 className="w-full h-full object-contain drop-shadow-2xl hover:drop-shadow-3xl transition-all duration-300 scale-125"
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                priority
                             />
                         </div>
 
@@ -83,9 +85,7 @@ const CakeWheelHero = () => {
                             <Clock className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 animate-spin-slow" />
                             Fresh Daily
                         </Badge>
-
                     </motion.div>
-
 
                     {/* Content Section */}
                     <motion.div
@@ -152,7 +152,6 @@ const CakeWheelHero = () => {
                                 className="flex flex-wrap items-center gap-4 lg:gap-6"
                             >
                                 <button className="px-6 lg:px-8 py-3 lg:py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-300/40 hover:-translate-y-1 flex items-center gap-2 text-sm lg:text-base">
-
                                     <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
                                     Order Now
                                 </button>
