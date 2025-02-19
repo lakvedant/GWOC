@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,116 @@ import CakeOrderDialog from "@/components/CakeDialogOpen";
 import { ProductData } from "@/models/Product";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { CartItem } from "@/types/checkout";
 
 interface CartBadgeProps {
   count: number;
 }
+
+const SearchOverlay = ({
+  isOpen,
+  onClose,
+  searchQuery,
+  onSearch,
+  searchResults,
+  onProductClick,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  searchQuery: string;
+  onSearch: (query: string) => void;
+  searchResults: ProductData[];
+  onProductClick: (product: ProductData) => void;
+}) => {
+  const suggestedSearches = [
+    "Birthday Cakes",
+    "Wedding Cakes",
+    "Cupcakes",
+    "Custom Cakes",
+    "Vegan Options",
+    "Gluten Free"
+  ];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed inset-x-0 top-0 h-3/4 bg-pink-100 shadow-lg z-50"
+        >
+          <div className="max-w-3xl mx-auto p-6">
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Search for cakes, desserts, and more..."
+                className="w-full pl-12 pr-4 py-3 text-lg border-2 border-rose-300 rounded-full focus:border-rose-500 focus:ring-2 focus:ring-rose-200"
+                value={searchQuery}
+                onChange={(e) => onSearch(e.target.value)}
+                autoFocus
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-rose-400" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                onClick={onClose}
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </Button>
+            </div>
+
+            <div className="mt-8 max-h-[calc(100vh-300px)] overflow-auto">
+              {searchQuery ? (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-700">Search Results</h3>
+                  {searchResults.length > 0 ? (
+                    <div className="flex flex-col space-y-3">
+                      {searchResults.map((product) => (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          key={product._id}
+                          className="p-4 rounded-xl hover:bg-rose-50 border border-rose-100 cursor-pointer transition-all duration-200 hover:shadow-md"
+                          onClick={() => onProductClick(product)}
+                        >
+                          <h4 className="font-medium text-gray-900">{product.name}</h4>
+                          {product.description && (
+                            <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+                              {product.description}
+                            </p>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-center py-4">No results found</p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-700">Popular Searches</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {suggestedSearches.map((term) => (
+                      <button
+                        key={term}
+                        onClick={() => onSearch(term)}
+                        className="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-full text-sm transition-all duration-200"
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 export const Navbar = () => {
   const { toast } = useToast();
@@ -23,18 +129,15 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(null);
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ProductData[]>([]);
   const [allProducts, setAllProducts] = useState<ProductData[]>([]);
-  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
       setScrolled(window.scrollY > 20);
     };
 
@@ -68,7 +171,6 @@ export const Navbar = () => {
     setSearchQuery(value);
     if (value.trim() === "") {
       setSearchResults([]);
-      setShowResults(false);
       return;
     }
 
@@ -76,15 +178,14 @@ export const Navbar = () => {
       product.name.toLowerCase().includes(value.toLowerCase()) ||
       product.description?.toLowerCase().includes(value.toLowerCase())
     );
-    
+
     setSearchResults(filtered);
-    setShowResults(true);
   };
 
   const handleProductClick = (product: ProductData) => {
     setSelectedProduct(product);
     setIsDialogOpen(true);
-    setShowResults(false);
+    setSearchFocused(false);
     setSearchQuery("");
   };
 
@@ -93,7 +194,7 @@ export const Navbar = () => {
     setSelectedProduct(null);
   };
 
-  const handleAddToCart = (item: any) => {
+  const handleAddToCart = (item: CartItem) => {
     const updatedCart = [...cartItems, item];
     setCartItems(updatedCart);
     localStorage.setItem("cartData", JSON.stringify(updatedCart));
@@ -104,18 +205,6 @@ export const Navbar = () => {
     });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.search-container')) {
-        setShowResults(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
   const CartBadge: React.FC<CartBadgeProps> = ({ count }) => (
     <AnimatePresence>
       {count > 0 && (
@@ -125,7 +214,7 @@ export const Navbar = () => {
           exit={{ scale: 0 }}
           className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
         >
-          <motion.span 
+          <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             className="text-white text-xs font-bold"
@@ -144,121 +233,94 @@ export const Navbar = () => {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed w-full top-0 z-30 transition-all duration-300 font-playfair ${
-          scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
-        }`}
+        className={`fixed w-full top-0 z-30 transition-all duration-300 ${scrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md"
+          : "bg-white"
+          }`}
       >
-        <div className="mx-auto px-4 sm:px-6 lg:px-0 max-w-7xl">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex-shrink-0">
-              <Image 
-                src="/logo-2.png" 
-                alt="logo" 
-                width={100} 
-                height={100} 
-                className="h-10 w-auto -ml-1 pr-2" 
-                priority 
-              />
-            </Link>
-            <Link href="/" className="flex-shrink-0">
-              <Image 
-                src="/logo-1.png" 
-                alt="logo" 
-                width={100} 
-                height={100} 
-                className="h-10 w-auto mt-2" 
-                priority 
-              />
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src="/logo-2.png"
+                  alt="logo"
+                  width={100}
+                  height={100}
+                  className="h-12 w-auto"
+                  priority
+                />
+              </Link>
+              <Link href="/" className="flex-shrink-0">
+                <Image
+                  src="/logo-1.png"
+                  alt="logo"
+                  width={100}
+                  height={100}
+                  className="h-12 w-auto"
+                  priority
+                />
+              </Link>
+            </div>
 
-            <div className="hidden md:flex items-center flex-1 justify-center space-x-1">
+            <div className="hidden md:flex items-center justify-center space-x-1 flex-1">
               {navigationItems.map((label) => (
                 <Link
                   key={label}
                   href={label !== "Home" ? `/${label.toLowerCase()}` : "/"}
-                  className="px-5 py-2 text-rose-900 hover:text-rose-700 text-sm font-semibold rounded-full hover:bg-rose-100"
+                  className="px-4 py-2 text-gray-700 hover:text-rose-600 text-sm font-medium rounded-full hover:bg-rose-50 transition-all duration-200"
                 >
                   {label}
                 </Link>
               ))}
             </div>
 
-            <div className="hidden md:flex items-center space-x-6">
-              <div className="relative w-[200px] transition-all duration-300 search-container">
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  className="pl-10 pr-4 py-2 w-full rounded-full border-rose-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-rose-300"
-                  value={searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  onFocus={() => {
-                    setSearchFocused(true);
-                    if (searchQuery) setShowResults(true);
-                  }}
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-rose-400" />
-                
-                {showResults && searchResults.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
-                  >
-                    {searchResults.map((product) => (
-                      <div
-                        key={product._id}
-                        className="block px-4 py-2 hover:bg-rose-50 transition-colors cursor-pointer"
-                        onClick={() => handleProductClick(product)}
-                      >
-                        <div className="text-sm font-medium text-gray-900">
-                          {product.name}
-                        </div>
-                        {product.description && (
-                          <div className="text-xs text-gray-500 truncate">
-                            {product.description.substring(0, 50)}...
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 hover:bg-rose-50 text-gray-700 hover:text-rose-600"
+                onClick={() => setSearchFocused(true)}
+              >
+                <Search className="h-5 w-5" />
+                <span className="text-sm font-medium">Search</span>
+              </Button>
 
               <UserDropdown />
 
-              <Button 
-                variant="ghost" 
-                size="lg" 
-                className="relative flex items-center space-x-2" 
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative flex items-center space-x-2 hover:bg-rose-50 text-gray-700 hover:text-rose-600"
                 onClick={() => setIsCartOpen(true)}
               >
-                <ShoppingCart className="h-6 w-6" />
-                <span className="text-base font-medium">Cart</span>
+                <ShoppingCart className="h-5 w-5" />
+                <span className="text-sm font-medium">Cart</span>
                 <CartBadge count={cartItems.length} />
               </Button>
             </div>
 
             <div className="md:hidden flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="relative" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover:bg-rose-50"
                 onClick={() => setIsCartOpen(true)}
               >
-                <ShoppingCart className="h-6 w-6 text-rose-700" />
+                <ShoppingCart className="h-5 w-5 text-gray-700" />
                 <CartBadge count={cartItems.length} />
               </Button>
 
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-rose-50"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? (
-                  <X className="h-6 w-6 text-rose-700" />
+                  <X className="h-5 w-5 text-gray-700" />
                 ) : (
-                  <Menu className="h-6 w-6 text-rose-700" />
+                  <Menu className="h-5 w-5 text-gray-700" />
                 )}
               </Button>
             </div>
@@ -290,6 +352,16 @@ export const Navbar = () => {
         </AnimatePresence>
       </motion.nav>
 
+      {/* Search Overlay */}
+      <SearchOverlay
+        isOpen={searchFocused}
+        onClose={() => setSearchFocused(false)}
+        searchQuery={searchQuery}
+        onSearch={handleSearch}
+        searchResults={searchResults}
+        onProductClick={handleProductClick}
+      />
+
       <AnimatePresence>
         {isCartOpen && (
           <>
@@ -316,18 +388,18 @@ export const Navbar = () => {
       {isDialogOpen && selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[102] flex items-center justify-center p-4">
           <div className="relative w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden">
-            <button 
-              onClick={handleCloseDialog} 
+            <button
+              onClick={handleCloseDialog}
               className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 
                        transition-all duration-300 ease-in-out z-[103]"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <CakeOrderDialog 
-              product={selectedProduct} 
-              onClose={handleCloseDialog} 
-              onAddToCart={handleAddToCart} 
+            <CakeOrderDialog
+              product={selectedProduct}
+              onClose={handleCloseDialog}
+              onAddToCart={handleAddToCart}
             />
           </div>
         </div>

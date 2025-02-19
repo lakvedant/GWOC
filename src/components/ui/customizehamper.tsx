@@ -90,7 +90,7 @@ const BOX_TYPES: BoxType[] = [
         maxDesserts: 4,
         maxDips: 3,
         basePrice: 999,
-        image: '/images/large-box.jpg',
+        image: '/largehamp.png',
         description: 'Perfect for sharing with 4-6 people'
     },
     {
@@ -107,13 +107,19 @@ const BOX_TYPES: BoxType[] = [
 // Components
 const GiftHamperPage: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [initialBoxId, setInitialBoxId] = useState<string | null>(null);
+
+    const openDialogWithBox = (boxId: string) => {
+        setInitialBoxId(boxId);
+        setIsDialogOpen(true);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
             <section className="relative h-[70vh] overflow-hidden">
                 <Image
-                    src="/images/hero-bg.jpg"
+                    src="/banner.webp"
                     alt="Gift Hampers"
                     fill
                     className="object-cover"
@@ -146,7 +152,7 @@ const GiftHamperPage: React.FC = () => {
                         <Card
                             key={box.id}
                             className="group cursor-pointer hover:shadow-lg transition-shadow"
-                            onClick={() => setIsDialogOpen(true)}
+                            onClick={() => openDialogWithBox(box.id)}
                         >
                             <CardContent className="p-0">
                                 <div className="relative aspect-[16/9] overflow-hidden">
@@ -176,7 +182,11 @@ const GiftHamperPage: React.FC = () => {
 
             <CustomizationDialog
                 isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
+                onClose={() => {
+                    setIsDialogOpen(false);
+                    setInitialBoxId(null);
+                }}
+                initialBoxId={initialBoxId}
             />
         </div>
     );
@@ -186,11 +196,27 @@ const GiftHamperPage: React.FC = () => {
 const CustomizationDialog: React.FC<{
     isOpen: boolean;
     onClose: () => void;
-}> = ({ isOpen, onClose }) => {
+    initialBoxId: string | null;
+}> = ({ isOpen, onClose, initialBoxId }) => {
     const [step, setStep] = useState(1);
     const [selectedBox, setSelectedBox] = useState<BoxType | null>(null);
     const [selectedDesserts, setSelectedDesserts] = useState<DessertItem[]>([]);
     const [selectedDips, setSelectedDips] = useState<DessertItem[]>([]);
+
+    // Initialize with the provided box when dialog opens
+    React.useEffect(() => {
+        if (isOpen && initialBoxId) {
+            const boxType = BOX_TYPES.find(box => box.id === initialBoxId) || null;
+            setSelectedBox(boxType);
+
+            // If it's the large box, skip directly to dessert selection
+            if (initialBoxId === 'large') {
+                setStep(2); // Go directly to dessert selection
+            } else {
+                setStep(1);
+            }
+        }
+    }, [isOpen, initialBoxId]);
 
     const resetSelections = () => {
         setStep(1);

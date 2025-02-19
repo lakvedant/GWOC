@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChefHat, Clock, Heart, Star, Award, Instagram, Facebook, Twitter } from 'lucide-react';
+import { ChefHat,  Heart, Star, Award, } from 'lucide-react';
 import Image from 'next/image';
 
 const AboutUs = () => {
@@ -12,9 +12,9 @@ const AboutUs = () => {
             <section className="relative h-[70vh] overflow-hidden">
                 <div className="absolute inset-0">
                     <Image
-                        fill
-                        src="/api/placeholder/1920/1080"
+                        src="/bakery.avif"
                         alt="Cupcake Background"
+                        fill
                         className="object-cover w-full h-full brightness-50"
                     />
                 </div>
@@ -71,10 +71,10 @@ const AboutUs = () => {
                             className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl"
                         >
                             <Image
-                                fill
-                                src="/api/placeholder/800/600"
+                                src="/bakery.avif"
                                 alt="Bindi baking"
                                 className="object-cover w-full h-full"
+                                fill
                             />
                         </motion.div>
                     </div>
@@ -157,38 +157,7 @@ const AboutUs = () => {
                 </div>
             </section>
 
-            {/* Contact Section */}
-            <section className="py-20">
-                <div className="container px-4 mx-auto text-center">
-                    <h2 className="text-4xl font-bold text-gray-800 font-serif">Visit Us</h2>
-                    <p className="mt-6 text-lg text-gray-600">
-                        123 Sweet Street, Bakery Lane<br />
-                        Cupcake City, CC 12345
-                    </p>
-                    <div className="flex justify-center gap-6 mt-8">
-                        {[
-                            { icon: <Instagram className="w-6 h-6" />, label: "Instagram" },
-                            { icon: <Facebook className="w-6 h-6" />, label: "Facebook" },
-                            { icon: <Twitter className="w-6 h-6" />, label: "Twitter" }
-                        ].map((social, index) => (
-                            <motion.a
-                                key={index}
-                                href="#"
-                                whileHover={{ scale: 1.1 }}
-                                className="flex items-center justify-center w-12 h-12 text-pink-500 transition-colors duration-300 bg-pink-100 rounded-full hover:bg-pink-200"
-                            >
-                                {social.icon}
-                            </motion.a>
-                        ))}
-                    </div>
-                    <div className="mt-8">
-                        <p className="flex items-center justify-center gap-2 text-lg text-gray-600">
-                            <Clock className="w-5 h-5 text-pink-500" />
-                            Open Tuesday - Sunday: 9AM - 6PM
-                        </p>
-                    </div>
-                </div>
-            </section>
+
         </div>
     );
 };

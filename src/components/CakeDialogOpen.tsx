@@ -254,7 +254,6 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
                 {product.discount && (
                   <span className="text-sm text-green-500">({product.discount}% OFF)</span>
                 )}
-                <span className="text-xs md:text-sm text-gray-500">(Inclusive of GST)</span>
               </div>
 
               {/* Weight selection */}

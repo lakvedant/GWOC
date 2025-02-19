@@ -28,15 +28,14 @@ const AboutUsBanner = () => {
                     <div className="flex flex-col space-y-6 max-w-lg">
                         <h2 className="text-3xl font-bold text-pink-900">
                             <span className="block">Our Story</span>
-                            <span className="block text-pink-600 mt-1">Baked with Love Since 1987</span>
+                            <span className="block text-pink-600 mt-1">Baked with Passion Since 2020</span>
                         </h2>
 
                         <p className="text-pink-800 text-lg">
                             Welcome to Bindi&apos;s Cupcakery, a cozy cloud kitchen born from a love of baking and a dream to spread sweetness. Established in 2020, right in the heart of our home, we&apos;ve been creating handcrafted cupcakes and desserts that bring joy to every bite.                        </p>
 
                         <p className="text-pink-700">
-                            Every morning at 4am, our bakers begin their day, ensuring that when our doors open, you&apos;re greeted with the irresistible aroma of freshly baked goods.
-                        </p>
+                            With a commitment to using the finest local ingredients and a sprinkle of creativity, we wake up each day excited to bake fresh, delicious treats that make every occasion special. At Bindi&apos;s Cupcakery, the aroma of home-baked goodness isn&apos;t just a promise — it&apos;s our daily tradition.                        </p>
 
                         <div className="pt-4">
                             <a

@@ -99,8 +99,7 @@ const BakeryContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-medium text-pink-800">Email Us</h3>
-                                        <p className="text-gray-600 mt-1">hello@sweetbakery.com</p>
-                                        <p className="text-gray-600">orders@sweetbakery.com</p>
+                                        <p className="text-gray-600 mt-1">bindi123@gmail.com</p>
                                     </div>
                                 </div>
 
@@ -185,7 +184,7 @@ const BakeryContactPage = () => {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
+                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                                     <input
                                         type="tel"
                                         id="phone"
