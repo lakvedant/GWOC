@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, ShoppingBag, Heart, Star, LogIn, LogOut } from "lucide-react";
+import { User, LogIn, LogOut } from "lucide-react";
 import LoginSignupModal from "./Login";
 import Link from "next/link";
 
