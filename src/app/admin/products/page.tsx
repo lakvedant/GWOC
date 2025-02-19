@@ -79,20 +79,8 @@ const ProductsPage = () => {
   };
 
   const handleAddNewSave = async (newProduct: IProduct) => {
-    try {
-      const response = await fetch("/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-      });
-      const addedProduct = await response.json();
-      setProducts((prevProducts) => [...prevProducts, addedProduct]);
+      setProducts((prevProducts) => [...prevProducts, newProduct]);
       handleAddNewClose();
-    } catch (error) {
-      console.error("Error adding new product:", error);
-    }
   };
 
   return (

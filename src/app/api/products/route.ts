@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
             )
         }
 
+        console.log(body);
+
         const productData = {
             ...body,
         }

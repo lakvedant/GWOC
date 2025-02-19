@@ -82,7 +82,7 @@ export const columns: ColumnDef<IProduct>[] = [
       </Button>
     ),
     enableSorting: true,
-    cell: ({ row }) => <span className="capitalize">{new Date(row.original.createdAt).toLocaleDateString()}</span>,
+    cell: ({ row }) => <span className="capitalize">{new Date(row.original.createdAt).toLocaleDateString("en-IN")}</span>,
   },
   {
     accessorKey: "available",

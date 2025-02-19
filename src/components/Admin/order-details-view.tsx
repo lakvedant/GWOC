@@ -13,6 +13,7 @@ import { Clock, Package, InfoIcon } from "lucide-react";
 import { IKImage } from "imagekitio-next";
 
 interface Order {
+  orderID: string;
   _id: string;
   createdAt: string;
   orderStatus: string;
@@ -57,7 +58,7 @@ const OrderDetailsView: React.FC<DataTableProps> = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-full sm:max-w-xl overflow-y-auto p-6">
+      <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto p-6">
         <SheetHeader className="space-y-2">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-xl font-bold">Order Details</SheetTitle>
@@ -67,7 +68,7 @@ const OrderDetailsView: React.FC<DataTableProps> = ({
           </div>
           <SheetDescription className="flex items-center gap-2 text-sm">
             <Package className="w-4 h-4" />
-            Order ID: {order._id}
+            Order ID: {order.orderID}
           </SheetDescription>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Clock className="w-4 h-4" />

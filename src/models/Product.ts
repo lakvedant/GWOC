@@ -5,10 +5,10 @@ export interface IProduct extends Document {
 	description: string;
 	price: number;
 	category: string;
-	discount?: number;
+	discount: number;
 	image: string; // URL of the product image
 	available: boolean;
-	valueForOffer?: number;
+	valueForOffer: number;
 	review?: { rating: number; reviewId: Schema.Types.ObjectId }[];
 	weight?: string;
 	createdAt: Date;
@@ -23,9 +23,10 @@ const ProductSchema = new Schema<IProduct>({
 	description: { type: String, required: true },
 	price: { type: Number, required: true },
 	category: { type: String, required: true },
-
+	discount: { type: Number, required: true },
 	image: { type: String, required: true },
 	available: { type: Boolean, default: true },
+	valueForOffer: { type: Number, required: true },
 }, { timestamps: true });
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);

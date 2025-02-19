@@ -4,19 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Product from "@/models/Product";
 
-// For Next.js route handlers, we need to use this specific params type
-type Props = {
-    params: {
-        id: string;
-    }
-}
-
-export async function GET(
-    request: NextRequest,
-    props: Props
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const orderId = props.params.id;
+        const orderId = (await params).id;
 
         // Connect to DB
         await connectDB();
@@ -51,26 +42,16 @@ export async function GET(
 
     } catch (error) {
         console.error('Error fetching order:', error);
-        return NextResponse.json({
-            message: "Failed to fetch order",
-            error: error instanceof Error ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            } : String(error)
-        }, { status: 500 });
+        return NextResponse.json({ message: "Failed to get order", error  }, { status: 500 });
     }
 }
 
-export async function PATCH(
-    request: NextRequest,
-    props: Props
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         await connectDB();
 
-        const orderId = props.params.id;
-        const body = await request.json();
+        const orderId = (await params).id;
+        const body = await req.json();
 
         // Verify ID format
         if (!mongoose.Types.ObjectId.isValid(orderId)) {
@@ -100,25 +81,15 @@ export async function PATCH(
         return NextResponse.json(updatedOrder);
     } catch (error) {
         console.error('Error updating order:', error);
-        return NextResponse.json({
-            message: "Failed to update order",
-            error: error instanceof Error ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            } : String(error)
-        }, { status: 500 });
+        return NextResponse.json({ message: "Failed to update order", error  }, { status: 500 });
     }
 }
 
-export async function DELETE(
-    request: NextRequest,
-    props: Props
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         await connectDB();
 
-        const orderId = props.params.id;
+        const orderId = (await params).id;
 
         // Verify ID format
         if (!mongoose.Types.ObjectId.isValid(orderId)) {
@@ -143,13 +114,6 @@ export async function DELETE(
         );
     } catch (error) {
         console.error('Error deleting order:', error);
-        return NextResponse.json({
-            message: "Failed to delete order",
-            error: error instanceof Error ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            } : String(error)
-        }, { status: 500 });
+        return NextResponse.json({ message: "Failed to delete order", error  }, { status: 500 });
     }
 }
