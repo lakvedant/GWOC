@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 const AboutUsBanner = () => {
     return (
@@ -10,8 +11,9 @@ const AboutUsBanner = () => {
                     <div className="rounded-xl overflow-hidden shadow-xl relative">
                         <div className="absolute inset-0 bg-pink-900/10 z-10 pointer-events-none"></div>
                         <div className="aspect-w-16 aspect-h-9">
-                            <img
-                                src="bindi.jpg"
+                            <Image
+                                fill
+                                src="/bindi.jpg"
                                 alt="Our bakery team working together"
                                 className="w-full h-full object-cover"
                             />
@@ -30,7 +32,7 @@ const AboutUsBanner = () => {
                         </h2>
 
                         <p className="text-pink-800 text-lg">
-                            Welcome to Bindi's Cupcakery, a cozy cloud kitchen born from a love of baking and a dream to spread sweetness. Established in 2020, right in the heart of our home, we've been creating handcrafted cupcakes and desserts that bring joy to every bite.                        </p>
+                            Welcome to Bindi&apos;s Cupcakery, a cozy cloud kitchen born from a love of baking and a dream to spread sweetness. Established in 2020, right in the heart of our home, we&apos;ve been creating handcrafted cupcakes and desserts that bring joy to every bite.                        </p>
 
                         <p className="text-pink-700">
                             With a commitment to using the finest local ingredients and a sprinkle of creativity, we wake up each day excited to bake fresh, delicious treats that make every occasion special. At Bindi's Cupcakery, the aroma of home-baked goodness isn't just a promise — it's our daily tradition.                        </p>

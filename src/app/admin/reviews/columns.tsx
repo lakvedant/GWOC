@@ -5,7 +5,6 @@ import { ArrowUpDown } from "lucide-react";
 import { Actions } from "./actions";
 import { IReview } from "@/models/Review";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const getStatusColor = (status: string) => {
   const colors = {

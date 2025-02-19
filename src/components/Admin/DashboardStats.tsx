@@ -15,99 +15,98 @@ import {
   Wallet,
   CreditCard
 } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 import { WeeklyChart } from './WeeklyChart'; // We'll create this next
 import { PaymentChart } from './PaymentChart';
 
-interface IOrder {
-  userId: string;
-  phone: string;
-  products: any[];
-  amount: number;
-  paymentMode: 'UPI' | 'COD';
-  createdAt: Date;
-}
+interface UserType {
+	_id: string;
+	createdAt: string;
+  }
+  
+  interface ProductType {
+	_id: string;
+	price: number;
+  }
+  
+  interface OrderType {
+	userId: string;
+	phone: string;
+	products: { productId: string; quantity: number }[]; 
+	amount: number;
+	paymentType: "UPI" | "COD";
+	createdAt: string;
+  } 
 
 
-async function getData() {
+  async function getData(): Promise<{
+	users: UserType[];
+	products: ProductType[];
+	orders: OrderType[];
+  }> {
 	await connectDB();
   
 	const [users, products, orders] = await Promise.all([
-	  User.find({}, { _id: 1, createdAt: 1 }).lean(),
-	  Product.find({}, { _id: 1, price: 1 }).lean(),
-	  Order.find({}, { 
-		userId: 1, 
-		phone: 1, 
-		products: 1, 
-		amount: 1, 
+	  User.find({}, { _id: 1, createdAt: 1 }).lean<UserType[]>(),
+	  Product.find({}, { _id: 1, price: 1 }).lean<ProductType[]>(),
+	  Order.find({}, {
+		userId: 1,
+		phone: 1,
+		products: 1,
+		amount: 1,
 		paymentType: 1,
-		createdAt: 1 
-	  }).sort({ createdAt: -1 }),
+		createdAt: 1
+	  }).sort({ createdAt: -1 }).lean<OrderType[]>(),
 	]);
   
-	return {
-	  users,
-	  products,
-	  orders,
-	};
-  }
+	return { users, products, orders };
+  }  
   
   export async function DashboardStats() {
 	const data = await getData();
 	const { products, users, orders } = data;
   
-	// Calculate total amount
 	const totalAmount = orders.reduce((acc, curr) => acc + curr.amount, 0);
   
-	// Calculate payment mode stats
-	const upiOrders = orders.filter(order => order.paymentType === 'UPI');
-	const codOrders = orders.filter(order => order.paymentType === 'COD');
+	const upiOrders = orders.filter(order => order.paymentType === "UPI");
+	const codOrders = orders.filter(order => order.paymentType === "COD");
 	const upiAmount = upiOrders.reduce((acc, curr) => acc + curr.amount, 0);
 	const codAmount = codOrders.reduce((acc, curr) => acc + curr.amount, 0);
   
-	// Calculate daily stats
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
-	const todayOrders = orders.filter(order => 
+	const todayOrders = orders.filter(order =>
 	  new Date(order.createdAt).getTime() >= today.getTime()
 	);
 	const todayAmount = todayOrders.reduce((acc, curr) => acc + curr.amount, 0);
-	
-	// Prepare data for the chart (last 7 days)
-	const last7Days = [...Array(7)].map((_, i) => {
+  
+	type ChartDataType = { date: string; orders: number; amount: number };
+  
+	const last7Days: ChartDataType[] = [...Array(7)].map((_, i) => {
 	  const date = new Date();
 	  date.setDate(date.getDate() - i);
 	  date.setHours(0, 0, 0, 0);
 	  const nextDate = new Date(date);
 	  nextDate.setDate(nextDate.getDate() + 1);
-	  
-	  const dayOrders = orders.filter(order => 
-		new Date(order.createdAt) >= date && 
+  
+	  const dayOrders = orders.filter(order =>
+		new Date(order.createdAt) >= date &&
 		new Date(order.createdAt) < nextDate
 	  );
-
-	  
-	  
+  
 	  return {
-		date: date.toLocaleDateString('en-US', { weekday: 'short' }),
+		date: date.toLocaleDateString("en-US", { weekday: "short" }),
 		orders: dayOrders.length,
 		amount: dayOrders.reduce((acc, curr) => acc + curr.amount, 0),
 	  };
 	}).reverse();
-
-	const paymentData = [
-		{
-		  name: 'UPI',
-		  value: upiAmount,
-		  count: upiOrders.length
-		},
-		{
-		  name: 'COD',
-		  value: codAmount,
-		  count: codOrders.length
-		}
-	  ];
+  
+	type PaymentChartDataType = { name: string; value: number; count: number };
+  
+	const paymentData: PaymentChartDataType[] = [
+	  { name: "UPI", value: upiAmount, count: upiOrders.length },
+	  { name: "COD", value: codAmount, count: codOrders.length },
+	];
   
 	return (
 	  <div className="space-y-8">
@@ -127,7 +126,7 @@ async function getData() {
   
 		  <Card>
 			<CardHeader className="flex flex-row items-center justify-between pb-2">
-			  <CardTitle>Today's Revenue</CardTitle>
+			  <CardTitle>Today&apos;s Revenue</CardTitle>
 			  <TrendingUp className="h-4 w-4 text-blue-500" />
 			</CardHeader>
 			<CardContent>

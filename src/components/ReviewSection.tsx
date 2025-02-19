@@ -102,7 +102,8 @@ const ReviewsSection: React.FC<ReviewsProps> = ({ userId, userName }) => {
   useEffect(() => {
     fetchUserProducts();
     fetchUserReviews();
-  }, [userId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmitReview = async (product: UserProduct, e: React.FormEvent) => {
     e.preventDefault();

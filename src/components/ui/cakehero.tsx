@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { ChevronRight, Star, Clock, Award } from 'lucide-react';
+import Image from 'next/image';
 
 const CreativeCakeHero = () => {
     return (
@@ -75,7 +75,16 @@ const CreativeCakeHero = () => {
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                             <img
                                 src="/dount3.jpeg"
-                                alt="Featured Donut"
+                                alt="Featured Cake"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Floating Small Images */}
+                        <div className="absolute top-20 left-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform -rotate-12 hover:rotate-0 transition-transform duration-300">
+                            <img
+                                src="/a.png"
+                                alt="Cake Detail 1"
                                 className="w-full h-full object-cover"
                             />
                         </div>

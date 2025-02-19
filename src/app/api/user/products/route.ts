@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import User from "@/models/User";
 import connectDB from "@/lib/db";
 
+interface Product {
+  productId: string;
+  // Add other properties of the product if needed
+}
+
 export async function GET(request: Request) {
   try {
     await connectDB();
@@ -24,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     // Filter out empty products
-    const validProducts = user.products.filter((product: any) => 
+    const validProducts = user.products.filter((product: Product) => 
       product && product.productId && product.productId !== ""
     );
 

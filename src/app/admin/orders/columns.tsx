@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { Row } from "@tanstack/react-table"; // Import Row type
 
 const orderStatuses = [
   { value: "Pending", label: "Pending" },
@@ -36,7 +37,7 @@ const getPaymentTypeColor = (type: string) => {
   return type === "COD" ? "bg-orange-200 text-orange-800" : "bg-green-200 text-green-800";
 };
 
-const StatusCell = ({ row }: { row: any }) => {
+const StatusCell = ({ row }: { row: Row<IOrder> }) => {
   const [loading, setLoading] = useState(false);
 
   const handleStatusUpdate = async (newStatus: string) => {

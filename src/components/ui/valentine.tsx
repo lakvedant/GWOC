@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 const ValentineCountdown = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -86,8 +87,9 @@ const ValentineCountdown = () => {
                                 </div>
 
                                 <div className="relative">
-                                    <img
-                                        src="valentine.jpg"
+                                    <Image
+                                        fill
+                                        src="/valentine.jpg"
                                         alt={day.title}
                                         className="rounded-lg shadow-2xl animate-float"
                                     />

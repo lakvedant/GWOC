@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Camera, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { IKUploadResponse } from "imagekitio-next/dist/types/components/IKUpload/props";
 import FileUpload from "@/components/Admin/FileUpload";
 import { PaymentType } from "@/types/checkout";
+import Image from "next/image";
 
 interface PaymentFormProps {
 
@@ -111,7 +112,8 @@ export function PaymentForm({ total, onPaymentComplete }: PaymentFormProps) {
           <div className="flex justify-center">
             <div className="relative w-48 h-48">
               {qrCodeUrl ? (
-                <img
+                <Image
+                  fill
                   src={qrCodeUrl}
                   alt="UPI QR Code"
                   className={`w-full h-full transition-all duration-200 ${isBlurred ? "blur-sm scale-102" : "blur-0 scale-100"}`}

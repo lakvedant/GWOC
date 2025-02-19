@@ -71,8 +71,6 @@ const AboutUs = () => {
                         >
                             <img
                                 src="/bakery.avif"
-                                width={600}
-                                height={400}
                                 alt="Bindi baking"
                                 className="object-cover w-full h-full"
                             />
