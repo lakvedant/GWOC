@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/Admin/data-table";
 import { PageWrapper } from "@/components/Admin/page-wrapper";
 import { columns } from "./columns";
 import { IOrder } from "@/models/Order";
@@ -18,6 +17,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import { OrderDataTable } from "@/components/Admin/OrdersDataTable";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -103,7 +103,7 @@ const OrdersPage = () => {
                 ) : orders.length === 0 ? (
                   <p className="text-center text-gray-500">No orders found.</p>
                 ) : (
-                  <DataTable 
+                  <OrderDataTable 
                     columns={columns} 
                     data={orders} 
                     filterKey="orderID" 
