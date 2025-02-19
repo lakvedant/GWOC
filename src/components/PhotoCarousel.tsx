@@ -72,7 +72,7 @@ const cakeData = [
 		id: 7,
 		title: "Caramel Symphony",
 		description: "Layers of caramel, chocolate, and crunchy feuilletine",
-		image: "/c7.jpg",
+		image: "/Photo3.jpg",
 	},
 ];
 
