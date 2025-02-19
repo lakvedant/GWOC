@@ -171,8 +171,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
       image: product.image,
       variant: selectedWeight,
       message: message,
-      title: '',
-      weight: selectedWeight
+      title: ''
     };
     addToCart(cartItem);
     onClose();
