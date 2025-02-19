@@ -87,7 +87,7 @@ const HeroSection = () => {
                         }}
                         transition={{ duration: 3, repeat: Infinity }}
                     >
-                        Bindi's Bakes,
+                        Bindi`&apos;s Bakes,
                     </motion.span>
                 </motion.h1>
                 <div className="relative -mt-24">
