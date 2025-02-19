@@ -1,6 +1,4 @@
-// Navbar.tsx
-"use client";
-
+'use client'
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
@@ -10,35 +8,30 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { CartSlider } from "@/components/CartSlider";
 import UserDropdown from "@/components/UserProfile";
-import CakeOrderDialog from "@/components/CakeDialogOpen"; // Import the dialog component
-import { ProductData } from "@/models/Product"; // Import the ProductData model
+import CakeOrderDialog from "@/components/CakeDialogOpen";
+import { ProductData } from "@/models/Product";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 interface CartBadgeProps {
   count: number;
 }
 
 export const Navbar = () => {
-  // Navigation and UI states
+  const { toast } = useToast();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-
-  // Dialog states
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(null);
-
-  // Cart state
   const [cartItems, setCartItems] = useState<any[]>([]);
-
-  // Search states
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ProductData[]>([]);
   const [allProducts, setAllProducts] = useState<ProductData[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  // Scroll handler
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -49,7 +42,6 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -67,13 +59,11 @@ export const Navbar = () => {
     fetchProducts();
   }, []);
 
-  // Load cart data
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cartData") || "[]");
     setCartItems(savedCart);
   }, []);
 
-  // Handle search input
   const handleSearch = (value: string) => {
     setSearchQuery(value);
     if (value.trim() === "") {
@@ -91,7 +81,6 @@ export const Navbar = () => {
     setShowResults(true);
   };
 
-  // Handle product item click
   const handleProductClick = (product: ProductData) => {
     setSelectedProduct(product);
     setIsDialogOpen(true);
@@ -99,22 +88,22 @@ export const Navbar = () => {
     setSearchQuery("");
   };
 
-  // Handle close dialog
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setSelectedProduct(null);
   };
 
-  // Handle add to cart from dialog
   const handleAddToCart = (item: any) => {
-    // Implement your add to cart logic here
-    // Update cart items
     const updatedCart = [...cartItems, item];
     setCartItems(updatedCart);
     localStorage.setItem("cartData", JSON.stringify(updatedCart));
+    toast({
+      title: "Added to cart",
+      description: `You now have ${updatedCart.length} items in your cart`,
+      duration: 3000,
+    });
   };
 
-  // Handle click outside search results
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -127,7 +116,6 @@ export const Navbar = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Cart badge component
   const CartBadge: React.FC<CartBadgeProps> = ({ count }) => (
     <AnimatePresence>
       {count > 0 && (
@@ -149,7 +137,6 @@ export const Navbar = () => {
     </AnimatePresence>
   );
 
-  // Navigation items
   const navigationItems = ["Home", "About", "Products", "Contact"];
 
   return (
@@ -161,21 +148,29 @@ export const Navbar = () => {
           scrolled ? "bg-rose-50/80 backdrop-blur-lg shadow-lg" : "bg-rose-50"
         }`}
       >
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="mx-auto px-4 sm:px-6 lg:px-0 max-w-7xl">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <Image 
-                src="/logo.png" 
+                src="/logo-2.png" 
                 alt="logo" 
-                width={150} 
-                height={150} 
-                className="h-12 w-auto" 
+                width={100} 
+                height={100} 
+                className="h-10 w-auto -ml-1 pr-2" 
+                priority 
+              />
+            </Link>
+            <Link href="/" className="flex-shrink-0">
+              <Image 
+                src="/logo-1.png" 
+                alt="logo" 
+                width={100} 
+                height={100} 
+                className="h-10 w-auto mt-2" 
                 priority 
               />
             </Link>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center flex-1 justify-center space-x-1">
               {navigationItems.map((label) => (
                 <Link
@@ -188,7 +183,6 @@ export const Navbar = () => {
               ))}
             </div>
 
-            {/* Search & Icons */}
             <div className="hidden md:flex items-center space-x-6">
               <div className="relative w-[200px] transition-all duration-300 search-container">
                 <Input
@@ -204,41 +198,35 @@ export const Navbar = () => {
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-rose-400" />
                 
-                {/* Search Results Dropdown */}
-                <AnimatePresence>
-                  {showResults && searchResults.length > 0 && (
-                    <motion.div
-                      key={`search-results-${searchResults.map(p => p._id).join("-")}-${Date.now()}`}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
-                    >
-                      {searchResults.map((product) => (
-                        <div
-                          key={product._id}
-                          className="block px-4 py-2 hover:bg-rose-50 transition-colors cursor-pointer"
-                          onClick={() => handleProductClick(product)}
-                        >
-                          <div className="text-sm font-medium text-gray-900">
-                            {product.name}
-                          </div>
-                          {product.description && (
-                            <div className="text-xs text-gray-500 truncate">
-                              {product.description.substring(0, 50)}...
-                            </div>
-                          )}
+                {showResults && searchResults.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"
+                  >
+                    {searchResults.map((product) => (
+                      <div
+                        key={product._id}
+                        className="block px-4 py-2 hover:bg-rose-50 transition-colors cursor-pointer"
+                        onClick={() => handleProductClick(product)}
+                      >
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
                         </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                        {product.description && (
+                          <div className="text-xs text-gray-500 truncate">
+                            {product.description.substring(0, 50)}...
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
               </div>
 
-              {/* User Profile Dropdown */}
               <UserDropdown />
 
-              {/* Cart Button */}
               <Button 
                 variant="ghost" 
                 size="lg" 
@@ -251,7 +239,6 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-4">
               <Button 
                 variant="ghost" 
@@ -278,7 +265,6 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -302,58 +288,51 @@ export const Navbar = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Cart Sidebar */}
-        <div 
-          className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-            isCartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <CartSlider onClose={() => setIsCartOpen(false)} />
-        </div>
-
-        {/* Cart Overlay */}
-        {isCartOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40" 
-            onClick={() => setIsCartOpen(false)} 
-          />
-        )}
       </motion.nav>
 
-      {/* Product Dialog Modal */}
-{isDialogOpen && selectedProduct && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div className="relative w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden">
+      <AnimatePresence>
+        {isCartOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-[100]"
+              onClick={() => setIsCartOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 20 }}
+              className="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-[101] overflow-hidden"
+            >
+              <CartSlider onClose={() => setIsCartOpen(false)} />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
-      {/* Premium Close Button */}
-      <button 
-        onClick={handleCloseDialog} 
-        className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 
-                   transition-all duration-300 ease-in-out z-50"
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth="2" 
-          stroke="currentColor" 
-          className="w-5 h-5"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      {isDialogOpen && selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[102] flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden">
+            <button 
+              onClick={handleCloseDialog} 
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 
+                       transition-all duration-300 ease-in-out z-[103]"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-      <CakeOrderDialog 
-        product={selectedProduct} 
-        onClose={handleCloseDialog} 
-        onAddToCart={handleAddToCart} 
-      />
-    </div>
-  </div>
-)}
-
-
+            <CakeOrderDialog 
+              product={selectedProduct} 
+              onClose={handleCloseDialog} 
+              onAddToCart={handleAddToCart} 
+            />
+          </div>
+        </div>
+      )}
+      <Toaster />
     </>
   );
 };

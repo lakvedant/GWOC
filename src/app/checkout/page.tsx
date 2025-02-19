@@ -11,6 +11,7 @@ import { useCart } from "@/components/CartProvider";
 import Navbar from "@/components/Navbar";
 import type { CheckoutState, PaymentType } from "@/types/checkout";
 import BillingForm from "@/components/Billing-form";
+import { OrderSuccessView } from "@/components/OrderSuccess";
 
 const initialState: CheckoutState = {
   name: "",
@@ -24,8 +25,15 @@ export default function CheckoutPage() {
   const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated, setDiscount } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [step, setStep] = useState<"information" | "pickup" | "payment">("information");
+  const [step, setStep] = useState<"information" | "pickup" | "payment" | "success">("information");
   const [isLoading, setIsLoading] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<{
+    orderId: string;
+    amount: number;
+    paymentType: string;
+    name: string;
+    phone: string;
+  } | null>(null);
 
   useEffect(() => {
     setIsLoading(false);
@@ -41,8 +49,6 @@ export default function CheckoutPage() {
     }
   }, [cartItems, router, isAuthenticated]);
   
-  
-
   useEffect(() => {
     if (userInfo) {
       setState((prev) => ({
@@ -106,18 +112,24 @@ export default function CheckoutPage() {
       }
   
       const orderData = await orderResponse.json();
-  
-      // Construct the success URL
-      const successUrl = `/checkout/success?orderId=${orderData.orderId}&amount=${subtotal * (1 - discount)}&paymentType=${paymentType}&name=${encodeURIComponent(state.name)}&phone=${encodeURIComponent(state.phone)}`;
-  
-      // First, redirect to success page
-      await router.push(successUrl);
-  
-      // Only after successful redirect, clear the cart and discount
+      
+      // Set order details for success page
+      setOrderDetails({
+        orderId: orderData.orderId,
+        amount: subtotal * (1 - discount),
+        paymentType,
+        name: state.name,
+        phone: state.phone,
+      });
+      
+      // Switch to success step
+      setStep("success");
+      
+      // Clear cart after a delay to ensure user sees the success page with items
       setTimeout(() => {
         setDiscount(0);
         clearCart();
-      }, 100);
+      }, 60000);
   
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
@@ -125,42 +137,53 @@ export default function CheckoutPage() {
     }
   };
   
+  const handleReturnHome = () => {
+    router.push("/");
+  };
+  
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-white text-black py-20 px-4 md:px-40">
         <div className="max-w-7xl mx-auto py-8">
-          <div className="grid lg:grid-cols-[1fr_400px] gap-8">
-            <div>
-              <CheckoutNav currentStep={step} />
-              {step === "information" ? (
-                <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
-                  <BillingForm
-                    name={state.name}
-                    phone={state.phone}
-                    instructions={state.instructions}
-                    onNameChange={(value: string) => handleContactChange("name", value)}
-                    onPhoneChange={(value: string) => handleContactChange("phone", value)}
-                    onInstructionsChange={(value: string) => handleContactChange("instructions", value)}
-                  />
-                  <Button type="submit" size="lg" className="w-full md:w-auto">
-                    Continue to Pickup Details
-                  </Button>
-                </form>
-              ) : step === "pickup" ? (
-                <div className="mt-6">
-                  <PickupForm onProceed={handlePickupProceed} isLoading={isLoading} />
-                </div>
-              ) : (
-                <div className="mt-6">
-                  <PaymentForm total={subtotal * (1 - discount)} onPaymentComplete={handlePaymentComplete} />
-                </div>
-              )}
+          {step === "success" && orderDetails ? (
+            <OrderSuccessView 
+              orderDetails={orderDetails}
+              onReturnHome={handleReturnHome}
+            />
+          ) : (
+            <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+              <div>
+                <CheckoutNav currentStep={step} />
+                {step === "information" ? (
+                  <form onSubmit={handleInformationSubmit} className="space-y-8 mt-6">
+                    <BillingForm
+                      name={state.name}
+                      phone={state.phone}
+                      instructions={state.instructions}
+                      onNameChange={(value: string) => handleContactChange("name", value)}
+                      onPhoneChange={(value: string) => handleContactChange("phone", value)}
+                      onInstructionsChange={(value: string) => handleContactChange("instructions", value)}
+                    />
+                    <Button type="submit" size="lg" className="w-full md:w-auto">
+                      Continue to Pickup Details
+                    </Button>
+                  </form>
+                ) : step === "pickup" ? (
+                  <div className="mt-6">
+                    <PickupForm onProceed={handlePickupProceed} isLoading={isLoading} />
+                  </div>
+                ) : (
+                  <div className="mt-6">
+                    <PaymentForm total={subtotal * (1 - discount)} onPaymentComplete={handlePaymentComplete} />
+                  </div>
+                )}
+              </div>
+              <div className="lg:pl-8 lg:border-l border-border">
+                <CartSummary items={cartItems} subtotal={subtotal} discount={discount} />
+              </div>
             </div>
-            <div className="lg:pl-8 lg:border-l border-border">
-              <CartSummary items={cartItems} subtotal={subtotal} discount={discount} />
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>

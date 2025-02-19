@@ -3,9 +3,14 @@ import { ChevronRight } from "lucide-react"
 
 interface CheckoutNavProps {
 
-  currentStep: "information" | "pickup" | "payment"
+
+
+  currentStep: "information" | "pickup" | "payment" | "success"
+
+
 
 }
+
 
 export function CheckoutNav({ currentStep }: CheckoutNavProps) {
   const steps = ["information", "pickup", "payment"]

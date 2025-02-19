@@ -1,7 +1,8 @@
 import connectDB from "@/lib/db";
-import Order, { IOrder } from "@/models/Order";
-import { NextResponse, NextRequest } from "next/server";
+import Order from "@/models/Order";
+import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import Product from "@/models/Product";
 
 export async function GET() {
     try {
@@ -9,7 +10,13 @@ export async function GET() {
 
         const orders = await Order.find({}).sort({
             createdAt: -1,
-        }).lean();
+        })
+        .populate({
+          path: 'products.productId',
+          select: 'name price image description _id',
+          model: Product
+      })
+      .lean();
 
         if (!orders || orders.length === 0) {
             return NextResponse.json([], {status: 200})
@@ -17,7 +24,7 @@ export async function GET() {
 
         return NextResponse.json(orders, {status: 200})
     } catch (error) {
-        return NextResponse.json({error: "Failed to fetch orders"}, {status: 500})
+        return NextResponse.json({message: "Failed to fetch orders", error}, {status: 500})
     }
 }
 

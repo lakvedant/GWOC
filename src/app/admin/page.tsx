@@ -57,7 +57,7 @@ export default async function Dashboard() {
           <CardHeader>
             <CardTitle>Transactions</CardTitle>
             <CardDescription>
-              Recent transactions from the last 7 days
+              Recent transactions from the last 30 days
             </CardDescription>
           </CardHeader>
           <CardContent>
