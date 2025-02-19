@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({
@@ -10,6 +10,7 @@ const roboto = Roboto({
 });
 
 const HeroSection = () => {
+    const controls = useAnimation();
     const features = [
         {
             id: 1,
@@ -79,7 +80,7 @@ const HeroSection = () => {
                     variants={titleVariants}
                     initial="initial"
                     animate="animate"
-                    className="text-[#75166e] font-extrabold text-5xl sm:text-7xl md:text-8xl leading-tight uppercase -mb-24 ml-10 hidden sm:block"
+                    className="text-[#75166e] font-extrabold text-5xl sm:text-7xl md:text-8xl leading-tight uppercase -mb-24 ml-10"
                 >
                     <motion.span
                         animate={{
@@ -87,7 +88,7 @@ const HeroSection = () => {
                         }}
                         transition={{ duration: 3, repeat: Infinity }}
                     >
-                        Bindi&apos;s Bakes,
+                        Bindi's Bakes,
                     </motion.span>
                 </motion.h1>
                 <div className="relative -mt-24">
@@ -117,7 +118,7 @@ const HeroSection = () => {
                 </div>
                 <motion.div
                     animate={floatingAnimation}
-                    className="text-[#B11268] font-extrabold text-5xl sm:text-7xl md:text-7xl leading-tight uppercase -mt-32 absolute z-10 ml-30 hidden sm:block"
+                    className="text-[#B11268] font-extrabold text-5xl sm:text-7xl md:text-7xl leading-tight uppercase -mt-32 absolute z-10 ml-30"
                 >
                     Happiness Awaits!
                 </motion.div>
@@ -130,7 +131,7 @@ const HeroSection = () => {
                     stiffness: 100,
                     delay: 0.5
                 }}
-                className="text-[#6a1b9a] text-lg sm:text-xl max-w-2xl -mt-8 sm:mt-0"
+                className="text-[#6a1b9a] text-lg sm:text-xl max-w-2xl -mt-8"
             >
                 Experience Bliss in Every Bite! Discover our artisanal cakes, crafted
                 with passion and creativity to sweeten your moments of joy.
@@ -203,7 +204,7 @@ const HeroSection = () => {
                         <motion.div
                             initial="rest"
                             whileHover="hover"
-                            className="max-w-xs transition-all duration-300 hover:bg-white/80 p-4 rounded-lg"
+                            className="max-w-xs transition-all duration-300 bg-white/80 p-4 rounded-lg"
                         >
                             <motion.h3
                                 className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}
@@ -238,37 +239,50 @@ const HeroSection = () => {
                 ))}
             </div>
 
-            {/* Updated Mobile Features */}
+            {/* Mobile Features */}
             <div className="md:hidden mt-16 space-y-6">
                 {features.map((feature, index) => (
                     <motion.div
                         key={feature.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+                        whileHover="hover"
                         transition={{
                             duration: 0.5,
                             delay: 0.2 * index
                         }}
-                        className="bg-white/80 p-6 rounded-lg shadow-md"
+                        className="flex items-center space-x-4 bg-white/80 p-4 rounded-lg shadow-md"
                     >
-                        <div className="flex items-center space-x-4 mb-3">
-                            <motion.div
-                                whileHover={{ scale: 1.1, rotate: 360 }}
-                                className="w-10 h-10 bg-pink-800 text-lg font-bold text-white flex items-center justify-center rounded-full shadow-lg"
-                                style={{ clipPath: 'polygon(50% 0%, 80% 10%, 100% 40%, 90% 80%, 50% 100%, 10% 80%, 0% 40%, 20% 10%)' }}
-                            >
-                                {feature.id}
-                            </motion.div>
-                            <h3 className={`font-bold text-pink-500 text-xl ${roboto.className}`}>
+                        <div className="w-10 h-10 bg-[#ffeb3b] text-lg font-bold text-pink-500 flex items-center justify-center rounded-full shadow-lg">
+                            {feature.id}
+                        </div>
+                        <div className="flex-1">
+                            <h3 className={`font-bold text-pink-500 mb-1 text-xl ${roboto.className}`}>
                                 {feature.title}
                             </h3>
+                            <motion.p
+                                className="text-sm text-[#6a1b9a]"
+                                initial={{ opacity: 0, height: 0 }}
+                                variants={{
+                                    hover: {
+                                        opacity: 1,
+                                        height: "auto",
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    },
+                                    rest: {
+                                        opacity: 0,
+                                        height: 0,
+                                        transition: {
+                                            duration: 0.3
+                                        }
+                                    }
+                                }}
+                            >
+                                {feature.description}
+                            </motion.p>
                         </div>
-                        <motion.p
-                            initial={{ opacity: 1, height: "auto" }}
-                            className="text-left text-sm text-[#6a1b9a] pl-12"
-                        >
-                            {feature.description}
-                        </motion.p>
                     </motion.div>
                 ))}
             </div>

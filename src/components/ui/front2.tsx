@@ -151,7 +151,10 @@ const CakeWheelHero = () => {
                                 transition={{ delay: 1.2 }}
                                 className="flex flex-wrap items-center gap-4 lg:gap-6"
                             >
-                                <button className="px-6 lg:px-8 py-3 lg:py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-300/40 hover:-translate-y-1 flex items-center gap-2 text-sm lg:text-base">
+                                <button
+                                    className="px-6 lg:px-8 py-3 lg:py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-300/40 hover:-translate-y-1 flex items-center gap-2 text-sm lg:text-base"
+                                    onClick={() => window.location.href = '/products'}
+                                >
                                     <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
                                     Order Now
                                 </button>

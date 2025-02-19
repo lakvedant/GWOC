@@ -35,6 +35,7 @@ const page = () => {
       <WhatsAppChat />
       <TestimonialsPage />
       <Footer />
+      <GiftHamperPage />
     </div>
   )
 }

@@ -9,7 +9,7 @@ const TestimonialsPage = () => {
             id: 1,
             name: "Emma Johnson",
             location: "Local Customer",
-            image: "/api/placeholder/80/80",
+            image: "/cupcake1.png",
             content: "The sourdough bread from this bakery is simply divine! I&apos;ve tried countless others in the city, but none compare to the perfect crust and tender crumb I find here. It&apos;s become a weekend tradition to stop by for our family dinner bread.",
             favorite: "Artisan Sourdough"
         },
@@ -17,7 +17,7 @@ const TestimonialsPage = () => {
             id: 2,
             name: "Michael Chen",
             location: "Food Blogger",
-            image: "/api/placeholder/80/80",
+            image: "/cupcake1.png",
             content: "As someone who reviews bakeries professionally, I can honestly say these croissants are the closest I&apos;ve found to what I enjoyed in Paris. The butter lamination is perfect - so flaky and delicious!",
             favorite: "Almond Croissants"
         },
@@ -25,25 +25,25 @@ const TestimonialsPage = () => {
             id: 3,
             name: "Sarah Williams",
             location: "Wedding Planner",
-            image: "/api/placeholder/80/80",
-            content: "I&apos;ve recommended this bakery to all my wedding clients, and they never disappoint. Their custom cakes are not only gorgeous but taste amazing. My brides are always thrilled!",
+            image: "/cupcake1.png",
+            content: "I've recommended this bakery to all my wedding clients, and they never disappoint. Their custom cakes are not only gorgeous but taste amazing. My brides are always thrilled!",
             favorite: "Wedding Cakes"
         },
         {
             id: 4,
             name: "David Rodriguez",
             location: "Cafe Owner",
-            image: "/api/placeholder/80/80",
+            image: "/cupcake1.png",
             content: "We source all our pastries from this wonderful bakery. Our customers rave about their pain au chocolat and cinnamon rolls. Consistent quality, every single time.",
             favorite: "Pain au Chocolat"
         },
         {
             id: 5,
             name: "Priya Patel",
-            location: "Office Manager",
-            image: "/api/placeholder/80/80",
-            content: "Our team meetings became much more popular after we started ordering cookie platters from here! The variety is wonderful and they accommodate dietary restrictions beautifully.",
-            favorite: "Cookie Assortment"
+            location: "GDG Lead",
+            image: "/cupcake1.png",
+            content: "Our club meetings became much more popular after we started ordering dessert platters from here! The variety is wonderful and they accommodate dietary restrictions beautifully.",
+            favorite: "Large Hamper"
         },
     ];
 
@@ -191,7 +191,10 @@ const TestimonialsPage = () => {
 
                 <div className="text-center mt-16">
                     <h3 className="text-2xl font-bold text-pink-900 mb-4">Ready to experience our delicious treats?</h3>
-                    <button className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-8 rounded-full transition-colors shadow-md">
+                    <button
+                        className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-8 rounded-full transition-colors shadow-md"
+                        onClick={() => window.location.href = '/products'}
+                    >
                         Visit Our Bakery
                     </button>
                     <p className="text-pink-700 mt-4">
