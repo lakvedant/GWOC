@@ -120,7 +120,7 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
 
         {orderDetails.paymentType === "UPI" && (
           <div className="mt-6 text-center text-green-600 font-medium">
-            Your payment is confirmed. We'll process your order shortly!
+            Your payment is confirmed. We &apos;ll process your order shortly!
           </div>
         )}
       </div>
