@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { ChevronRight, Star, Clock, Award } from 'lucide-react';
 import Image from 'next/image';
@@ -70,11 +71,20 @@ const CreativeCakeHero = () => {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-wrap gap-4">
-                            <button className="px-8 py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-200 hover:-translate-y-0.5">
+                            <button
+                                className="px-8 py-4 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-all duration-300 shadow-lg hover:shadow-pink-200 hover:-translate-y-0.5"
+                                onClick={() => window.location.href = '/products'}
+                            >
                                 Order Now
                                 <ChevronRight className="w-5 h-5 inline-block ml-2" />
                             </button>
-                            <button className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-pink-50 transition-all duration-300 border-2 border-pink-600">
+                            <button
+                                className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-pink-50 transition-all duration-300 border-2 border-pink-600"
+                                onClick={() => window.scrollBy({
+                                    top: window.innerHeight * 3.75,
+                                    behavior: 'smooth'
+                                })}
+                            >
                                 View Gallery
                             </button>
                         </div>

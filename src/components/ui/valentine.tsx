@@ -81,7 +81,10 @@ const ValentineCountdown = () => {
                                         {day.description}
                                     </p>
 
-                                    <button className="bg-red-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-600 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+                                    <button
+                                        className="bg-red-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-600 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                        onClick={() => window.location.href = '/products'}
+                                    >
                                         SHOP NOW
                                     </button>
                                 </div>
@@ -151,7 +154,7 @@ const ValentineCountdown = () => {
                     animation: fade-in 0.8s ease-out forwards;
                 }
             `}</style>
-        </div>
+        </div >
     );
 };
 

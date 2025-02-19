@@ -80,7 +80,7 @@ const SliderController: React.FC<SliderControllerProps> = ({
 	prevRef,
 	nextRef,
 }) => (
-	<div className="slider-controller flex justify-center items-center space-x-6 mt-10">
+	<div className="slider-controller flex justify-center items-center space-x-6 mt-10 hidden sm:block">
 		<motion.div
 			whileHover={{ scale: 1.2 }}
 			whileTap={{ scale: 0.9 }}
@@ -248,9 +248,19 @@ const HeroSection = () => {
 					className="relative inline-block"
 				>
 					<div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-rose-600 rounded-lg blur-lg opacity-75 group-hover:opacity-100 transition duration-500"></div>
-					<button className="relative px-8 py-4 bg-white text-pink-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+					<motion.button
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95, y: 5 }}
+						className="relative px-8 py-4 bg-white text-pink-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition duration-300"
+						onClick={() => {
+							window.scrollBy({
+								top: window.innerHeight,
+								behavior: 'smooth',
+							});
+						}}
+					>
 						Discover Our Collection
-					</button>
+					</motion.button>
 				</motion.div>
 			</div>
 		</div>

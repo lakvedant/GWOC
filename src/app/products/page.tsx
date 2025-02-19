@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react"; // Import icons for mobile menu
 
 const categories = [
-  { name: "Desert Hampers", image: "/desert_hampers.png" },
   { name: "Cakes", image: "/ccake.jpg" },
   { name: "Donuts", image: "/cdonuts.jpg" },
   { name: "Cookies", image: "/ccookie.jpg" },
