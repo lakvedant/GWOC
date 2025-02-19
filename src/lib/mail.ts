@@ -82,7 +82,7 @@ export function compileWelcomeTemplate2(
 	amount: number,
 	paymentType: string,
 ) {
-	let productDetails = products.map(product => `Product ID: ${product.productId}, Quantity: ${product.quantity}`).join("\n");
+	// const productDetails = products.map(product => `Product ID: ${product.productId}, Quantity: ${product.quantity}`).join("\n");
 	const template = handlebars.compile(orderTemplate);
 	const templateData = {
 		customerName: name,
@@ -100,16 +100,6 @@ export function compileWelcomeTemplate2(
 		paymentType: paymentType,
 	  };
 	
-	const htmlBody = template({
-		name: name,
-		phone: phone,
-		instructions: instructions,
-		products: productDetails,
-		amount: amount,
-		paymentType: paymentType,
-		companyName: "Bindi's Cupcakery",
-		formattedDate: new Date().toLocaleString(),
-		currentYear: new Date().getFullYear() 
-	});
+	const htmlBody = template(templateData);
 	return htmlBody;
 }
