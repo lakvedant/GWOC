@@ -223,6 +223,8 @@ export const Navbar = () => {
       });
       setIsMobileMenuOpen(false);
     } catch (error) {
+      console.log(error);
+      
       toast({
         title: "Login failed",
         description: "Please try again",
@@ -241,6 +243,8 @@ export const Navbar = () => {
       });
       setIsMobileMenuOpen(false);
     } catch (error) {
+      console.log(error);
+      
       toast({
         title: "Logout failed",
         description: "Please try again",
