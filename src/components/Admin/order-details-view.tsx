@@ -29,6 +29,8 @@ interface Order {
     quantity: number;
   }[];
   instructions?: string;
+  upiImage?: string;
+  paymentType: string;
 }
 
 interface DataTableProps {
@@ -137,6 +139,22 @@ const OrderDetailsView: React.FC<DataTableProps> = ({
                       <p className="text-sm text-gray-600">{order.instructions}</p>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {order.paymentType == "UPI" && (
+              <Card className="mt-6">
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg">UPI Image</h3>
+                  <IKImage
+                    path={order.upiImage}
+                    width={400}
+                    height={400}
+                    alt="UPI Payment"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                  />
                 </CardContent>
               </Card>
             )}
