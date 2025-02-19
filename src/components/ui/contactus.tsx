@@ -1,7 +1,8 @@
 "use client"
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, Cake, Cookie } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, Cake } from 'lucide-react';
 import Image from 'next/image';
+import Footer from '../Footer';
 
 const BakeryContactPage = () => {
     const [formData, setFormData] = useState({
@@ -313,33 +314,7 @@ const BakeryContactPage = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Footer CTA */}
-            <div className="bg-pink-100 py-16">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="max-w-2xl mx-auto">
-                        <Cookie className="w-12 h-12 text-pink-600 mx-auto mb-4" />
-                        <h2 className="text-3xl font-bold text-pink-800 mb-3">Ready to Taste Something Sweet?</h2>
-                        <p className="text-pink-600 mb-6">
-                            We can&apos;t wait to serve you! Stop by our bakery, place an order online, or contact us with any questions.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a
-                                href="/products"
-                                className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition-colors"
-                            >
-                                Order Online
-                            </a>
-                            <a
-                                href="tel:+15551234567"
-                                className="bg-white hover:bg-gray-100 text-pink-600 font-medium py-3 px-6 rounded-lg shadow-md transition-colors"
-                            >
-                                Call Now
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Footer />
         </div>
     );
 };

@@ -7,6 +7,17 @@ import { Swiper as SwiperType } from "swiper";
 import { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper/modules";
 import { ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sigmar, Candal } from 'next/font/google';
+
+const sigmar = Sigmar({
+	weight: ['400'],
+	subsets: ['latin'],
+});
+
+const candal = Candal({
+	weight: ['400'],
+	subsets: ['latin'],
+});
 
 // Import Swiper styles
 import "swiper/css";
@@ -212,13 +223,18 @@ const HeroSection = () => {
 					transition={{ duration: 0.7 }}
 				>
 					<h1 className="text-6xl md:text-7xl font-bold mb-6">
-						<span className="font-[var(--font-dancing-script)] bg-gradient-to-r from-pink-600 via-rose-500 to-pink-600 bg-clip-text text-transparent">
-							Sweet Gallery
-						</span>
+						<div className={candal.className}>
+
+							<span className="bg-gradient-to-r from-pink-600 via-rose-500 to-pink-600 bg-clip-text text-transparent">
+								Sweet Gallery
+							</span>
+						</div>
 					</h1>
-					<p className="text-3xl md:text-4xl font-light mb-8 text-pink-700/90">
-						Our Delectable Creations
-					</p>
+					<div className={sigmar.className}>
+						<p className="text-3xl md:text-4xl font-light mb-8 text-pink-700/90">
+							Our Delectable Creations
+						</p>
+					</div>
 					<p className="max-w-2xl mx-auto text-pink-800/80 mb-12 text-lg">
 						Explore our stunning collection of handcrafted pastries and cakes,
 						each one a masterpiece of flavor and design. Click on any image to learn more.

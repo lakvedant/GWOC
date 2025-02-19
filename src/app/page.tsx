@@ -30,20 +30,11 @@ const page = () => {
       <HeroSection />
       <CreativeCakeHero />
       <CuriousSection />
-      <PhotoCarousel />
-
-      {/* <CupcakeShowcase /> */}
-      <WhatsAppChat />
-      {/* <FeaturesSection /> */}
-      {/* <ReviewPage /> */}
-      <Footer />
-      <GiftHamperPage />
-      {/* <HomePage /> */}
-      {/* <ProfilePage /> */}
-      {/* <AboutUs /> */}
-      <TestimonialsPage />
       <AboutUsBanner />
-      <BakeryContactPage />
+      <PhotoCarousel />
+      <WhatsAppChat />
+      <TestimonialsPage />
+      <Footer />
     </div>
   )
 }
