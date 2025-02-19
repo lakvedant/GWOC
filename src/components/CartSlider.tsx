@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { IKImage } from "imagekitio-next";
@@ -16,7 +16,7 @@ interface CartSliderProps {
 
 const COUPONS: { [key: string]: number } = {
   "SAVE10": 0.10, // 10% off
-  "DISCOUNT20": 0.20, // 20% off
+  "SAVE20": 0.20, // 20% off
   "FREESHIP": 0.15, // 15% off
   "SAVE99": 0.99, // 99% off
 };
@@ -67,8 +67,17 @@ export const CartSlider: React.FC<CartSliderProps> = ({ onClose }) => {
 
   return (
     <div className="flex flex-col h-full z-50">
-      <div className="px-4 py-2 border-b">
+      <div className="px-4 py-2 border-b flex justify-between items-center">
         <h2 className="text-lg font-medium">Shopping Cart ({cartItems.length})</h2>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={onClose} 
+          className="ml-auto"
+          aria-label="Close cart"
+        >
+          <X className="h-5 w-5" />
+        </Button>
       </div>
 
       <ScrollArea className="flex-1 px-4">

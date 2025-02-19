@@ -28,7 +28,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<"information" | "pickup" | "payment" | "success">("information");
   const [isLoading, setIsLoading] = useState(true);
   const [orderDetails, setOrderDetails] = useState<{
-    orderId: string;
+    orderId: number;
     amount: number;
     paymentType: string;
     name: string;
@@ -96,6 +96,7 @@ export default function CheckoutPage() {
           products: cartItems.map((item) => ({
             productId: item.id,
             quantity: item.quantity,
+            weight: item.weight,
           })),
           amount: subtotal * (1 - discount),
           paymentType,

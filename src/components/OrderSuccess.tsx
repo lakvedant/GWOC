@@ -4,7 +4,7 @@ import { CheckCircle, Home, Phone, Calendar, CreditCard, Share2 } from "lucide-r
 
 interface OrderSuccessViewProps {
   orderDetails: {
-    orderId: string;
+    orderId: number;
     amount: number;
     paymentType: string;
     name: string;
@@ -24,6 +24,8 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  console.log(orderDate);
 
   const handleWhatsAppConfirmation = () => {
     const message = encodeURIComponent(

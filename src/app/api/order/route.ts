@@ -187,7 +187,7 @@ export async function GET(req: Request) {
         products: order.products.map(product => ({
           productId: product.productId._id,
           quantity: product.quantity,
-          _id: product._id
+          _id: product._id,
         })),
         amount: order.amount,
         paymentType: order.paymentType,

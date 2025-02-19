@@ -4,25 +4,25 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Store } from "lucide-react"
 
-export const PickupForm = ({ 
+export const PickupForm = ({
   onProceed,
   isLoading = false
-}: { 
+}: {
   onProceed: () => void;
   isLoading?: boolean;
 }) => {
   const storeAddress = {
-    street: "123 Market Street",
-    city: "San Francisco",
-    state: "CA",
-    zip: "94105",
+    street: "338, Radhenagar Society,",
+    city: "Parle Point, Surat",
+    state: "Gujarat",
+    zip: "395007",
     coordinates: "37.7937007,-122.3971633"  // Example coordinates
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Store Pickup Details</h2>
-      
+
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="flex-1">
@@ -39,7 +39,6 @@ export const PickupForm = ({
               <ul className="text-sm space-y-1 mt-4">
                 <li>• Ready for pickup in 2 hours</li>
                 <li>• Store hours: 9 AM - 9 PM daily</li>
-                <li>• Please bring a valid ID for pickup</li>
               </ul>
             </div>
           </div>
@@ -54,8 +53,8 @@ export const PickupForm = ({
         />
       </div>
 
-      <Button 
-        className="w-full" 
+      <Button
+        className="w-full"
         onClick={onProceed}
         disabled={isLoading}
         size="lg"

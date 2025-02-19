@@ -89,7 +89,7 @@ export const columns: ColumnDef<IProduct>[] = [
     header: "Availability",
     cell: ({ row }) => (
       <span
-        className={`px-2 py-1 text-sm rounded ${
+        className={`px-2 py-1 text-sm rounded whitespace-nowrap ${
           row.original.available ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
         }`}
       >
