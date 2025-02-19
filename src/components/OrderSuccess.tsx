@@ -29,7 +29,7 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
 
   const handleWhatsAppConfirmation = () => {
     const message = encodeURIComponent(
-      `Hello! I have placed order #${orderDetails.orderId} with Cash on Delivery payment. Amount: ₹${orderDetails.amount}. Please confirm my order. Thank you!`
+      `Hello! I have placed order  with Cash on Delivery payment. Amount: ₹${orderDetails.amount}. Please confirm my order. Thank you!`
     );
     window.open(`https://wa.me/+919898058074?text=${message}`, "_blank");
   };
@@ -53,13 +53,13 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
         {/* Order Details */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-gray-600">
                 <Share2 className="w-4 h-4" />
                 <span>Order ID</span>
               </div>
               <span className="font-semibold">#{orderDetails.orderId}</span>
-            </div>
+            </div> */}
             
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-gray-600">
