@@ -3,14 +3,11 @@ import connectDB from '@/lib/db';
 import Review from '@/models/Review';
 
 // For App Router
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
     
-    const productId = params.id;
+    const productId = (await params).id;
     
     if (!productId) {
       return NextResponse.json(

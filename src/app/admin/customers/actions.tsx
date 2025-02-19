@@ -34,7 +34,6 @@ export const Actions = ({ id, onEdit }: Props) => {
   const handleEditClick = async () => {
     try {
       const response = await fetch(`/api/user/${id}`);
-      if (!response.ok) throw new Error("Failed to fetch user");
 
       const user = await response.json();
       setSelectedUser(user);

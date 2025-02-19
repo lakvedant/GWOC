@@ -1,16 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Product from "@/models/Product";
 import connectDB from "@/lib/db";
 
-export async function GET(
-  request: Request,
-  context: { params: { id?: string } } // ✅ Correct way to access params
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> 
+}) {
   try {
     await connectDB();
 
-    const { id } = context.params; // ✅ Correct way to destructure params
+    const id = (await params).id; // ✅ Correct way to destructure params
 
     if (!id) {
       return NextResponse.json(
