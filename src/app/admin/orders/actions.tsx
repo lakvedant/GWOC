@@ -34,8 +34,7 @@ export const Actions = ({ id }: Props) => {
       if (!response.ok) {
         throw new Error("Failed to delete order");
       }
-
-      router.refresh();
+      router.push("/admin/orders");
     } catch (error) {
       console.error("Error deleting order:", error);
     } finally {

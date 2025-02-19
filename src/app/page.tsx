@@ -15,10 +15,10 @@ import CreativeCakeHero from "@/components/ui/cakehero";
 // import CakeWheelHero from "@/components/ui/front2";
 // import CakeShowcase from "@/components/ui/front2";
 import ValentineCountdown from "@/components/ui/valentine";
-import GiftHamperPage from "@/components/ui/customizehamper";
+// import GiftHamperPage from "@/components/ui/customizehamper";
 import TestimonialsPage from "@/components/ui/testimonials";
 import AboutUsBanner from "@/components/ui/aboutusvideo";
-import BakeryContactPage from "@/components/ui/contactus";
+// import BakeryContactPage from "@/components/ui/contactus";
 // import ImageSlider from "@/components/PhotoCarousel";
 // import AboutUs from "@/components/ui/aboutus";
 

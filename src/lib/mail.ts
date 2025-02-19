@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import * as handlebars from "handlebars";
-import { welcomeTemplate } from "./templates/welcome";
+import { reviewTemplate } from "./templates/welcome";
 
 export async function sendMail({
 	too,
@@ -48,13 +48,20 @@ export async function sendMail({
 export function compileWelcomeTemplate(
 	name: string,
 	email: string,
-	message: string
+	phone: string,
+	subject: string,
+	message: string,
 ) {
-	const template = handlebars.compile(welcomeTemplate);
+	const template = handlebars.compile(reviewTemplate);
 	const htmlBody = template({
-		name: name,
+		name: name,                    // Submitter's name
+		email: email,        // Submitter's email
+		phone: phone,              // Optional phone number
+		subject: subject,          // Optional subject line
 		message: message,
-        email: email,
+		companyName: "Bindi's Cupcakery",        // Your company name
+		formattedDate: new Date().toLocaleString(), // Current date/time
+		currentYear: new Date().getFullYear() 
 	});
 	return htmlBody;
 }

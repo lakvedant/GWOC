@@ -2,17 +2,19 @@
 import { compileWelcomeTemplate, sendMail } from "@/lib/mail";
 
 type Props = {
-	name: string;
-	email: string;
-	message: string;
+	name: string,
+	email: string,
+	message: string,
+	phone: string,
+	subject: string,
 };
 
-const send = async ({ name, email, message }: Props) => {
+const send = async ({ name, email, phone, subject, message }: Props) => {
 	await sendMail({
 		too: email,
 		name: name,
-		subject: `Response From ${name}`,
-		body: compileWelcomeTemplate(name, email, message),
+		subject: `${subject}`,
+		body: compileWelcomeTemplate(name, email, phone, subject, message),
 	});
 };
 
