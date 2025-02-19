@@ -136,7 +136,8 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                             <option value="Swiss Rolls">Swiss Rolls</option>
                             <option value="Valetine Specials">Valentine Specials</option>
                             <option value="Desert Hamper">Desert Hamper</option>
-                            <option value="DH">Dips and Deserts</option>
+                            <option value="Dips">Dips</option>
+                            <option value="Desert">Desert</option>
 
                         </select>
                         {errors.category && (
