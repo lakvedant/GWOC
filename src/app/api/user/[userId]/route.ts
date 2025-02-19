@@ -3,14 +3,11 @@ import connectDB from "@/lib/db";
 import User from "@/models/User";
 import mongoose from "mongoose";
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { userId: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
-    const userId = params.userId;
+    const userId = (await params).id;
     const body = await req.json();
 
     if (!mongoose.isValidObjectId(userId)) {
@@ -64,14 +61,11 @@ export async function PUT(
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { userId: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
 
-    const userId = params.userId;
+    const userId = (await params).id;
 
     if (!mongoose.isValidObjectId(userId)) {
       return NextResponse.json(
