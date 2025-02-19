@@ -1,67 +1,55 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import { IKImage } from 'imagekitio-next';
 
 const ValentineCountdown = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [carouselData, setCarouselData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const valentineDays = [
-        {
-            date: "7 Feb",
-            title: "Rose Day",
-            description: "Begin your love story with the timeless gesture of roses. Choose from our curated collection of fresh blooms to express your feelings in the most romantic way.",
-            bgColor: "from-pink-100 to-rose-200",
-            image: "/valentine.jpg"
-        },
-        {
-            date: "10 Feb",
-            title: "Teddy Day",
-            description: "Make your love feel extra special with our adorable collection of plush teddy bears. Each comes with a personalized message to make this moment unforgettable.",
-            bgColor: "from-red-100 to-pink-200",
-            image: "/valentine.jpg"
-        },
-        {
-            date: "12 Feb",
-            title: "Promise Day",
-            description: "Seal your promises with our exquisite collection of promise rings and bracelets. Create lasting memories with thoughtfully crafted jewelry pieces.",
-            bgColor: "from-purple-100 to-pink-200",
-            image: "/valentine.jpg"
-        },
-        {
-            date: "14 Feb",
-            title: "Valentine's Day",
-            description: "Celebrate the grand finale of love with our premium Valentine's packages. From romantic dinners to luxury gift hampers, make this day truly special.",
-            bgColor: "from-red-200 to-rose-300",
-            image: "/valentine.jpg"
-        }
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("/api/photo-carousel");
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const data = await response.json();
+                setCarouselData(data);
+            } catch (err) {
+                console.log("Failed to fetch data", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % valentineDays.length);
+        setCurrentSlide((prev) => (prev + 1) % carouselData.length);
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + valentineDays.length) % valentineDays.length);
+        setCurrentSlide((prev) => (prev - 1 + carouselData.length) % carouselData.length);
     };
 
     useEffect(() => {
         const timer = setInterval(nextSlide, 5000);
         return () => clearInterval(timer);
-    });
+    }, [nextSlide, carouselData]);
+
+    if (loading) return <div className="text-center py-10">Loading...</div>;
+    if (carouselData.length === 0) return <div className="text-center py-10">No data available</div>;
 
     return (
         <div className="relative min-h-screen overflow-hidden">
-            {/* Main Carousel */}
             <div className="relative w-full h-screen">
-                {valentineDays.map((day, index) => (
+                {carouselData.map((item, index) => (
                     <div
-                        key={index}
-                        className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r ${day.bgColor} transition-all duration-700 ease-out
+                        key={item._id}
+                        className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r from-pink-100 to-rose-200 transition-all duration-700 ease-out
                             ${index === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
-                        style={{
-                            transform: `translateX(${(index - currentSlide) * 100}%)`
-                        }}
+                        style={{ transform: `translateX(${(index - currentSlide) * 100}%)` }}
                     >
                         <div className="container mx-auto h-full px-4">
                             <div className="grid lg:grid-cols-2 gap-8 h-full items-center">
@@ -72,13 +60,13 @@ const ValentineCountdown = () => {
                                     </div>
 
                                     <h1 className="text-6xl font-serif font-bold text-gray-800">
-                                        {day.title}
+                                        {item.title}
                                         <br />
                                         <span className="text-red-500">Special</span>
                                     </h1>
 
                                     <p className="text-xl text-gray-600">
-                                        {day.description}
+                                        {item.description}
                                     </p>
 
                                     <button
@@ -90,14 +78,13 @@ const ValentineCountdown = () => {
                                 </div>
 
                                 <div className="relative">
-                                    <Image
+                                    <IKImage
                                         width={800}
                                         height={300}
-                                        src="/valentine.jpg"
-                                        alt={day.title}
+                                        path={item.image}
+                                        alt={item.name || "Product Image"}
                                         className="rounded-lg shadow-2xl animate-float hidden sm:block"
                                     />
-
                                 </div>
                             </div>
                         </div>
@@ -121,7 +108,7 @@ const ValentineCountdown = () => {
 
             {/* Progress Bar */}
             <div className="absolute bottom-20 left-0 right-0 flex gap-1 p-4 justify-center">
-                {valentineDays.map((_, index) => (
+                {carouselData.map((_, index) => (
                     <div
                         key={index}
                         className="relative h-1 w-24 bg-white/30 rounded-full overflow-hidden cursor-pointer"
