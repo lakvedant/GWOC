@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import * as handlebars from "handlebars";
-import { welcomeTemplate, reviewTemplate } from "./templates/welcome";
+import { reviewTemplate } from "./templates/welcome";
 
 export async function sendMail({
 	too,

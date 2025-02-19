@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChefHat, Heart, Star, Award, } from 'lucide-react';
+import { ChefHat, Heart, Star } from 'lucide-react';
 import Image from 'next/image';
 
 const AboutUs = () => {
