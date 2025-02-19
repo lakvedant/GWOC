@@ -32,11 +32,35 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the card click event from firing
+    e.stopPropagation();
     if (product.available) {
       setIsDialogOpen(true);
     }
   };
+
+  const getOfferTag = () => {
+    switch (String(product.valueForOffer)) {
+      case "1":
+        return {
+          text: "Bestseller",
+          className: "bg-amber-500"
+        };
+      case "2":
+        return {
+          text: "Sugar Free",
+          className: "bg-green-500"
+        };
+      case "3":
+        return {
+          text: "New",
+          className: "bg-blue-500"
+        };
+      default:
+        return null;
+    }
+  };
+
+  const offerTag = getOfferTag();
 
   return (
     <>
@@ -44,6 +68,14 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
         onClick={handleCardClick}
         className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden max-w-[300px] border border-gray-100 relative group cursor-pointer"
       >
+        {offerTag && (
+          <div className="absolute top-3 left-3 z-10">
+            <span className={`${offerTag.className} text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm`}>
+              {offerTag.text}
+            </span>
+          </div>
+        )}
+
         <div className="absolute top-3 right-3 z-10">
           <Image src="/veg.png" width={20} height={20} alt="veg" className="opacity-80" />
         </div>

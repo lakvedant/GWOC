@@ -135,6 +135,9 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                             <option value="Donuts">Donuts</option>
                             <option value="Swiss Rolls">Swiss Rolls</option>
                             <option value="Valetine Specials">Valentine Specials</option>
+                            <option value="Desert Hamper">Desert Hamper</option>
+                            <option value="DH">Dips and Deserts</option>
+
                         </select>
                         {errors.category && (
                             <Alert variant="destructive" className="py-2 px-3">

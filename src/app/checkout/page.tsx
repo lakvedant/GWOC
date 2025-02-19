@@ -111,7 +111,7 @@ export default function CheckoutPage() {
       
       // Set order details for success page
       setOrderDetails({
-        orderId: orderData.orderId,
+        orderId: orderData.orderID,
         amount: subtotal * (1 - discount),
         paymentType,
         name: state.name,
@@ -125,7 +125,7 @@ export default function CheckoutPage() {
       setTimeout(() => {
         setDiscount(0);
         clearCart();
-      }, 60000);
+      }, 600000);
   
     } catch (error) {
       console.error("🚨 Order creation failed:", error);
