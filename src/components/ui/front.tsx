@@ -34,8 +34,8 @@ const HeroSection = () => {
         },
         {
             id: 4,
-            title: "Customizable Treats",
-            description: "Personalize cakes and treats to match your taste and style.",
+            title: "HomeMade",
+            description: "Move with love from Bindi;s Kitchen",
             position: "bottom-[330px] right-[800px]",
             flexDirection: "flex-row-reverse"
         }

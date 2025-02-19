@@ -14,7 +14,7 @@ interface Review {
   userid: string;
   rating: number;
   comment: string;
-  approved: boolean;
+  status: string;
   productId: string;
   productName: string;
   createdAt: string;
@@ -132,12 +132,11 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
         if (response.ok) {
           const data = await response.json();
           
-          
-          // Filter only approved reviews
-          const approvedReviews = data.filter((review: Review) => review.approved);
+          // Filter reviews to show only those with "Approved" status
+          const approvedReviews = data.filter((review: Review) => review.status === "Approved");
           setReviews(approvedReviews);
           
-          // Calculate average rating
+          // Calculate average rating only from approved reviews
           if (approvedReviews.length > 0) {
             const sum = approvedReviews.reduce((acc: number, review: Review) => acc + review.rating, 0);
             setAverageRating(parseFloat((sum / approvedReviews.length).toFixed(1)));

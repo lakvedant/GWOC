@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Review from '@/models/Review';
 
-// For App Router
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB();
     
-    const productId = (await params).id;
+    const productId = params.id;
     
     if (!productId) {
       return NextResponse.json(
@@ -19,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // Fetch reviews for the specific product, sorted by creation date (newest first)
     const reviews = await Review.find({ 
       productId,
-      approved: true // Only return approved reviews
+      status: "Approved" // Only return reviews with "Approved" status
     })
     .sort({ createdAt: -1 })
     .lean();
