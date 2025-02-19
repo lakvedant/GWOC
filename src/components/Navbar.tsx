@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -18,26 +18,30 @@ interface CartBadgeProps {
   count: number;
 }
 
-const SearchOverlay = ({
-  isOpen,
-  onClose,
-  searchQuery,
-  onSearch,
-  searchResults,
-  onProductClick,
-}: {
+interface SearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   searchQuery: string;
   onSearch: (query: string) => void;
   searchResults: ProductData[];
   onProductClick: (product: ProductData) => void;
+}
+
+const SearchOverlay: React.FC<SearchOverlayProps> = ({
+  isOpen,
+  onClose,
+  searchQuery,
+  onSearch,
+  searchResults,
+  onProductClick,
 }) => {
   const suggestedSearches = [
     "Cake",
     "Muffin",
     "Cupcake",
     "Brownie",
+    "Pastry",
+    "Cookie",
   ];
 
   return (
@@ -121,6 +125,27 @@ const SearchOverlay = ({
   );
 };
 
+const CartBadge: React.FC<CartBadgeProps> = ({ count }) => (
+  <AnimatePresence>
+    {count > 0 && (
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0 }}
+        className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
+      >
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="text-white text-xs font-bold"
+        >
+          {count}
+        </motion.span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
 export const Navbar = () => {
   const { toast } = useToast();
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -133,6 +158,7 @@ export const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ProductData[]>([]);
   const [allProducts, setAllProducts] = useState<ProductData[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -187,6 +213,42 @@ export const Navbar = () => {
     setSearchQuery("");
   };
 
+  const handleLogin = async () => {
+    try {
+      // Implement your login logic here
+      setIsAuthenticated(true);
+      toast({
+        title: "Logged in successfully",
+        duration: 3000,
+      });
+      setIsMobileMenuOpen(false);
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: "Please try again",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Implement your logout logic here
+      setIsAuthenticated(false);
+      toast({
+        title: "Logged out successfully",
+        duration: 3000,
+      });
+      setIsMobileMenuOpen(false);
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "Please try again",
+        duration: 3000,
+      });
+    }
+  };
+
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setSelectedProduct(null);
@@ -203,41 +265,49 @@ export const Navbar = () => {
     });
   };
 
-  const CartBadge: React.FC<CartBadgeProps> = ({ count }) => (
-    <AnimatePresence>
-      {count > 0 && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0 }}
-          className="absolute -top-2 -right-2 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full px-2 py-1 min-w-6 h-6 flex items-center justify-center"
-        >
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="text-white text-xs font-bold"
-          >
-            {count}
-          </motion.span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  const navigationItems = ["Home", "About", "Products", "Contact", "Customize"];
 
-  const navigationItems = ["Home", "About", "Products", "Contact"];
+  // Mobile auth menu component
+  const MobileAuthMenu = () => (
+    <div className="px-4 py-2 border-t border-gray-200">
+      {isAuthenticated ? (
+        <>
+          <div className="flex items-center space-x-2 px-3 py-2 text-gray-700">
+            <User className="h-5 w-5" />
+            <span>Your Profile</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-2 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </button>
+        </>
+      ) : (
+        <button
+          onClick={handleLogin}
+          className="flex items-center space-x-2 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+        >
+          <LogIn className="h-5 w-5" />
+          <span>Login</span>
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <>
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed w-full top-0 z-30 transition-all duration-300 ${scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-md"
-          : "bg-white"
-          }`}
+        className={`fixed w-full top-0 z-30 transition-all duration-300 ${
+          scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-white"
+        }`}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex items-center justify-between h-20">
+            {/* Logo section */}
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Link href="/" className="flex-shrink-0">
                 <Image
@@ -261,6 +331,7 @@ export const Navbar = () => {
               </Link>
             </div>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center justify-center space-x-1 flex-1">
               {navigationItems.map((label) => (
                 <Link
@@ -273,6 +344,7 @@ export const Navbar = () => {
               ))}
             </div>
 
+            {/* Desktop Actions */}
             <div className="hidden md:flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -284,7 +356,19 @@ export const Navbar = () => {
                 <span className="text-sm font-medium">Search</span>
               </Button>
 
-              <UserDropdown />
+              {isAuthenticated ? (
+                <UserDropdown />
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center space-x-2 hover:bg-rose-50 text-gray-700 hover:text-rose-600"
+                  onClick={handleLogin}
+                >
+                  <LogIn className="h-5 w-5" />
+                  <span className="text-sm font-medium">Login</span>
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
@@ -298,7 +382,7 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            {/* Mobile view navigation with search button next to hamburger */}
+            {/* Mobile Actions */}
             <div className="md:hidden flex items-center space-x-2">
               <Button
                 variant="ghost"
@@ -335,6 +419,7 @@ export const Navbar = () => {
           </div>
         </div>
 
+        {/* Mobile Menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -355,6 +440,7 @@ export const Navbar = () => {
                   </Link>
                 ))}
               </div>
+              <MobileAuthMenu />
             </motion.div>
           )}
         </AnimatePresence>
@@ -370,6 +456,7 @@ export const Navbar = () => {
         onProductClick={handleProductClick}
       />
 
+      {/* Cart Slider */}
       <AnimatePresence>
         {isCartOpen && (
           <>
@@ -393,6 +480,7 @@ export const Navbar = () => {
         )}
       </AnimatePresence>
 
+      {/* Product Dialog */}
       {isDialogOpen && selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[102] flex items-center justify-center p-4">
           <div className="relative w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden">
@@ -412,6 +500,7 @@ export const Navbar = () => {
           </div>
         </div>
       )}
+      
       <Toaster />
     </>
   );

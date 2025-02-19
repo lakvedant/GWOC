@@ -11,7 +11,7 @@ export interface IOrder extends Document {
   instructions: string;
   upiImage?: string;
   products: {
-    _id: mongoose.Types.ObjectId; productId: mongoose.Types.ObjectId; quantity: number ; weight:number;
+    _id: mongoose.Types.ObjectId; productId: mongoose.Types.ObjectId; quantity: number ; 
 }[];
   amount: number;
   paymentType: "COD" | "UPI";
@@ -31,7 +31,6 @@ const OrderSchema = new Schema<IOrder>(
       {
         productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
         quantity: { type: Number, required: true },
-        weight: { type: Number, required: true },
       },
     ],
     amount: { type: Number, required: true },

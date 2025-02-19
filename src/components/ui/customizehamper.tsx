@@ -49,7 +49,7 @@ const BOX_TYPES: BoxType[] = [
     maxDesserts: 2,
     maxDips: 2,
     basePrice: 599,
-    image: '/images/small-box.jpg',
+    image: '/smallH.png',
     description: 'Perfect treat for 2-3 people'
   }
 ];

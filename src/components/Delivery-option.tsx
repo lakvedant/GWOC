@@ -45,13 +45,13 @@ export const PickupForm = ({
         </div>
       </Card>
 
-      <div className="mb-6 h-64 w-full rounded-lg overflow-hidden">
+      {/* <div className="mb-6 h-64 w-full rounded-lg overflow-hidden">
         <iframe
           className="w-full h-full border-0"
           src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${storeAddress.coordinates}`}
           allowFullScreen
         />
-      </div>
+      </div> */}
 
       <Button
         className="w-full"
