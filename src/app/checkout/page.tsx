@@ -12,6 +12,7 @@ import Navbar from "@/components/Navbar";
 import type { CheckoutState, PaymentType } from "@/types/checkout";
 import BillingForm from "@/components/Billing-form";
 import { OrderSuccessView } from "@/components/OrderSuccess";
+import sendOrderConfirmation from "@/hooks/sendMailAfterOrder";
 
 const initialState: CheckoutState = {
   name: "",
@@ -108,6 +109,9 @@ export default function CheckoutPage() {
       }
   
       const orderData = await orderResponse.json();
+
+      sendOrderConfirmation({ orderId: orderData._id });
+
       
       // Set order details for success page
       setOrderDetails({

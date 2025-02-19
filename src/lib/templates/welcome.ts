@@ -1,4 +1,4 @@
-export const welcomeTemplate = `
+export const orderTemplate = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,45 +62,11 @@ body {
                   <tr>
                     <td>
                       <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                        Thank you {{customerName}}, we have received your order #{{orderNumber}}!
+                        New order received!
                       </p>
                       <p style="color: #777; line-height: 150%; font-size: 16px; margin: 15px 0;">
-                        We're delighted to be baking your sweet treats. Here's what happens next:
+                        Order #{{orderNumber}} has been placed by {{customerName}}.
                       </p>
-
-                      <!-- Order Timeline -->
-                      <table style="width: 100%; margin-top: 20px;">
-                        <tr>
-                          <td style="padding: 10px;">
-                            <img src="/api/placeholder/40/40" alt="Mixing Bowl" />
-                          </td>
-                          <td>
-                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                              Our bakers will start preparing your order <strong style="color: #555;">{{preparationTime}}</strong>
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="padding: 10px;">
-                            <img src="/api/placeholder/40/40" alt="Oven" />
-                          </td>
-                          <td>
-                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                              Your cupcakes will be freshly baked and decorated on <strong style="color: #555;">{{deliveryDate}}</strong>
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="padding: 10px;">
-                            <img src="/api/placeholder/40/40" alt="Delivery" />
-                          </td>
-                          <td>
-                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                              Your order will be ready for {{fulfillmentMethod}} at {{pickupTime}}
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
 
                       <!-- Order Summary -->
                       <h3 style="font-weight: normal; font-size: 20px; margin: 40px 0 25px;">Order Summary</h3>
@@ -141,30 +107,31 @@ body {
                       </table>
 
                       <!-- Customer Information -->
-                      <h3 style="font-weight: normal; font-size: 20px; margin: 40px 0 25px;">Order Details</h3>
+                      <h3 style="font-weight: normal; font-size: 20px; margin: 40px 0 25px;">Customer Information</h3>
                       <table style="width: 100%;">
                         <tr>
-                          <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
-                            <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">
-                              {{#if isDelivery}}Delivery{{else}}Pickup{{/if}} Information
-                            </h4>
-                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                              {{#if isDelivery}}
-                                {{deliveryAddress}}<br/>
-                                {{deliveryCity}}, {{deliveryState}} {{deliveryZip}}
-                              {{else}}
-                                Pickup at:<br/>
-                                {{storeAddress}}<br/>
-                                {{storeCity}}, {{storeState}} {{storeZip}}
-                              {{/if}}
-                            </p>
-                          </td>
                           <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
                             <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">Contact Information</h4>
                             <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
                               {{customerName}}<br/>
                               {{customerEmail}}<br/>
                               {{customerPhone}}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
+                            <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">Instructions</h4>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              {{instructions}}
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="customer-info__item" style="width: 50%; padding-bottom: 20px;" valign="top">
+                            <h4 style="font-weight: 500; font-size: 16px; color: #555; margin: 0 0 5px;">Payment Type</h4>
+                            <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
+                              {{paymentType}}
                             </p>
                           </td>
                         </tr>
@@ -175,11 +142,11 @@ body {
                         <tr>
                           <td style="padding: 40px 0;">
                             <p style="color: #777; line-height: 150%; font-size: 16px; margin: 0;">
-                              Questions about your order? Contact us at <a href="mailto:{{supportEmail}}" style="color: #1990C6; text-decoration: none;">{{supportEmail}}</a>
+                              Please prepare the order for {{fulfillmentMethod}}.
                             </p>
                             <p style="color: #777; line-height: 150%; font-size: 16px; margin: 15px 0 0;">
-                              Sweet regards,<br/>
-                              Bindi and the Cupcakery Team
+                              Best regards,<br/>
+                              Your Automated System
                             </p>
                           </td>
                         </tr>
