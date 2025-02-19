@@ -170,6 +170,7 @@ export async function GET(req: Request) {
 
     const orders = await Order.find({ userId })
       .populate<{ products: Array<{
+        weight: any;
         quantity: number;
         _id: Types.ObjectId; productId: IProduct & { _id: Types.ObjectId } 
 }> }>("products.productId")
@@ -187,7 +188,8 @@ export async function GET(req: Request) {
         products: order.products.map(product => ({
           productId: product.productId._id,
           quantity: product.quantity,
-          _id: product._id
+          _id: product._id,
+          weight: product.weight,
         })),
         amount: order.amount,
         paymentType: order.paymentType,

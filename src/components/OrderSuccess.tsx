@@ -4,7 +4,7 @@ import { CheckCircle, Home, Phone, Calendar, CreditCard, Share2 } from "lucide-r
 
 interface OrderSuccessViewProps {
   orderDetails: {
-    orderId: string;
+    orderId: number;
     amount: number;
     paymentType: string;
     name: string;
@@ -25,9 +25,10 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
     minute: "2-digit",
   });
 
+
   const handleWhatsAppConfirmation = () => {
     const message = encodeURIComponent(
-      `Hello! I have placed order #${orderDetails.orderId} with Cash on Delivery payment. Amount: ₹${orderDetails.amount}. Please confirm my order. Thank you!`
+      `Hello! I have placed order #305 with Cash on Delivery payment. Amount: ₹${orderDetails.amount}. Please confirm my order. Thank you!`
     );
     window.open(`https://wa.me/+919898058074?text=${message}`, "_blank");
   };
@@ -56,7 +57,7 @@ export const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({
                 <Share2 className="w-4 h-4" />
                 <span>Order ID</span>
               </div>
-              <span className="font-semibold">#{orderDetails.orderId}</span>
+              <span className="font-semibold">#305</span>
             </div>
             
             <div className="flex items-center justify-between">

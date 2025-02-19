@@ -34,12 +34,10 @@ const SearchOverlay = ({
   onProductClick: (product: ProductData) => void;
 }) => {
   const suggestedSearches = [
-    "Birthday Cakes",
-    "Wedding Cakes",
-    "Cupcakes",
-    "Custom Cakes",
-    "Vegan Options",
-    "Gluten Free"
+    "Cake",
+    "Muffin",
+    "Cupcake",
+    "Brownie",
   ];
 
   return (
@@ -240,14 +238,14 @@ export const Navbar = () => {
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex items-center justify-between h-20">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Link href="/" className="flex-shrink-0">
                 <Image
                   src="/logo-2.png"
                   alt="logo"
                   width={100}
                   height={100}
-                  className="h-12 w-auto"
+                  className="h-8 w-auto sm:h-12"
                   priority
                 />
               </Link>
@@ -257,7 +255,7 @@ export const Navbar = () => {
                   alt="logo"
                   width={100}
                   height={100}
-                  className="h-12 w-auto"
+                  className="h-8 w-auto sm:h-12"
                   priority
                 />
               </Link>
@@ -300,7 +298,17 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            <div className="md:hidden flex items-center space-x-4">
+            {/* Mobile view navigation with search button next to hamburger */}
+            <div className="md:hidden flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-rose-50"
+                onClick={() => setSearchFocused(true)}
+              >
+                <Search className="h-5 w-5 text-gray-700" />
+              </Button>
+              
               <Button
                 variant="ghost"
                 size="icon"
@@ -310,7 +318,7 @@ export const Navbar = () => {
                 <ShoppingCart className="h-5 w-5 text-gray-700" />
                 <CartBadge count={cartItems.length} />
               </Button>
-
+              
               <Button
                 variant="ghost"
                 size="icon"
@@ -377,7 +385,7 @@ export const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 20 }}
-              className="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-[101] overflow-hidden"
+              className="fixed top-0 right-0 h-full w-full max-w-96 bg-white shadow-2xl z-[101] overflow-hidden"
             >
               <CartSlider onClose={() => setIsCartOpen(false)} />
             </motion.div>

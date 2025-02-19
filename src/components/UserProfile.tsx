@@ -82,20 +82,6 @@ const UserDropdown = () => {
                 </DropdownMenuItem>
               </Link>
 
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-pink-100 transition">
-                <ShoppingBag size={16} />
-                <span>My Orders</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-pink-100 transition">
-                <Star size={16} />
-                <span>My Reviews</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-pink-100 transition">
-                <Heart size={16} />
-                <span>My Favorites</span>
-              </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
