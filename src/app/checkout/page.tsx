@@ -99,6 +99,7 @@ export default function CheckoutPage() {
           products: cartItems.map((item) => ({
             productId: item.id,
             quantity: item.quantity,
+            weight: item.weight,
           })),
           amount: subtotal * (1 - discount),
           paymentType,

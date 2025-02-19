@@ -28,10 +28,10 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
             description: "",
             price: 0,
             category: "",
-            discount: undefined,
+            discount: 0,
             image: "",
             available: true,
-            valueForOffer: undefined,
+            valueForOffer: 0, // Default: No special offer
             review: [],
             weight: undefined,
         },
@@ -163,16 +163,19 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                         )}
                     </div>
 
-                    {/* Weight and Discount Group */}
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* Special Offer and Discount Group */}
+                    <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Weight (g)</label>
-                            <input
-                                type="number"
+                            <label className="text-sm font-medium">Special Offer Type</label>
+                            <select
                                 className="w-full px-3 py-2 rounded-md border border-gray-200 focus:border-black focus:ring-1 focus:ring-black transition-colors bg-white"
-                                placeholder="0"
-                                {...register("weight", { min: 0 })}
-                            />
+                                {...register("valueForOffer")}
+                            >
+                                <option value={0}>None</option>
+                                <option value={1}>Best Seller</option>
+                                <option value={2}>Sugar Free</option>
+                                <option value={3}>Newly Added</option>
+                            </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Discount (%)</label>
@@ -187,9 +190,8 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                 </div>
             </div>
 
-            {/* Full Width Fields */}
+            {/* Rest of the form remains the same */}
             <div className="space-y-6 pt-4">
-                {/* Image Upload */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium">Product Image</label>
                     <FileUpload fileType="image" onSuccess={handleUploadSuccess} onProgress={handleUploadProgress} />
@@ -203,7 +205,6 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                     )}
                 </div>
 
-                {/* Availability */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium">Availability</label>
                     <div className="flex gap-6">
@@ -228,7 +229,6 @@ export default function AddNewProduct({ onSave, onClose }: AddNewProductProps) {
                     </div>
                 </div>
 
-                {/* Submit Button */}
                 <button
                     type="submit"
                     className="w-full py-3 px-4 bg-black text-white rounded-md hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"

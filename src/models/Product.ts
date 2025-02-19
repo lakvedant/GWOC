@@ -12,6 +12,7 @@ export interface IProduct extends Document {
 	review?: { rating: number; reviewId: Schema.Types.ObjectId }[];
 	weight?: string;
 	createdAt: Date;
+	
 };
 
 export type ProductData = Omit<IProduct, keyof Document> & {

@@ -28,12 +28,13 @@ export async function POST(req: Request) {
     }
 
     // Validate products
-    const validatedProducts = products.map((product: { productId: string; quantity: number }) => {
+    const validatedProducts = products.map((product: { productId: string; quantity: number; weight:string }) => {
       if (!mongoose.isValidObjectId(product.productId)) {
         throw new Error(`Invalid productId format: ${product.productId}`);
       }
-      return { productId: new mongoose.Types.ObjectId(product.productId), quantity: product.quantity };
+      return { productId: new mongoose.Types.ObjectId(product.productId), quantity: product.quantity, weight: product.weight };
     });
+    console.log("validatedProducts", validatedProducts);
 
     // Validate payment type
     if (!["COD", "UPI"].includes(paymentType)) {

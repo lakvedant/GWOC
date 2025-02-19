@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
         const body:IProduct = await req.json();
 
-        if (!body.name || !body.description || !body.price || !body.category || !body.image || !body.available) {
+        if (!body.name || !body.description || !body.price || !body.category || !body.image || !body.available || !body.discount) {
             return NextResponse.json(
                 {error: "Missing required fields"},
                 {status: 400}
