@@ -33,7 +33,7 @@ const CreativeCakeHero = () => {
 
                         <h1 className="text-5xl lg:text-7xl font-bold">
                             <span className="block text-gray-800">Artisan</span>
-                            <span className="block mt-2 text-pink-600">Cakes & Pastries</span>
+                            <span className="block mt-2 text-pink-600">Fresh Donuts</span>
                         </h1>
 
                         <p className="text-lg text-gray-600 max-w-md">
@@ -74,28 +74,12 @@ const CreativeCakeHero = () => {
                         {/* Main Image */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                             <img
-                                src="/test"
-                                alt="Featured Cake"
+                                src="/dount3.jpeg"
+                                alt="Featured Donut"
                                 className="w-full h-full object-cover"
                             />
                         </div>
 
-                        {/* Floating Small Images */}
-                        <div className="absolute top-20 left-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform -rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <img
-                                src="/a.png"
-                                alt="Cake Detail 1"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-
-                        <div className="absolute bottom-20 right-0 w-40 h-40 rounded-lg overflow-hidden shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <img
-                                src="/a.png"
-                                alt="Cake Detail 2"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
 
                         {/* Floating Elements */}
                         <div className="absolute top-40 right-20 bg-white p-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
