@@ -9,7 +9,7 @@ const TestimonialsPage = () => {
             id: 1,
             name: "Emma Johnson",
             location: "Local Customer",
-            image: "/cupcake1.png",
+            image: "/pro2.avif",
             content: "The sourdough bread from this bakery is simply divine! I&apos;ve tried countless others in the city, but none compare to the perfect crust and tender crumb I find here. It&apos;s become a weekend tradition to stop by for our family dinner bread.",
             favorite: "Artisan Sourdough"
         },
@@ -17,7 +17,7 @@ const TestimonialsPage = () => {
             id: 2,
             name: "Michael Chen",
             location: "Food Blogger",
-            image: "/cupcake1.png",
+            image: "/pro1.jpg",
             content: "As someone who reviews bakeries professionally, I can honestly say these croissants are the closest I&apos;ve found to what I enjoyed in Paris. The butter lamination is perfect - so flaky and delicious!",
             favorite: "Almond Croissants"
         },
@@ -25,7 +25,7 @@ const TestimonialsPage = () => {
             id: 3,
             name: "Sarah Williams",
             location: "Wedding Planner",
-            image: "/cupcake1.png",
+            image: "/pro4.jpg",
             content: "I've recommended this bakery to all my wedding clients, and they never disappoint. Their custom cakes are not only gorgeous but taste amazing. My brides are always thrilled!",
             favorite: "Wedding Cakes"
         },
@@ -33,7 +33,7 @@ const TestimonialsPage = () => {
             id: 4,
             name: "David Rodriguez",
             location: "Cafe Owner",
-            image: "/cupcake1.png",
+            image: "/pro3.jpg",
             content: "We source all our pastries from this wonderful bakery. Our customers rave about their pain au chocolat and cinnamon rolls. Consistent quality, every single time.",
             favorite: "Pain au Chocolat"
         },
@@ -41,7 +41,7 @@ const TestimonialsPage = () => {
             id: 5,
             name: "Priya Patel",
             location: "GDG Lead",
-            image: "/cupcake1.png",
+            image: "/pro4.jpg",
             content: "Our club meetings became much more popular after we started ordering dessert platters from here! The variety is wonderful and they accommodate dietary restrictions beautifully.",
             favorite: "Large Hamper"
         },
