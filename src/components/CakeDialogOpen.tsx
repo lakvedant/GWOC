@@ -75,7 +75,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const [averageRating, setAverageRating] = useState(0);
   const shortText = product.description.slice(0, 100);
-  const [quantity, setQuantity] = useState(1); // Add quantity state
+
 
   // Define weight options and prices based on category
   useEffect(() => {
@@ -171,7 +171,8 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
       image: product.image,
       variant: selectedWeight,
       message: message,
-      title: ''
+      title: '',
+      weight: selectedWeight
     };
     addToCart(cartItem);
     onClose();
@@ -208,7 +209,7 @@ const CakeOrderDialog: React.FC<CakeOrderDialogProps> = ({ product, onClose }) =
               />
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-pink-50/90 p-3 md:p-4 rounded-b-lg">
-              <h3 className="font-semibold text-gray-800 text-sm md:text-base">In Our Chef's Word</h3>
+              <h3 className="font-semibold text-gray-800 text-sm md:text-base">In Our Chef&apos;s Word</h3>
               <p className="text-xs md:text-sm text-gray-600">
                 {chefWords[product.category]}
               </p>

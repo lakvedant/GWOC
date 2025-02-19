@@ -14,7 +14,6 @@ interface CakeCardProps {
 
 const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
   const { addToCart } = useCart();
 
   const discountedPrice = product.discount 
@@ -24,8 +23,6 @@ const CakeProductCard: React.FC<CakeCardProps> = ({ product }) => {
   const handleAddToCart = (cartItem: CartItem) => {
     addToCart(cartItem);
     setIsDialogOpen(false);
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
   };
 
   const handleCardClick = () => {

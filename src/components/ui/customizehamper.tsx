@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift, X, ChevronRight, Heart, ShoppingBag } from 'lucide-react';
+import { Gift, X, ChevronRight, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
 
@@ -25,18 +25,6 @@ interface BoxType {
     basePrice: number;
     image: string;
     description: string;
-}
-
-interface CartItem {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-    details: {
-        desserts: DessertItem[];
-        dips: DessertItem[];
-        boxType: BoxType;
-    };
 }
 
 // Constants

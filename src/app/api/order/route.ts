@@ -1,20 +1,39 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import mongoose, { Types } from "mongoose";
 import connectDB from "@/lib/db";
-import Order, { IOrder } from "@/models/Order";
+import Order from "@/models/Order";
 import User from "@/models/User";
-import Product from "@/models/Product";
+import Product, { IProduct } from "@/models/Product";
 
-interface UserProduct {
+interface OrderProduct {
   productId: Types.ObjectId;
-  isReviewed: boolean;
-  reviewId?: Types.ObjectId;
+  quantity: number;
+  _id?: Types.ObjectId;
+}
+
+interface CreateOrderBody {
+  userId: string;
+  name: string;
+  phone: string;
+  products: Array<{
+    productId: string;
+    quantity: number;
+  }>;
+  amount: number;
+  paymentType: "COD" | "UPI";
+  upiImage?: string;
+  instructions?: string;
+}
+
+interface UpdateOrderBody {
+  orderId: number;
+  orderStatus: "Pending" | "Accepted" | "Ready" | "Picked" | "Declined";
 }
 
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const body = await req.json();
+    const body: CreateOrderBody = await req.json();
     
     // Validate required fields
     const { userId, name, phone, products, amount, paymentType, upiImage, instructions } = body;
@@ -28,11 +47,14 @@ export async function POST(req: Request) {
     }
 
     // Validate products
-    const validatedProducts = products.map((product: { productId: string; quantity: number }) => {
+    const validatedProducts: OrderProduct[] = products.map((product) => {
       if (!mongoose.isValidObjectId(product.productId)) {
         throw new Error(`Invalid productId format: ${product.productId}`);
       }
-      return { productId: new mongoose.Types.ObjectId(product.productId), quantity: product.quantity };
+      return { 
+        productId: new Types.ObjectId(product.productId), 
+        quantity: product.quantity 
+      };
     });
 
     // Validate payment type
@@ -50,7 +72,7 @@ export async function POST(req: Request) {
     // Create the order
     const order = await Order.create({
       orderID: nextOrderID,
-      userId: new mongoose.Types.ObjectId(userId),
+      userId: new Types.ObjectId(userId),
       name,
       phone,
       instructions: instructions || "",
@@ -61,38 +83,42 @@ export async function POST(req: Request) {
       orderStatus: "Pending",
     });
 
-    // First, get the user's existing products
+    // Get the user's existing products
     const user = await User.findById(userId);
     if (!user) {
       return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
     // Safely build set of existing product IDs
-    const existingProductIds = new Set();
+    const existingProductIds = new Set<string>();
     if (user.products && Array.isArray(user.products)) {
-      user.products.forEach((p: any) => {
-        if (p && p.productId) {
-          try {
-            const idStr = p.productId.toString();
-            if (idStr) existingProductIds.add(idStr);
-          } catch (e) {
-            // Skip invalid product ID
-          }
+      user.products.forEach((p: { productId?: Types.ObjectId }) => {
+        if (p?.productId) {
+          existingProductIds.add(p.productId.toString());
         }
       });
     }
 
     // Filter out products that already exist
     const newProducts = validatedProducts
-      .filter((p: { productId: { toString: () => unknown; }; }) => !existingProductIds.has(p.productId.toString()))
-      .map((p: { productId: any; }) => ({
+      .filter(p => !existingProductIds.has(p.productId.toString()))
+      .map(p => ({
         productId: p.productId,
         isReviewed: false,
         approved: false
       }));
 
     // Update user with new order and only new products
-    const updateQuery: any = {
+    const updateQuery: {
+      $push: {
+        orders: Types.ObjectId;
+        products?: { $each: Array<{
+          productId: Types.ObjectId;
+          isReviewed: boolean;
+          approved: boolean;
+        }> };
+      };
+    } = {
       $push: {
         orders: order._id
       }
@@ -103,7 +129,7 @@ export async function POST(req: Request) {
       updateQuery.$push.products = { $each: newProducts };
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       userId,
       updateQuery,
       { new: true }
@@ -126,7 +152,6 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
-    // Get userId from the query parameters
     const searchParams = new URL(req.url).searchParams;
     const userId = searchParams.get("userId");
 
@@ -138,67 +163,52 @@ export async function GET(req: Request) {
       return NextResponse.json([], { status: 400 });
     }
 
-    // Ensure Product model is registered before using populate
+    // Ensure Product model is registered
     if (!mongoose.models.Product) {
       mongoose.model('Product', Product.schema);
     }
 
-    // Fetch orders and populate product details
-    const orders: IOrder[] = await Order.find({ userId })
-      .populate("products.productId") // Populate product details
-      .sort({ createdAt: -1 }); // Sort by newest first
+    const orders = await Order.find({ userId })
+      .populate<{ products: Array<{
+        quantity: number;
+        _id: Types.ObjectId; productId: IProduct & { _id: Types.ObjectId } 
+}> }>("products.productId")
+      .sort({ createdAt: -1 });
 
-    // Transform response to match required format
     const transformedOrders = orders.map(order => {
-      try {
-        return {
-          _id: order._id,
-          orderID: order.orderID,
-          userId: order.userId,
-          name: order.name,
-          phone: order.phone,
-          instructions: order.instructions || "",
-          upiImage: order.upiImage || "",
-          products: order.products.map(product => {
-            try {
-              return {
-                productId: product.productId._id, // Only return the product ID
-                quantity: product.quantity,
-                _id: product._id
-              };
-            } catch (e) {
-              // Fallback if product structure is unexpected
-              return {
-                productId: product.productId,
-                quantity: product.quantity,
-                _id: product._id
-              };
-            }
-          }),
-          amount: order.amount,
-          paymentType: order.paymentType,
-          orderStatus: order.orderStatus,
-          createdAt: order.createdAt,
-          updatedAt: order.updatedAt,
-          __v: order.__v
-        };
-      } catch (e) {
-        // Return basic order data if transformation fails
-        return order;
-      }
+      return {
+        _id: order._id,
+        orderID: order.orderID,
+        userId: order.userId,
+        name: order.name,
+        phone: order.phone,
+        instructions: order.instructions || "",
+        upiImage: order.upiImage || "",
+        products: order.products.map(product => ({
+          productId: product.productId._id,
+          quantity: product.quantity,
+          _id: product._id
+        })),
+        amount: order.amount,
+        paymentType: order.paymentType,
+        orderStatus: order.orderStatus,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        __v: order.__v
+      };
     });
 
-    return NextResponse.json(transformedOrders, { status: 200 }); // Directly return the array
+    return NextResponse.json(transformedOrders, { status: 200 });
   } catch (error) {
     console.error("Error fetching orders:", error);
-    return NextResponse.json([], { status: 500 }); // Return empty array on error
+    return NextResponse.json([], { status: 500 });
   }
 }
 
 export async function PUT(req: Request) {
   try {
     await connectDB();
-    const body = await req.json();
+    const body: UpdateOrderBody = await req.json();
 
     if (!body.orderId || !body.orderStatus) {
       return NextResponse.json({
@@ -207,8 +217,7 @@ export async function PUT(req: Request) {
       }, { status: 400 });
     }
 
-    // Validate order status
-    const validStatuses = ["Pending", "Accepted", "Ready", "Picked", "Declined"];
+    const validStatuses = ["Pending", "Accepted", "Ready", "Picked", "Declined"] as const;
     if (!validStatuses.includes(body.orderStatus)) {
       return NextResponse.json({
         success: false,

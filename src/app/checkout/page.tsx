@@ -24,7 +24,6 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { cartItems, subtotal, discount, userInfo, clearCart, isAuthenticated, setDiscount } = useCart();
   const [state, setState] = useState<CheckoutState>(initialState);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [step, setStep] = useState<"information" | "pickup" | "payment" | "success">("information");
   const [isLoading, setIsLoading] = useState(true);
   const [orderDetails, setOrderDetails] = useState<{
@@ -44,9 +43,6 @@ export default function CheckoutPage() {
       return router.push("/");
     }
   
-    if (!isAuthenticated) {
-      setIsLoginModalOpen(true);
-    }
   }, [cartItems, router, isAuthenticated]);
   
   useEffect(() => {
