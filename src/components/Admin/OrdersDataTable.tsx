@@ -132,11 +132,18 @@ export function OrderDataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => handleRowClick(row.original)}
                   className="cursor-pointer hover:bg-gray-50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      onClick={() => {
+                        const columnId = cell.column.id;
+                        if (["orderID", "name", "instructions"].includes(columnId)) {
+                          handleRowClick(row.original);
+                        }
+                      }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

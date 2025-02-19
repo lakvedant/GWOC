@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { Row } from "@tanstack/react-table"; // Import Row type
+import { useRouter } from "next/navigation";
 
 const orderStatuses = [
   { value: "Pending", label: "Pending" },
@@ -38,6 +39,7 @@ const getPaymentTypeColor = (type: string) => {
 };
 
 const StatusCell = ({ row }: { row: Row<IOrder> }) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleStatusUpdate = async (newStatus: string) => {
@@ -50,6 +52,7 @@ const StatusCell = ({ row }: { row: Row<IOrder> }) => {
         },
         body: JSON.stringify({ orderStatus: newStatus }),
       });
+      router.push("/admin/orders");
     } catch (error) {
       console.error("Error updating order status:", error);
     } finally {
@@ -160,7 +163,7 @@ export const columns: ColumnDef<IOrder>[] = [
       >
         Status
         <ArrowUpDown className="size-4 ml-2" />
-      </Button>
+      </Button> 
     ),
     cell: StatusCell
   },

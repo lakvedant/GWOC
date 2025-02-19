@@ -23,12 +23,12 @@ export default function Footer() {
 
           {/* Our Menu */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-pink-600">Our Menu</h3>
+            <h3 className="text-xl font-semibold text-pink-600 pl-7">Our Menu</h3>
             <ul className="space-y-3 list-none">
               {["Cake Flavours", "Brownie", "Fudge", "Many More...."].map((item) => (
                 <ul key={item} className="list-none">
                   <Link
-                    href="#"
+                    href="/products"
                     className="text-gray-600 hover:text-pink-600 transition-colors duration-300 flex items-center space-x-2 list-none"
                   >
                     <span className="h-1 w-1 bg-pink-400 rounded-full"></span>
@@ -41,8 +41,8 @@ export default function Footer() {
 
           {/* Contact Section */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-pink-600">Contact Us</h3>
-            <div className="space-y-3 -ml-7">
+            <h3 className="text-xl font-semibold text-pink-600 pl-7">Contact Us</h3>
+            <div className="space-y-3">
               <div className="flex items-start space-x-3 ">
                 <FaMapMarkerAlt className="text-pink-500 mt-1 flex-shrink-0" />
                 <p className="text-gray-600">

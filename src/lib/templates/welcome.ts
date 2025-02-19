@@ -111,7 +111,7 @@ body {
                             <img src="{{imageUrl}}" width="60" height="60" style="border-radius: 8px;"/>
                           </td>
                           <td style="padding-left: 15px;">
-                            <span style="font-size: 16px; font-weight: 600; color: #555;">{{name}} × {{quantity}}</span>
+                            <span style="font-size: 16px; font-weight: 600; color: #555;">{{name}} x {{quantity}}</span>
                             <br/>
                             <span style="font-size: 14px; color: #999;">{{variant}}</span>
                           </td>
@@ -197,3 +197,103 @@ body {
 </body>
 </html>
 `;
+
+export const reviewTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Contact Form Submission</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #4a86e8;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .message-box {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      border-left: 4px solid #4a86e8;
+      margin-top: 20px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #666666;
+      padding: 20px;
+    }
+    .info-item {
+      margin-bottom: 10px;
+    }
+    .info-label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Contact Form Submission</h1>
+      <p>{{formattedDate}}</p>
+    </div>
+    
+    <div class="content">
+      <p>Dear {{companyName}} Team,</p>
+      
+      <p>You have received a new response from your website's contact form.</p>
+      
+      <div class="info-item">
+        <span class="info-label">Name:</span> {{name}}
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Email:</span> <a href="mailto:{{email}}">{{email}}</a>
+      </div>
+      
+      {{#if phone}}
+      <div class="info-item">
+        <span class="info-label">Phone:</span> {{phone}}
+      </div>
+      {{/if}}
+      
+      {{#if subject}}
+      <div class="info-item">
+        <span class="info-label">Subject:</span> {{subject}}
+      </div>
+      {{/if}}
+      
+      <div class="message-box">
+        <div class="info-label">Message:</div>
+        <p>{{message}}</p>
+      </div>
+      
+      <p>Please respond to this inquiry at your earliest convenience.</p>
+    </div>
+    
+    <div class="footer">
+      <p>This email was sent automatically from your website contact form.</p>
+      <p>&copy; {{currentYear}} {{companyName}}. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+`
