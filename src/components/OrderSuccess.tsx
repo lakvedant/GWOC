@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Home, Phone, Calendar, CreditCard, Share2 } from "lucide-react";
+import { CheckCircle, Home, Phone, Calendar, CreditCard } from "lucide-react";
 
 interface OrderSuccessViewProps {
   orderDetails: {

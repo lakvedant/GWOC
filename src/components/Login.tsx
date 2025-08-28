@@ -16,7 +16,8 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
   const [loading, setLoading] = useState(false);
   const { updateUserInfo } = useCart();
 
-  const TEST_PHONE = "9898058074";
+  const TEST_PHONE1 = "8401062005";
+  const TEST_PHONE2 = "9898058074";
   const TEST_OTP = "123456";
 
   const checkUserInfo = async () => {
@@ -131,7 +132,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
 
     try {
-      if (phone === TEST_PHONE) {
+      if (phone === TEST_PHONE1 || phone === TEST_PHONE2) {
         setStep("otp");
         setTimer(30);
         setLoading(false);
@@ -172,7 +173,7 @@ export default function LoginSignupModal({ open, onClose }: { open: boolean; onC
     }
 
     try {
-      if (phone === TEST_PHONE) {
+      if (phone === TEST_PHONE1 || phone === TEST_PHONE2) {
         if (otp === TEST_OTP) {
           await checkUserInfo();
         } else {
