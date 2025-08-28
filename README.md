@@ -6,17 +6,28 @@
 ![Team](https://img.shields.io/badge/Team-404_%23NotFound-red)
 ![Last Updated](https://img.shields.io/badge/Last%20Updated-2025--02--19-green)
 
-[Previous sections remain the same until Getting Started...]
+A full-stack bakery web application built under **Google Winter of Code (GWOC)** for a Surat-based startup — providing them a digital presence, online ordering, and admin analytics.  
 
-## 🚀 Setup and Installation Guide
+## 🚀 Project Motivation
+This project was built as a **social impact initiative**: students learned to build industry-grade software while empowering small businesses with digital solutions.  
 
-### Prerequisites
+## 🛠 Tech Stack
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS, ShadCN UI, Framer Motion  
+- **Backend**: Node.js, Express, MongoDB (Atlas)  
+- **Integrations**: Message Central (OTP Authentication), WhatsApp API, ImageKit (CDN)  
 
-Before you begin, ensure you have the following installed:
-- Node.js (v18.0.0 or higher)
-- npm (v8.0.0 or higher) or yarn (v1.22.0 or higher)
-- MongoDB (v4.4 or higher)
-- Git
+## ✨ Features
+- 📱 **Phone OTP Authentication** (via Message Central)  
+- 🛒 **Online Ordering System** (cakes, donuts, cookies, muffins & more)  
+- 💳 **Payment Options**: Cash on Delivery + UPI QR Upload  
+- 📊 **Admin Dashboard**: Revenue, Orders, Customers, Reviews, Banner Management  
+- 🎨 **Exceptional UI/UX** with animations and customizable photo carousel  
+
+## 📂 Project Structure
+- `frontend/` → Next.js UI with pages, components, hooks  
+- `backend/` → Express + MongoDB models (Orders, Products, Coupons, Reviews, Users)  
+- `admin/` → Dashboard with analytics, CRUD, and banner/review management  
+
 
 ### 1. Repository Setup
 
@@ -60,21 +71,9 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
-### 3. Database Setup
 
-```bash
-# Start MongoDB service
-mongod --dbpath /path/to/data/directory
+### 3. Running the Application
 
-# Initialize database (if needed)
-npm run init-db
-# or
-yarn init-db
-```
-
-### 4. Running the Application
-
-#### Development Mode
 ```bash
 # Start development server
 npm run dev
@@ -83,194 +82,3 @@ yarn dev
 
 # The application will be available at http://localhost:3000
 ```
-
-#### Production Mode
-```bash
-# Build the application
-npm run build
-# or
-yarn build
-
-# Start production server
-npm start
-# or
-yarn start
-```
-
-### 5. Testing
-
-```bash
-# Run unit tests
-npm run test
-# or
-yarn test
-
-# Run end-to-end tests
-npm run e2e
-# or
-yarn e2e
-```
-
-## 📝 Development Workflow
-
-### 1. Branch Management
-
-```bash
-# Create a new feature branch
-git checkout -b feature/your-feature-name
-
-# Create a new bugfix branch
-git checkout -b bugfix/your-bugfix-name
-```
-
-### 2. Code Style and Linting
-
-```bash
-# Run linter
-npm run lint
-# or
-yarn lint
-
-# Fix linting issues
-npm run lint:fix
-# or
-yarn lint:fix
-```
-
-### 3. Type Checking
-
-```bash
-# Run TypeScript compiler
-npm run type-check
-# or
-yarn type-check
-```
-
-## 🔧 Available Scripts
-
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "test": "jest",
-    "e2e": "cypress run",
-    "init-db": "node scripts/init-db.js"
-  }
-}
-```
-
-## 🚀 Deployment
-
-### Vercel Deployment
-
-1. Connect your GitHub repository to Vercel
-2. Configure environment variables in Vercel dashboard
-3. Deploy with following settings:
-   - Framework Preset: Next.js
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
-
-### Manual Deployment
-
-```bash
-# Build the application
-npm run build
-
-# Start the production server
-npm start
-
-# Optional: Use PM2 for process management
-pm2 start npm --name "bindis-cupcakery" -- start
-```
-
-## 🐳 Docker Support
-
-```bash
-# Build Docker image
-docker build -t bindis-cupcakery .
-
-# Run Docker container
-docker run -p 3000:3000 bindis-cupcakery
-```
-
-## 📊 Monitoring and Logging
-
-### Application Logs
-```bash
-# View application logs
-npm run logs
-# or
-yarn logs
-
-# View error logs
-npm run logs:error
-# or
-yarn logs:error
-```
-
-### Performance Monitoring
-- Configure monitoring tools in `monitoring/config.js`
-- Access dashboard at `/admin/monitoring`
-
-## 🔍 Troubleshooting
-
-### Common Issues and Solutions
-
-1. **MongoDB Connection Issues**
-   ```bash
-   # Check MongoDB status
-   mongo --eval "db.adminCommand('ping')"
-   ```
-
-2. **Build Errors**
-   ```bash
-   # Clear next.js cache
-   rm -rf .next
-   npm run build
-   ```
-
-3. **API Errors**
-   - Verify environment variables
-   - Check API keys and tokens
-   - Ensure proper CORS configuration
-
-### Debug Mode
-
-```bash
-# Run in debug mode
-DEBUG=* npm run dev
-# or
-DEBUG=* yarn dev
-```
-
-## 🔄 Update Instructions
-
-```bash
-# Pull latest changes
-git pull origin main
-
-# Install new dependencies
-npm install
-# or
-yarn install
-
-# Rebuild application
-npm run build
-# or
-yarn build
-```
-
-## 📚 Additional Resources
-
-- [Project Documentation](docs/README.md)
-- [API Documentation](docs/api/README.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
-- [Change Log](CHANGELOG.md)
-
----
-Last Updated: 2025-02-19 18:23:17 UTC
-Updated by: mjgandhi2305
